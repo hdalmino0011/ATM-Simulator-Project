@@ -1,0 +1,6 @@
+{
+  "name": "CTU Express ATM Simulator — Python & Django OOP Project",
+  "description": "P ELEC 1 Object-Oriented Programming Final Project: Fictional ATM Simulator built with Python OOP classes, Django templates, HTML, and glassmorphic Light Blue & White CSS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
