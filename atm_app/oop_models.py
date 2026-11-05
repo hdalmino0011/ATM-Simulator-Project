@@ -176,6 +176,13 @@ class Account:
         return self._account_number
 
     @property
+    def masked_account_number(self) -> str:
+        s = str(self._account_number or "").strip()
+        if len(s) <= 3:
+            return s
+        return ("*" * (len(s) - 3)) + s[-3:]
+
+    @property
     def holder_name(self) -> str:
         return self._holder_name
 
@@ -520,7 +527,7 @@ class ATMService:
     def __init__(
         self,
         accounts: Optional[Dict[str, Account]] = None,
-        active_account_number: str = "SA-100248",
+        active_account_number: str = "100000248",
     ):
         if accounts:
             self._accounts = accounts
@@ -536,7 +543,7 @@ class ATMService:
     def _create_predefined_accounts() -> Dict[str, Account]:
         """Creates the initial predefined fictional accounts for the ATM simulator."""
         acc1 = SavingsAccount(
-            account_number="SA-100248",
+            account_number="100000248",
             holder_name="Hanz Dee",
             starting_balance=15000.00,
             transactions=[
@@ -552,7 +559,7 @@ class ATMService:
             ],
         )
         acc2 = CheckingAccount(
-            account_number="CA-200519",
+            account_number="200000519",
             holder_name="Hanz Dee",
             starting_balance=25000.00,
             transactions=[
@@ -568,7 +575,7 @@ class ATMService:
             ],
         )
         acc3 = SavingsAccount(
-            account_number="SA-100892",
+            account_number="100000892",
             holder_name="Maria Clara Santos",
             starting_balance=3500.00,
             transactions=[
@@ -746,7 +753,7 @@ class ATMService:
                 )
                 rebuilt_accounts[acc_num] = sa
 
-        active_num = data.get("active_account_number", "SA-100248")
+        active_num = data.get("active_account_number", "100000248")
         return cls(accounts=rebuilt_accounts, active_account_number=active_num)
 
 

@@ -51,7 +51,7 @@
 
         <div class="form-group">
           <label class="form-label" for="input-account-number">Account Number</label>
-          <input id="input-account-number" type="text" class="form-input" placeholder="Enter Account Number" autocomplete="off" />
+          <input id="input-account-number" type="text" class="form-input" placeholder="Enter Account Number (At least 9 digits)" autocomplete="off" />
         </div>
 
         <div class="form-group">
@@ -90,7 +90,7 @@
       <div id="atm-header-bar" class="atm-top-row">
         <div>
           <h1 id="atm-holder-name" class="holder-name">Hanz Dee</h1>
-          <p id="atm-account-meta" class="account-meta">Account #100248</p>
+          <p id="atm-account-meta" class="account-meta">Card Account #******248</p>
         </div>
         <button type="button" id="btn-logout" class="btn-secondary-blue">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -289,7 +289,7 @@
               <div class="clean-row-title">Account Number</div>
               <div class="clean-row-meta">Active Card Account</div>
             </div>
-            <span id="inq-acc-num" class="tabular-nums">100248</span>
+            <span id="inq-acc-num" class="tabular-nums">******248</span>
           </li>
           <li class="clean-row-item">
             <div>
@@ -394,7 +394,14 @@ from browser import document, html, window, timer
 from datetime import datetime
 import json
 
-STORAGE_KEY = "expressbank_atm_json_v4"
+STORAGE_KEY = "expressbank_atm_json_v5"
+
+
+def mask_account_number(acc_num):
+    s = str(acc_num or "").strip()
+    if len(s) <= 3:
+        return s
+    return ("*" * (len(s) - 3)) + s[-3:]
 
 
 class ATMTransactionError(Exception):
@@ -488,6 +495,10 @@ class Account:
         return self._account_number
 
     @property
+    def masked_account_number(self):
+        return mask_account_number(self._account_number)
+
+    @property
     def holder_name(self):
         return self._holder_name
 
@@ -505,7 +516,7 @@ class Account:
 
     def verify_pin(self, input_pin):
         clean_in = str(input_pin).strip()
-        return clean_in in (self._pin, "123456", "1234")
+        return clean_in.isdigit() and 4 <= len(clean_in) <= 6
 
     @staticmethod
     def parse_positive_amount(raw_value, operation_name="Transaction"):
@@ -631,10 +642,10 @@ class ATMService:
             except Exception:
                 pass
 
-        sa = SavingsAccount("100248", "Hanz Dee", "123456", 15000.00)
+        sa = SavingsAccount("100000248", "Hanz Dee", "123456", 15000.00)
         sa._record_transaction("Opening Balance", 15000.00, 0.0)
 
-        ca = CheckingAccount("200519", "Hanz Dee", "123456", 25000.00)
+        ca = CheckingAccount("200000519", "Hanz Dee", "123456", 25000.00)
         ca._record_transaction("Opening Balance", 25000.00, 0.0)
 
         self.accounts = {
@@ -653,17 +664,18 @@ class ATMService:
         if not acc_in or not pin_in:
             raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
 
-        normalized = acc_in.replace("SA-", "").replace("CA-", "")
-        valid_numbers = ("100248", "200519")
-        if normalized not in valid_numbers:
-            raise ATMTransactionError("Invalid Account Number or PIN Code.")
+        normalized = acc_in.replace("SA-", "").replace("CA-", "").replace(" ", "").replace("-", "")
+        if not normalized.isdigit() or len(normalized) < 9:
+            raise ATMTransactionError("Account Number must be at least 9 digits.")
 
         sa = self.accounts["savings"]
         if not sa.verify_pin(pin_in):
-            raise ATMTransactionError("Invalid Account Number or PIN Code.")
+            raise ATMTransactionError("Invalid PIN Code. Please enter a 4 to 6 digit PIN.")
 
         self.logged_in_card = normalized
-        self.current_account = sa if normalized == "100248" else self.accounts["checking"]
+        self.accounts["savings"]._account_number = normalized
+        self.accounts["checking"]._account_number = normalized
+        self.current_account = self.accounts["savings"]
         return self.current_account
 
     def select_account_type(self, kind):
@@ -724,10 +736,10 @@ def refresh_atm_data():
         return
 
     document["atm-holder-name"].text = acc.holder_name
-    document["atm-account-meta"].text = f"{acc.account_type} · Account #{acc.account_number}"
+    document["atm-account-meta"].text = f"{acc.account_type} · Account #{acc.masked_account_number}"
 
     # Balance inquiry details
-    document["inq-acc-num"].text = acc.account_number
+    document["inq-acc-num"].text = acc.masked_account_number
     document["inq-acc-type"].text = acc.account_type
     document["inq-balance"].text = fmt_php(acc.balance)
     document["inq-withdrawable"].text = fmt_php(acc.get_max_withdrawable())
@@ -769,7 +781,7 @@ def on_login(_ev):
             document["view-atm"].class_name = "screen-wrapper"
             document["atm-header-bar"].class_name = "atm-top-row"
             document["atm-holder-name"].text = acc.holder_name
-            document["atm-account-meta"].text = f"Card Account #{service.logged_in_card}"
+            document["atm-account-meta"].text = f"Card Account #{mask_account_number(service.logged_in_card)}"
             show_subscreen("screen-menu")
         except ATMTransactionError as exc:
             document["login-loading-box"].class_name = "loading-state-box hidden"
