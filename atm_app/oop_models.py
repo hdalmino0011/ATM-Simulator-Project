@@ -253,10 +253,10 @@ class ATMService:
 
     @staticmethod
     def _create_predefined_accounts():
-        sa = SavingsAccount("100000248", "Hanz Dee", "123456", 15000.00)
+        sa = SavingsAccount("100000248", "Hanz Dalmino", "123456", 15000.00)
         sa._record_transaction("Opening Balance", 15000.00, 0.0)
 
-        ca = CheckingAccount("200000519", "Hanz Dee", "123456", 25000.00)
+        ca = CheckingAccount("200000519", "Kristof Badayos", "123456", 25000.00)
         ca._record_transaction("Opening Balance", 25000.00, 0.0)
 
         return {
