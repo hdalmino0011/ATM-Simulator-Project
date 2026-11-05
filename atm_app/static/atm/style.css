@@ -1,6 +1,6 @@
 /* ==========================================================================
-   ExpressBank ATM Simulator — Pure CSS Stylesheet
-   Theme: Light Blue & White with Glassmorphism
+   ATM Simulator — Pure CSS Stylesheet
+   Theme: Light Blue & White Glassmorphism
    Typography: Outfit & Plus Jakarta Sans
    ========================================================================== */
 
@@ -9,15 +9,11 @@
   --bg-mid: #dff1fe;
   --bg-end: #eef8ff;
 
-  --glass-surface: rgba(255, 255, 255, 0.84);
-  --glass-strong: rgba(255, 255, 255, 0.94);
-  --glass-blue-tint: rgba(224, 242, 254, 0.76);
-  --glass-border: rgba(255, 255, 255, 0.94);
-  --glass-border-blue: rgba(56, 189, 248, 0.35);
+  --glass-surface: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.95);
 
   --blue-primary: #0284c7;
   --blue-bright: #0ea5e9;
-  --blue-light: #38bdf8;
   --blue-pale: #e0f2fe;
   --blue-deep: #0b2239;
 
@@ -26,12 +22,12 @@
   --text-muted: #5b7a9c;
 
   --shadow-glass:
-    0 16px 38px -10px rgba(2, 132, 199, 0.14),
+    0 18px 40px -10px rgba(2, 132, 199, 0.14),
     0 4px 14px -2px rgba(11, 34, 57, 0.05),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.96);
 
   --shadow-blue:
-    0 12px 26px -6px rgba(2, 132, 199, 0.38),
+    0 12px 26px -6px rgba(2, 132, 199, 0.36),
     inset 0 1px 1px rgba(255, 255, 255, 0.48);
 
   --font-display: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -63,10 +59,10 @@ body {
 }
 
 /* ==========================================================================
-   1. LOGIN & SIGN UP VIEW
+   1. LOGIN SCREEN (ACCOUNT NUMBER & PIN CODE ONLY)
    ========================================================================== */
 
-.auth-wrapper {
+.screen-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -74,27 +70,31 @@ body {
   padding: 2rem 1.25rem;
 }
 
-.auth-card {
+.glass-card {
   width: 100%;
-  max-width: 470px;
+  max-width: 440px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 249, 255, 0.82) 100%);
   backdrop-filter: blur(22px) saturate(180%);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
   border: 1.5px solid var(--glass-border);
   box-shadow: var(--shadow-glass);
   border-radius: 28px;
-  padding: 2.25rem 2rem;
+  padding: 2.35rem 2rem;
 }
 
-.auth-brand-header {
+.atm-card-wide {
+  max-width: 680px;
+}
+
+.brand-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.75rem;
 }
 
-.auth-logo-circle {
+.logo-icon-box {
   width: 56px;
   height: 56px;
   border-radius: 18px;
@@ -107,7 +107,7 @@ body {
   margin-bottom: 0.9rem;
 }
 
-.auth-title {
+.brand-title {
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 800;
@@ -115,382 +115,205 @@ body {
   color: var(--blue-deep);
 }
 
-.auth-subtitle {
+.brand-subtitle {
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--text-secondary);
   margin-top: 0.2rem;
 }
 
-.auth-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  background: rgba(224, 242, 254, 0.85);
-  padding: 0.35rem;
-  border-radius: 14px;
-  border: 1px solid rgba(125, 211, 252, 0.65);
-  margin-bottom: 1.5rem;
+/* Form Controls */
+.form-group {
+  margin-bottom: 1.15rem;
 }
 
-.auth-tab-btn {
-  padding: 0.6rem 1rem;
-  border-radius: 11px;
-  border: none;
-  background: transparent;
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 150ms ease;
-}
-
-.auth-tab-btn.active {
-  background: #ffffff;
-  color: var(--blue-deep);
-  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
-}
-
-.saved-accounts-box {
-  margin-top: 1.35rem;
-  padding-top: 1.15rem;
-  border-top: 1px solid rgba(56, 189, 248, 0.25);
-}
-
-.saved-accounts-label {
-  font-size: 0.76rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-  margin-bottom: 0.55rem;
+.form-label {
   display: block;
-}
-
-.saved-account-chip {
-  width: 100%;
-  text-align: left;
-  padding: 0.65rem 0.9rem;
-  margin-bottom: 0.45rem;
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1.5px solid rgba(186, 230, 253, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: all 150ms ease;
-}
-
-.saved-account-chip:hover {
-  background: rgba(224, 242, 254, 0.85);
-  border-color: var(--blue-bright);
-}
-
-/* ==========================================================================
-   2. TOP ATM NAVIGATION BAR
-   ========================================================================== */
-
-.atm-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 0.95rem 2rem;
-  background: rgba(255, 255, 255, 0.84);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
-}
-
-.atm-brand {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--blue-deep);
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.atm-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-}
-
-.atm-nav-btn {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 700;
   color: var(--text-secondary);
-  background: none;
-  border: none;
-  border-bottom: 2.5px solid transparent;
-  padding: 0.35rem 0;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 150ms ease, border-color 150ms ease;
+  margin-bottom: 0.45rem;
 }
 
-.atm-nav-btn:hover,
-.atm-nav-btn.active {
-  color: var(--blue-primary);
-  border-bottom-color: var(--blue-bright);
-}
-
-/* ==========================================================================
-   3. ATM SIMULATOR WORKSPACE
-   ========================================================================== */
-
-.atm-container {
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
-}
-
-.atm-grid {
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 1.75rem;
-  align-items: start;
-}
-
-@media (max-width: 960px) {
-  .atm-grid {
-    grid-template-columns: 1fr;
-  }
-  .atm-topbar {
-    padding: 0.85rem 1.15rem;
-    gap: 1rem;
-  }
-}
-
-.glass-panel {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 249, 255, 0.78) 100%);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid var(--glass-border);
-  box-shadow: var(--shadow-glass);
-  border-radius: 26px;
-  padding: 1.75rem;
-}
-
-/* Account Header & Profile (Reference Screenshot Typography) */
-.account-top-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
-}
-
-.account-top-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 800;
+.form-input {
+  width: 100%;
+  padding: 0.88rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--blue-deep);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid rgba(125, 211, 252, 0.95);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-.circle-icon-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1.5px solid rgba(125, 211, 252, 0.85);
+.form-input:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+.btn-primary-blue {
+  width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--blue-primary);
-  cursor: pointer;
-  transition: background 150ms ease, transform 150ms ease;
-}
-
-.circle-icon-btn:hover {
-  background: var(--blue-pale);
-  transform: scale(1.03);
-}
-
-.profile-heading-name {
+  gap: 0.5rem;
+  padding: 0.92rem 1.4rem;
   font-family: var(--font-display);
-  font-size: 2.2rem;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.96) 0%, rgba(2, 132, 199, 0.99) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 14px;
+  box-shadow: var(--shadow-blue);
+  cursor: pointer;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.btn-primary-blue:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.btn-secondary-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.05rem;
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #0369a1;
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(186, 230, 253, 0.72) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.btn-secondary-blue:hover {
+  background: linear-gradient(135deg, rgba(186, 230, 253, 0.95) 0%, rgba(125, 211, 252, 0.85) 100%);
+}
+
+/* ==========================================================================
+   2. ATM MAIN MENU & OPERATION SCREENS
+   ========================================================================== */
+
+.atm-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.35rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.holder-name {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--blue-deep);
-  line-height: 1.12;
+  line-height: 1.15;
 }
 
-.profile-subtext {
-  font-size: 0.92rem;
+.account-meta {
+  font-size: 0.88rem;
   font-weight: 700;
   color: #0369a1;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
 }
 
-/* 3-Column Rounded Action Tile Grid */
-.action-tile-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.85rem;
-  margin: 1.35rem 0 1.5rem;
-}
-
-.action-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1.1rem 0.65rem;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.65) 100%);
-  backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(186, 230, 253, 0.9);
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 150ms ease;
-  color: var(--blue-deep);
-}
-
-.action-tile:hover,
-.action-tile.active {
-  transform: translateY(-2px);
-  border-color: var(--blue-bright);
-  background: linear-gradient(160deg, rgba(240, 249, 255, 0.98) 0%, rgba(186, 230, 253, 0.85) 100%);
-  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.24), 0 8px 20px -6px rgba(2, 132, 199, 0.16);
-}
-
-.action-tile-label {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--blue-deep);
-  white-space: nowrap;
-}
-
-/* Wallet Balance Card */
-.section-heading {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: var(--blue-deep);
-  margin-bottom: 0.7rem;
-}
-
-.wallet-pill-card {
+/* Wallet Pill Banner */
+.wallet-banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: 1.15rem 1.35rem;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.85) 100%);
-  backdrop-filter: blur(16px);
   border: 1.5px solid rgba(125, 211, 252, 0.85);
-  border-radius: 22px;
-  box-shadow: 0 10px 26px -8px rgba(2, 132, 199, 0.14), inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-radius: 20px;
+  box-shadow: 0 8px 22px -8px rgba(2, 132, 199, 0.14);
   margin-bottom: 1.5rem;
 }
 
-.wallet-badge-box {
+.wallet-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.28rem 0.6rem;
   border-radius: 8px;
   border: 2px solid var(--blue-primary);
-  background: rgba(224, 242, 254, 0.8);
+  background: rgba(224, 242, 254, 0.85);
   color: var(--blue-primary);
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 800;
 }
 
-.wallet-amount {
+.wallet-balance {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: var(--blue-deep);
-  white-space: nowrap;
 }
 
-/* Clean Divided Rows */
-.clean-row-list {
-  list-style: none;
-  border-top: 1px solid rgba(14, 165, 233, 0.2);
-  border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+/* 2x2 ATM Main Menu Option Grid */
+.atm-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
-.clean-row-item {
+@media (max-width: 520px) {
+  .atm-menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.atm-option-tile {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0.9rem 0.15rem;
-  border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.55rem 1rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.68) 100%);
+  border: 1.5px solid rgba(186, 230, 253, 0.95);
+  border-radius: 22px;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+  color: var(--blue-deep);
 }
 
-.clean-row-item:last-child {
-  border-bottom: none;
+.atm-option-tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue-bright);
+  background: linear-gradient(160deg, rgba(240, 249, 255, 0.99) 0%, rgba(186, 230, 253, 0.85) 100%);
+  box-shadow: 0 10px 24px -8px rgba(2, 132, 199, 0.2);
 }
 
-.clean-row-left {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.clean-row-title {
+.atm-option-title {
   font-family: var(--font-display);
-  font-size: 0.92rem;
+  font-size: 1.08rem;
   font-weight: 800;
   color: var(--blue-deep);
 }
 
-.clean-row-meta {
-  font-size: 0.76rem;
-  color: var(--text-muted);
+.atm-option-sub {
+  font-size: 0.78rem;
   font-weight: 600;
+  color: var(--text-muted);
 }
 
-/* ATM Keypad & Form Controls */
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-.form-input,
-.form-select {
-  width: 100%;
-  padding: 0.82rem 1rem;
-  font-family: var(--font-body);
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--blue-deep);
-  background: rgba(255, 255, 255, 0.96);
-  border: 1.5px solid rgba(125, 211, 252, 0.9);
-  border-radius: 14px;
-  outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-
-.form-input:focus,
-.form-select:focus {
-  border-color: var(--blue-primary);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
-}
-
+/* Keypad & Cash Input */
 .atm-amount-display {
   font-family: var(--font-display);
   font-size: 1.65rem;
@@ -498,28 +321,28 @@ body {
   font-variant-numeric: tabular-nums;
   text-align: right;
   padding: 0.85rem 1.15rem;
-  background: linear-gradient(135deg, rgba(240, 249, 255, 0.95) 0%, rgba(224, 242, 254, 0.85) 100%);
+  background: linear-gradient(135deg, rgba(240, 249, 255, 0.96) 0%, rgba(224, 242, 254, 0.85) 100%);
   border: 2px solid rgba(56, 189, 248, 0.65);
   border-radius: 16px;
   color: var(--blue-deep);
 }
 
-.quick-cash-grid {
+.quick-cash-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
 }
 
-.atm-keypad-grid {
+.keypad-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.6rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.25rem;
 }
 
 .keypad-btn {
-  padding: 0.78rem;
+  padding: 0.8rem;
   border-radius: 14px;
   border: 1.5px solid rgba(186, 230, 253, 0.9);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.68) 100%);
@@ -528,82 +351,61 @@ body {
   font-weight: 800;
   color: var(--blue-deep);
   cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+  transition: transform 120ms ease, background 120ms ease;
 }
 
 .keypad-btn:hover {
   background: rgba(186, 230, 253, 0.85);
   border-color: var(--blue-bright);
-  transform: translateY(-1px);
 }
 
-.keypad-btn:active {
-  transform: scale(0.98);
+/* Clean Divided Rows */
+.clean-row-list {
+  list-style: none;
+  border-top: 1px solid rgba(14, 165, 233, 0.2);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+  margin-bottom: 1.25rem;
 }
 
-.glass-solid-blue {
-  display: inline-flex;
+.clean-row-item {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.4rem;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.92rem 0.2rem;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.14);
+}
+
+.clean-row-item:last-child {
+  border-bottom: none;
+}
+
+.clean-row-title {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 800;
-  color: #ffffff;
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.95) 0%, rgba(2, 132, 199, 0.98) 100%);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 14px;
-  box-shadow: var(--shadow-blue);
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: transform 150ms ease, opacity 150ms ease;
+  color: var(--blue-deep);
 }
 
-.glass-solid-blue:hover {
-  transform: translateY(-1px);
-  opacity: 0.96;
+.clean-row-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
-.glass-soft-blue-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.52rem 0.95rem;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #0369a1;
-  background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(186, 230, 253, 0.72) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.48);
-  border-radius: 11px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 150ms ease;
-}
-
-.glass-soft-blue-btn:hover {
-  background: linear-gradient(135deg, rgba(186, 230, 253, 0.95) 0%, rgba(125, 211, 252, 0.85) 100%);
-}
-
-/* Status Banner */
+/* Feedback Banner */
 .feedback-banner {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  border-radius: 18px;
-  margin-bottom: 1.4rem;
-  backdrop-filter: blur(14px);
+  gap: 0.8rem;
+  padding: 0.95rem 1.15rem;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
 }
 
 .feedback-banner.success,
 .feedback-banner.info {
-  background: rgba(240, 249, 255, 0.95);
+  background: rgba(240, 249, 255, 0.96);
   border: 1.5px solid rgba(14, 165, 233, 0.45);
   color: #075985;
 }
@@ -614,7 +416,7 @@ body {
   color: #991b1b;
 }
 
-/* Transaction Table */
+/* Data Table */
 .data-table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -628,7 +430,7 @@ body {
 
 .data-table th {
   text-align: left;
-  padding: 0.75rem 0.75rem;
+  padding: 0.75rem 0.65rem;
   font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 800;
@@ -637,7 +439,7 @@ body {
 }
 
 .data-table td {
-  padding: 0.85rem 0.75rem;
+  padding: 0.85rem 0.65rem;
   border-bottom: 1px solid rgba(14, 165, 233, 0.14);
   color: var(--blue-deep);
 }
