@@ -894,18 +894,10 @@ def on_login_keydown(ev):
         on_login(ev)
 
 
-def on_pin_input(ev):
-    pin_val = document["input-pin-code"].value.strip()
-    acc_val = document["input-account-number"].value.strip()
-    if len(pin_val) == 6 and len(acc_val) > 0:
-        on_login(ev)
-
-
 # Bindings
 document["btn-login"].bind("click", on_login)
 document["input-account-number"].bind("keydown", on_login_keydown)
 document["input-pin-code"].bind("keydown", on_login_keydown)
-document["input-pin-code"].bind("input", on_pin_input)
 document["btn-logout"].bind("click", trigger_thankyou_and_exit)
 
 # Clicking any of the 4 main options first opens the Select Account Type screen
