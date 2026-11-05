@@ -11,7 +11,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython_stdlib.js"></script>
@@ -44,8 +44,8 @@
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
           <div>
-            <div style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Login Declined</div>
-            <div id="login-error-msg" style="font-size: 0.82rem; font-weight: 600; margin-top: 0.1rem;"></div>
+            <div style="font-size: 0.92rem;">Login Declined</div>
+            <div id="login-error-msg" style="font-size: 0.82rem; margin-top: 0.1rem;"></div>
           </div>
         </div>
 
@@ -83,13 +83,13 @@
        SCREEN 2: ATM SIMULATOR (SHOWN AFTER LOGIN)
        ====================================================================== -->
   <div id="view-atm" class="screen-wrapper hidden">
-    <div class="glass-card atm-card-wide">
+    <div id="atm-modal-card" class="glass-card atm-card-wide">
 
       <!-- Top Account Header (Hidden during Thank You exit screen) -->
       <div id="atm-header-bar" class="atm-top-row">
         <div>
           <h1 id="atm-holder-name" class="holder-name">Hanz Dee</h1>
-          <p id="atm-account-meta" class="account-meta">Savings Account · Account #100248</p>
+          <p id="atm-account-meta" class="account-meta">Account #100248</p>
         </div>
         <button type="button" id="btn-logout" class="btn-secondary-blue">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -111,7 +111,7 @@
       </div>
 
       <!-- ==================================================================
-           SUB-SCREEN A: MAIN ATM OPTIONS MENU (NO BALANCE DISPLAYED HERE)
+           SUB-SCREEN A: MAIN ATM OPTIONS MENU
            ================================================================== -->
       <div id="screen-menu">
         <div class="atm-menu-prompt">Please select a transaction</div>
@@ -164,12 +164,45 @@
       </div>
 
       <!-- ==================================================================
+           SUB-SCREEN A2: SELECT ACCOUNT TYPE (SAVINGS OR CHECKING)
+           Shown before typing an amount or viewing Balance / Transactions
+           ================================================================== -->
+      <div id="screen-account-type" class="hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.15rem;">
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--blue-deep);">Select Account Type</h2>
+            <p class="clean-row-meta">Choose which account to use for this transaction</p>
+          </div>
+          <button type="button" id="btn-cancel-acct-type" class="btn-secondary-blue">Cancel</button>
+        </div>
+
+        <div class="atm-menu-grid">
+          <button type="button" id="btn-choose-savings" class="atm-option-tile">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span class="atm-option-title">Savings Account</span>
+            <span class="atm-option-sub">₱500 Maintaining · ₱0 Fee</span>
+          </button>
+
+          <button type="button" id="btn-choose-checking" class="atm-option-tile">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+            <span class="atm-option-title">Checking Account</span>
+            <span class="atm-option-sub">₱0 Maintaining · ₱15 Fee</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================================================================
            SUB-SCREEN B: DEPOSIT / WITHDRAW INPUT SCREEN
            ================================================================== -->
       <div id="screen-cash" class="hidden">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
           <div>
-            <h2 id="cash-screen-title" style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; color: var(--blue-deep);">
+            <h2 id="cash-screen-title" style="font-size: 1.35rem; color: var(--blue-deep);">
               Withdraw Cash
             </h2>
             <p id="cash-screen-sub" class="clean-row-meta">Enter an amount or select a denomination</p>
@@ -177,7 +210,7 @@
           <button type="button" id="btn-back-from-cash" class="btn-secondary-blue">Cancel</button>
         </div>
 
-        <!-- Validation Error Alert (Only shown if input is invalid) -->
+        <!-- Validation Error Alert -->
         <div id="cash-error" class="feedback-banner error hidden">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
             <circle cx="12" cy="12" r="10"></circle>
@@ -185,8 +218,8 @@
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
           <div>
-            <div style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Transaction Declined</div>
-            <div id="cash-error-msg" style="font-size: 0.82rem; font-weight: 600; margin-top: 0.1rem;"></div>
+            <div style="font-size: 0.92rem;">Transaction Declined</div>
+            <div id="cash-error-msg" style="font-size: 0.82rem; margin-top: 0.1rem;"></div>
           </div>
         </div>
 
@@ -224,7 +257,7 @@
       </div>
 
       <!-- ==================================================================
-           SUB-SCREEN C: TRANSACTION COMPLETED & ANOTHER TRANSACTION PROMPT
+           SUB-SCREEN C: TRANSACTION COMPLETED (ONLY FOR WITHDRAW & DEPOSIT)
            ================================================================== -->
       <div id="screen-completed" class="prompt-center-box hidden">
         <div class="status-icon-circle">
@@ -235,68 +268,105 @@
 
         <h2 class="completed-heading">Transaction Completed!</h2>
 
-        <!-- Optional Details Container (Shown ONLY when the transaction was Balance Inquiry or Transactions) -->
-        <div id="completed-inquiry-details" class="hidden" style="width: 100%; margin-top: 0.75rem;">
-          <ul class="clean-row-list">
-            <li class="clean-row-item">
-              <div>
-                <div class="clean-row-title">Account Number</div>
-                <div class="clean-row-meta">Active Card Account</div>
-              </div>
-              <span id="inq-acc-num" class="tabular-nums" style="font-weight: 800;">100248</span>
-            </li>
-            <li class="clean-row-item">
-              <div>
-                <div class="clean-row-title">Account Type</div>
-                <div class="clean-row-meta">Account classification</div>
-              </div>
-              <span id="inq-acc-type" style="font-weight: 800;">Savings Account</span>
-            </li>
-            <li class="clean-row-item">
-              <div>
-                <div class="clean-row-title">Current Balance</div>
-                <div class="clean-row-meta">Total funds in account</div>
-              </div>
-              <span id="inq-balance" class="tabular-nums" style="font-weight: 800; font-size: 1.2rem; color: var(--blue-primary);">₱ 15,000.00</span>
-            </li>
-            <li class="clean-row-item">
-              <div>
-                <div class="clean-row-title">Available for Withdrawal</div>
-                <div class="clean-row-meta">Maximum single withdrawal allowed</div>
-              </div>
-              <span id="inq-withdrawable" class="tabular-nums" style="font-weight: 800;">₱ 14,500.00</span>
-            </li>
-          </ul>
-        </div>
+        <p class="another-tx-question">Would you like to perform another transaction?</p>
 
-        <div id="completed-history-details" class="hidden" style="width: 100%; margin-top: 0.75rem;">
-          <div class="data-table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Reference</th>
-                  <th>Type</th>
-                  <th>Date &amp; Time</th>
-                  <th style="text-align: right;">Amount</th>
-                  <th style="text-align: right;">Fee</th>
-                  <th style="text-align: right;">Balance</th>
-                </tr>
-              </thead>
-              <tbody id="tx-history-tbody"></tbody>
-            </table>
-          </div>
+        <div class="yes-no-row">
+          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
+          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
+        </div>
+      </div>
+
+      <!-- ==================================================================
+           SUB-SCREEN D: BALANCE INQUIRY VIEW (NO "TRANSACTION COMPLETED!" TEXT)
+           ================================================================== -->
+      <div id="screen-inquire" class="hidden">
+        <h2 class="section-view-heading">Balance Inquiry</h2>
+
+        <ul class="clean-row-list">
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Account Number</div>
+              <div class="clean-row-meta">Active Card Account</div>
+            </div>
+            <span id="inq-acc-num" class="tabular-nums">100248</span>
+          </li>
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Account Type</div>
+              <div class="clean-row-meta">Selected account type</div>
+            </div>
+            <span id="inq-acc-type">Savings Account</span>
+          </li>
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Current Balance</div>
+              <div class="clean-row-meta">Total funds in account</div>
+            </div>
+            <span id="inq-balance" class="tabular-nums" style="font-size: 1.25rem; color: var(--blue-primary);">₱ 15,000.00</span>
+          </li>
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Available for Withdrawal</div>
+              <div class="clean-row-meta">Maximum single withdrawal allowed</div>
+            </div>
+            <span id="inq-withdrawable" class="tabular-nums">₱ 14,500.00</span>
+          </li>
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Maintaining Balance</div>
+              <div class="clean-row-meta">Minimum required balance</div>
+            </div>
+            <span id="inq-maint" class="tabular-nums">₱ 500.00</span>
+          </li>
+          <li class="clean-row-item">
+            <div>
+              <div class="clean-row-title">Withdrawal Fee</div>
+              <div class="clean-row-meta">Service charge per withdrawal</div>
+            </div>
+            <span id="inq-fee" class="tabular-nums">₱ 0.00</span>
+          </li>
+        </ul>
+
+        <p class="another-tx-question">Would you like to perform another transaction?</p>
+
+        <div class="yes-no-row">
+          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
+          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
+        </div>
+      </div>
+
+      <!-- ==================================================================
+           SUB-SCREEN E: TRANSACTIONS VIEW (EXPANDED MODAL, NO "TRANSACTION COMPLETED!")
+           ================================================================== -->
+      <div id="screen-history" class="hidden">
+        <h2 id="history-view-heading" class="section-view-heading">Transaction History</h2>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Type</th>
+                <th>Date &amp; Time</th>
+                <th style="text-align: right;">Amount</th>
+                <th style="text-align: right;">Fee</th>
+                <th style="text-align: right;">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="tx-history-tbody"></tbody>
+          </table>
         </div>
 
         <p class="another-tx-question">Would you like to perform another transaction?</p>
 
         <div class="yes-no-row">
-          <button type="button" id="btn-another-yes" class="btn-primary-blue">Yes</button>
-          <button type="button" id="btn-another-no" class="btn-secondary-blue" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
+          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
+          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
         </div>
       </div>
 
       <!-- ==================================================================
-           SUB-SCREEN D: THANK YOU / CARD EJECT SCREEN
+           SUB-SCREEN F: THANK YOU / CARD EJECT SCREEN
            ================================================================== -->
       <div id="screen-thankyou" class="prompt-center-box hidden" style="padding: 2.75rem 1rem;">
         <div class="status-icon-circle">
@@ -323,7 +393,7 @@ from browser import document, html, window, timer
 from datetime import datetime
 import json
 
-STORAGE_KEY = "expressbank_atm_json_v2"
+STORAGE_KEY = "expressbank_atm_json_v3"
 
 
 class ATMTransactionError(Exception):
@@ -538,8 +608,9 @@ class CheckingAccount(Account):
 class ATMService:
     def __init__(self):
         self.accounts = {}
+        self.logged_in_card = None
         self.current_account = None
-        self.cash_mode = "withdraw"
+        self.pending_action = None  # "withdraw" | "deposit" | "inquire" | "history"
         self.load_storage()
 
     def load_storage(self):
@@ -553,7 +624,7 @@ class ATMService:
                         self.accounts[k] = CheckingAccount(v["account_number"], v["holder_name"], v["pin"], v["balance"], txs)
                     else:
                         self.accounts[k] = SavingsAccount(v["account_number"], v["holder_name"], v["pin"], v["balance"], txs)
-                if self.accounts:
+                if "savings" in self.accounts and "checking" in self.accounts:
                     return
             except Exception:
                 pass
@@ -565,8 +636,8 @@ class ATMService:
         ca._record_transaction("Opening Balance", 25000.00, 0.0)
 
         self.accounts = {
-            "100248": sa,
-            "200519": ca,
+            "savings": sa,
+            "checking": ca,
         }
         self.save_storage()
 
@@ -581,11 +652,24 @@ class ATMService:
             raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
 
         normalized = acc_in.replace("SA-", "").replace("CA-", "")
-        target = self.accounts.get(normalized) or self.accounts.get(acc_in)
-        if not target or not target.verify_pin(pin_in):
+        valid_numbers = ("100248", "200519")
+        if normalized not in valid_numbers:
             raise ATMTransactionError("Invalid Account Number or PIN Code.")
-        self.current_account = target
-        return target
+
+        sa = self.accounts["savings"]
+        if not sa.verify_pin(pin_in):
+            raise ATMTransactionError("Invalid Account Number or PIN Code.")
+
+        self.logged_in_card = normalized
+        self.current_account = sa if normalized == "100248" else self.accounts["checking"]
+        return self.current_account
+
+    def select_account_type(self, kind):
+        if kind == "checking":
+            self.current_account = self.accounts["checking"]
+        else:
+            self.current_account = self.accounts["savings"]
+        return self.current_account
 
 
 service = ATMService()
@@ -599,10 +683,20 @@ def show_subscreen(screen_id):
     all_screens = [
         "screen-loading",
         "screen-menu",
+        "screen-account-type",
         "screen-cash",
         "screen-completed",
+        "screen-inquire",
+        "screen-history",
         "screen-thankyou",
     ]
+    # Expand modal width when viewing Transactions so table never wraps
+    modal = document["atm-modal-card"]
+    if screen_id == "screen-history":
+        modal.class_name = "glass-card atm-card-expanded"
+    else:
+        modal.class_name = "glass-card atm-card-wide"
+
     for sid in all_screens:
         if sid == screen_id:
             if sid == "screen-loading":
@@ -635,26 +729,22 @@ def refresh_atm_data():
     document["inq-acc-type"].text = acc.account_type
     document["inq-balance"].text = fmt_php(acc.balance)
     document["inq-withdrawable"].text = fmt_php(acc.get_max_withdrawable())
+    document["inq-maint"].text = fmt_php(acc.MAINTAINING_BALANCE)
+    document["inq-fee"].text = fmt_php(acc.WITHDRAWAL_FEE)
 
     # Transaction history rows
+    document["history-view-heading"].text = f"Transaction History ({acc.account_type})"
     tbody = document["tx-history-tbody"]
     tbody.clear()
     for tx in acc.transactions:
         row = html.TR()
-        row <= html.TD(tx.transaction_id, Class="tabular-nums", style={"fontFamily": "var(--font-mono)", "fontWeight": "700", "fontSize": "0.78rem"})
-        row <= html.TD(tx.tx_type, style={"fontFamily": "var(--font-display)", "fontWeight": "800"})
+        row <= html.TD(tx.transaction_id, Class="tabular-nums")
+        row <= html.TD(tx.tx_type)
         row <= html.TD(tx.timestamp, Class="clean-row-meta")
-        row <= html.TD(fmt_php(tx.amount), Class="tabular-nums", style={"textAlign": "right", "fontWeight": "800"})
+        row <= html.TD(fmt_php(tx.amount), Class="tabular-nums", style={"textAlign": "right"})
         row <= html.TD(fmt_php(tx.fee), Class="tabular-nums", style={"textAlign": "right"})
-        row <= html.TD(fmt_php(tx.balance_after), Class="tabular-nums", style={"textAlign": "right", "fontWeight": "800", "color": "var(--blue-primary)"})
+        row <= html.TD(fmt_php(tx.balance_after), Class="tabular-nums", style={"textAlign": "right", "color": "var(--blue-primary)"})
         tbody <= row
-
-
-def show_completed_screen(mode="cash"):
-    refresh_atm_data()
-    document["completed-inquiry-details"].class_name = "" if mode == "inquire" else "hidden"
-    document["completed-history-details"].class_name = "" if mode == "history" else "hidden"
-    show_subscreen("screen-completed")
 
 
 def on_login(_ev):
@@ -662,13 +752,12 @@ def on_login(_ev):
     acc_num = document["input-account-number"].value
     pin_code = document["input-pin-code"].value
 
-    # Show login loading spinner
     document["login-form-box"].class_name = "hidden"
     document["login-loading-box"].class_name = "loading-state-box"
 
     def finish_login():
         try:
-            service.login(acc_num, pin_code)
+            acc = service.login(acc_num, pin_code)
             document["input-account-number"].value = ""
             document["input-pin-code"].value = ""
             document["login-loading-box"].class_name = "loading-state-box hidden"
@@ -677,7 +766,8 @@ def on_login(_ev):
             document["view-login"].class_name = "screen-wrapper hidden"
             document["view-atm"].class_name = "screen-wrapper"
             document["atm-header-bar"].class_name = "atm-top-row"
-            refresh_atm_data()
+            document["atm-holder-name"].text = acc.holder_name
+            document["atm-account-meta"].text = f"Card Account #{service.logged_in_card}"
             show_subscreen("screen-menu")
         except ATMTransactionError as exc:
             document["login-loading-box"].class_name = "loading-state-box hidden"
@@ -710,25 +800,48 @@ def on_another_yes(_ev):
     )
 
 
-def open_cash_screen(mode):
-    service.cash_mode = mode
-    document["cash-error"].class_name = "feedback-banner error hidden"
-    document["input-tx-amount"].value = ""
-    if mode == "withdraw":
-        document["cash-screen-title"].text = "Withdraw Cash"
-        document["cash-screen-sub"].text = "Enter withdrawal amount or select a denomination"
-        document["btn-confirm-cash"].text = "Confirm Withdrawal"
-    else:
-        document["cash-screen-title"].text = "Deposit Cash"
-        document["cash-screen-sub"].text = "Enter deposit amount or select a denomination"
-        document["btn-confirm-cash"].text = "Confirm Deposit"
+def prompt_account_type(action_name):
+    service.pending_action = action_name
+    show_subscreen("screen-account-type")
 
-    run_with_loading(
-        "Preparing Terminal...",
-        "Please wait",
-        450,
-        lambda: show_subscreen("screen-cash")
-    )
+
+def on_choose_account_type(kind):
+    acc = service.select_account_type(kind)
+    refresh_atm_data()
+    action = service.pending_action
+
+    if action in ("withdraw", "deposit"):
+        document["cash-error"].class_name = "feedback-banner error hidden"
+        document["input-tx-amount"].value = ""
+        if action == "withdraw":
+            document["cash-screen-title"].text = f"Withdraw Cash ({acc.account_type})"
+            document["cash-screen-sub"].text = "Enter withdrawal amount or select a denomination"
+            document["btn-confirm-cash"].text = "Confirm Withdrawal"
+        else:
+            document["cash-screen-title"].text = f"Deposit Cash ({acc.account_type})"
+            document["cash-screen-sub"].text = "Enter deposit amount or select a denomination"
+            document["btn-confirm-cash"].text = "Confirm Deposit"
+
+        run_with_loading(
+            f"Accessing {acc.account_type}...",
+            "Preparing cash terminal",
+            550,
+            lambda: show_subscreen("screen-cash")
+        )
+    elif action == "inquire":
+        run_with_loading(
+            f"Retrieving {acc.account_type} Balance...",
+            "Please wait",
+            650,
+            lambda: show_subscreen("screen-inquire")
+        )
+    elif action == "history":
+        run_with_loading(
+            f"Loading {acc.account_type} Transactions...",
+            "Please wait",
+            650,
+            lambda: show_subscreen("screen-history")
+        )
 
 
 def on_confirm_cash(_ev):
@@ -740,13 +853,14 @@ def on_confirm_cash(_ev):
 
     def process_tx():
         try:
-            if service.cash_mode == "withdraw":
+            if service.pending_action == "withdraw":
                 acc.withdraw(raw_amt)
             else:
                 acc.deposit(raw_amt)
             service.save_storage()
             document["input-tx-amount"].value = ""
-            show_completed_screen("cash")
+            refresh_atm_data()
+            show_subscreen("screen-completed")
         except ATMTransactionError as exc:
             show_subscreen("screen-cash")
             document["cash-error"].class_name = "feedback-banner error"
@@ -760,38 +874,29 @@ def on_confirm_cash(_ev):
     )
 
 
-def on_select_inquire(_ev):
-    run_with_loading(
-        "Retrieving Account Balance...",
-        "Please wait",
-        700,
-        lambda: show_completed_screen("inquire")
-    )
-
-
-def on_select_history(_ev):
-    run_with_loading(
-        "Loading Transactions...",
-        "Please wait",
-        700,
-        lambda: show_completed_screen("history")
-    )
-
-
 # Bindings
 document["btn-login"].bind("click", on_login)
 document["btn-logout"].bind("click", trigger_thankyou_and_exit)
 
-document["opt-withdraw"].bind("click", lambda _e: open_cash_screen("withdraw"))
-document["opt-deposit"].bind("click", lambda _e: open_cash_screen("deposit"))
-document["opt-inquire"].bind("click", on_select_inquire)
-document["opt-history"].bind("click", on_select_history)
+# Clicking any of the 4 main options first opens the Select Account Type screen
+document["opt-withdraw"].bind("click", lambda _e: prompt_account_type("withdraw"))
+document["opt-deposit"].bind("click", lambda _e: prompt_account_type("deposit"))
+document["opt-inquire"].bind("click", lambda _e: prompt_account_type("inquire"))
+document["opt-history"].bind("click", lambda _e: prompt_account_type("history"))
+
+# Account Type Selection Buttons
+document["btn-choose-savings"].bind("click", lambda _e: on_choose_account_type("savings"))
+document["btn-choose-checking"].bind("click", lambda _e: on_choose_account_type("checking"))
+document["btn-cancel-acct-type"].bind("click", lambda _e: show_subscreen("screen-menu"))
 
 document["btn-back-from-cash"].bind("click", lambda _e: show_subscreen("screen-menu"))
 document["btn-confirm-cash"].bind("click", on_confirm_cash)
 
-document["btn-another-yes"].bind("click", on_another_yes)
-document["btn-another-no"].bind("click", trigger_thankyou_and_exit)
+for ybtn in document.select(".btn-another-yes"):
+    ybtn.bind("click", on_another_yes)
+
+for nbtn in document.select(".btn-another-no"):
+    nbtn.bind("click", trigger_thankyou_and_exit)
 
 for qbtn in document.select(".quick-amt"):
     def bind_q(b):
