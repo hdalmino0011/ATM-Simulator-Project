@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server.ts",
-    "start": "node server.ts",
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "start": "vite preview --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "clean": "rm -rf dist",
+    "lint": "python3 -m py_compile manage.py atm_app/oop_models.py atm_app/views.py atm_app/urls.py"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
