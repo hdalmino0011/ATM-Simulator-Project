@@ -3,368 +3,346 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CTU Express ATM Simulator — Python &amp; Django OOP Project</title>
-  <meta name="description" content="P ELEC 1 Object-Oriented Programming Final Project: Fictional ATM Simulator built with Python OOP classes, Django templates, HTML, and glassmorphic Light Blue &amp; White CSS." />
-  <meta property="og:title" content="CTU Express ATM Simulator — Python &amp; Django OOP Project" />
-  <meta property="og:description" content="P ELEC 1 Object-Oriented Programming Final Project: Fictional ATM Simulator built with Python OOP classes, Django templates, HTML, and glassmorphic Light Blue &amp; White CSS." />
+  <title>ExpressBank ATM Simulator</title>
+  <meta name="description" content="ExpressBank ATM Simulator with Account Sign In, Sign Up, Deposit, Withdrawal, Balance Inquiry, and Transaction History." />
+  <meta property="og:title" content="ExpressBank ATM Simulator" />
+  <meta property="og:description" content="ExpressBank ATM Simulator with Account Sign In, Sign Up, Deposit, Withdrawal, Balance Inquiry, and Transaction History." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
-  <!-- Brython runtime so real Python 3 OOP classes execute directly in the browser on GitHub Pages -->
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython_stdlib.js"></script>
 </head>
 <body onload="brython(1)">
 
-  <!-- Pure CSS Radio Inputs for Navigation Tabs (works even before Python initializes) -->
-  <input type="radio" name="main-nav-tab" id="nav-tab-terminal" class="css-state-radio" checked />
-  <input type="radio" name="main-nav-tab" id="nav-tab-poly" class="css-state-radio" />
-  <input type="radio" name="main-nav-tab" id="nav-tab-uml" class="css-state-radio" />
-  <input type="radio" name="main-nav-tab" id="nav-tab-source" class="css-state-radio" />
-
-  <!-- Pure CSS Radio Inputs for Action Tiles (Deposit / Withdraw / New Account) -->
-  <input type="radio" name="atm-action-mode" id="mode-deposit" class="css-state-radio" checked />
-  <input type="radio" name="atm-action-mode" id="mode-withdraw" class="css-state-radio" />
-  <input type="radio" name="atm-action-mode" id="mode-create" class="css-state-radio" />
-
-  <!-- Top Navigation Bar (Strict 3-Zone Contract) -->
-  <header class="atm-topbar">
-    <!-- Zone 1: Brand Title -->
-    <label for="nav-tab-terminal" class="atm-brand">CTU Express ATM</label>
-
-    <!-- Zone 2: 4 Single-Line Navigation Links -->
-    <nav class="atm-nav">
-      <label for="nav-tab-terminal" class="atm-nav-label">ATM Simulator</label>
-      <label for="nav-tab-poly" class="atm-nav-label">Polymorphism Lab</label>
-      <label for="nav-tab-uml" class="atm-nav-label">UML &amp; 6 Test Cases</label>
-      <label for="nav-tab-source" class="atm-nav-label">Python &amp; Django Files</label>
-    </nav>
-
-    <!-- Zone 3: 1 Primary Action -->
-    <a href="./CTU_PELEC1_ATM_Simulator_Django.zip" download="CTU_PELEC1_ATM_Simulator_Django.zip" class="glass-solid-blue">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      Download Django ZIP
-    </a>
-  </header>
-
-  <main class="atm-container">
-
-    <!-- Top Context Strip -->
-    <div class="context-strip">
-      <div>
-        <strong style="color: #0b2239;">Cebu Technological University · P ELEC 1 Final Project</strong>
-        <span> · Option C: ATM Simulator · Pure Python OOP, HTML &amp; CSS</span>
+  <!-- ======================================================================
+       STEP 1: LOGIN & SIGN UP PAGE (JSON IN LOCAL STORAGE)
+       ====================================================================== -->
+  <div id="view-auth" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-brand-header">
+        <div class="auth-logo-circle">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+        </div>
+        <h1 class="auth-title">ExpressBank ATM</h1>
+        <p class="auth-subtitle">Insert virtual card credentials or open an account</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <button type="button" id="btn-inquire-top" class="glass-soft-blue-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+
+      <!-- Auth Alert Banner -->
+      <div id="auth-feedback" class="feedback-banner error hidden">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
             <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
-          Balance Inquiry
-        </button>
-        <button type="button" id="btn-reset-top" class="glass-soft-blue-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="1 4 1 10 7 10"></polyline>
-            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-          </svg>
-          Reset Session
-        </button>
-      </div>
-    </div>
-
-    <!-- Live Python Feedback / Exception Banner -->
-    <div id="feedback-box" class="feedback-banner info">
-      <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        <div>
-          <div id="feedback-title" style="font-family: var(--font-display); font-weight: 800; font-size: 0.98rem;">
-            Python OOP ATM Session Ready (SavingsAccount Active)
-          </div>
-          <div id="feedback-message" style="font-size: 0.86rem; font-weight: 600; margin-top: 0.15rem;">
-            Loaded predefined account SA-100248 (Hanz Dee · Savings Account) with starting balance PHP 15,000.00. Select an operation below.
+          <div>
+            <div id="auth-feedback-title" style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Authentication Error</div>
+            <div id="auth-feedback-msg" style="font-size: 0.82rem; font-weight: 600; margin-top: 0.1rem;"></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ====================================================================
-         PANEL 1: ATM SIMULATOR TERMINAL (SCREENSHOT-INSPIRED UI)
-         ==================================================================== -->
-    <div id="panel-terminal" class="tab-panel">
+      <!-- Sign In / Sign Up Toggle Tabs -->
+      <div class="auth-tabs">
+        <button type="button" id="tab-btn-signin" class="auth-tab-btn active">Sign In</button>
+        <button type="button" id="tab-btn-signup" class="auth-tab-btn">Sign Up</button>
+      </div>
+
+      <!-- SIGN IN FORM -->
+      <div id="form-signin">
+        <div class="form-group">
+          <label class="form-label" for="signin-account">Account Number or Holder Name</label>
+          <input id="signin-account" type="text" class="form-input" placeholder="e.g. SA-100248 or Hanz Dee" value="SA-100248" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signin-pin">4-Digit ATM PIN</label>
+          <input id="signin-pin" type="password" maxlength="6" class="form-input" placeholder="Enter PIN (Default: 1234)" value="1234" />
+        </div>
+        <button type="button" id="btn-login" class="glass-solid-blue" style="width: 100%; margin-top: 0.4rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+          Access ATM Terminal
+        </button>
+
+        <!-- Saved Accounts in Local Storage JSON -->
+        <div class="saved-accounts-box">
+          <span class="saved-accounts-label">Accounts Stored in Local Storage (Click to Autofill):</span>
+          <div id="saved-accounts-list"></div>
+        </div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div id="form-signup" class="hidden">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Account Holder Full Name</label>
+          <input id="signup-name" type="text" class="form-input" placeholder="e.g. Hanz Dee" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-type">Account Type</label>
+          <select id="signup-type" class="form-select">
+            <option value="SavingsAccount">Savings Account (₱500 Maintaining Balance · ₱0 Fee)</option>
+            <option value="CheckingAccount">Checking Account (₱0 Maintaining Balance · ₱15 Withdrawal Fee)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-pin">Create 4-Digit ATM PIN</label>
+          <input id="signup-pin" type="password" maxlength="6" class="form-input" placeholder="e.g. 1234" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-balance">Initial Deposit / Starting Balance (PHP)</label>
+          <input id="signup-balance" type="text" class="form-input" placeholder="e.g. 5000.00" value="5000" />
+        </div>
+        <button type="button" id="btn-register" class="glass-solid-blue" style="width: 100%; margin-top: 0.4rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+          Create Account &amp; Enter ATM
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       STEP 2: MAIN ATM SIMULATOR VIEW (SHOWN AFTER LOGIN)
+       ====================================================================== -->
+  <div id="view-atm" class="hidden">
+
+    <!-- Top Bar (Strict 3-Zone Contract) -->
+    <header class="atm-topbar">
+      <span id="brand-home-btn" class="atm-brand">ExpressBank ATM</span>
+
+      <nav class="atm-nav">
+        <button type="button" id="nav-btn-deposit" class="atm-nav-btn active">Deposit Cash</button>
+        <button type="button" id="nav-btn-withdraw" class="atm-nav-btn">Withdraw Cash</button>
+        <button type="button" id="nav-btn-inquire" class="atm-nav-btn">Balance Inquiry</button>
+        <button type="button" id="nav-btn-history" class="atm-nav-btn">Transaction History</button>
+      </nav>
+
+      <button type="button" id="btn-logout" class="glass-soft-blue-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Sign Out
+      </button>
+    </header>
+
+    <main class="atm-container">
+
+      <!-- ATM Status / Validation Notification Banner -->
+      <div id="atm-feedback" class="feedback-banner info">
+        <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <div>
+            <div id="atm-feedback-title" style="font-family: var(--font-display); font-weight: 800; font-size: 0.98rem;">
+              Welcome to ExpressBank ATM
+            </div>
+            <div id="atm-feedback-msg" style="font-size: 0.86rem; font-weight: 600; margin-top: 0.15rem;">
+              Select Deposit, Withdraw, or Balance Inquiry below.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Column ATM Interface -->
       <div class="atm-grid">
 
-        <!-- LEFT COLUMN: Screenshot-inspired Account Profile, 3 Action Tiles, Wallet Pill Card & Rules -->
-        <section class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <!-- LEFT COLUMN: Account Profile, 3 Action Tiles, Wallet Balance Card & Account Rules -->
+        <section class="glass-panel">
+          <div class="account-top-header">
+            <span class="account-top-title">Account</span>
+            <button type="button" id="btn-circle-inquire" class="circle-icon-btn" title="Balance Inquiry">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+
           <div>
-            <!-- "Account" + Circle Settings/Inquire Button from Screenshot -->
-            <div class="account-top-header">
-              <span class="account-top-title">Account</span>
-              <button type="button" id="btn-inquire-circle" class="circle-icon-btn" title="Inquire Balance via Account.inquire_balance()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <h1 id="atm-holder-name" class="profile-heading-name">Hanz Dee</h1>
+            <p id="atm-account-meta" class="profile-subtext">Savings Account · SA-100248</p>
+          </div>
+
+          <!-- 3-Column Rounded Action Tile Grid -->
+          <div class="action-tile-grid">
+            <button type="button" id="tile-deposit" class="action-tile active">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12"></path>
+                <polyline points="8 11 12 15 16 11"></polyline>
+                <rect x="4" y="17" width="16" height="4" rx="1"></rect>
+              </svg>
+              <span class="action-tile-label">Deposit</span>
+            </button>
+
+            <button type="button" id="tile-withdraw" class="action-tile">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 15V3"></path>
+                <polyline points="8 7 12 3 16 7"></polyline>
+                <rect x="4" y="17" width="16" height="4" rx="1"></rect>
+              </svg>
+              <span class="action-tile-label">Withdraw</span>
+            </button>
+
+            <button type="button" id="tile-inquire" class="action-tile">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <line x1="7" y1="9" x2="17" y2="9"></line>
+                <line x1="7" y1="13" x2="17" y2="13"></line>
+                <line x1="7" y1="17" x2="13" y2="17"></line>
+              </svg>
+              <span class="action-tile-label">Inquire</span>
+            </button>
+          </div>
+
+          <!-- Wallet Balance Card -->
+          <h2 class="section-heading">Wallet</h2>
+          <div class="wallet-pill-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="wallet-badge-box">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
                 </svg>
-              </button>
-            </div>
-
-            <!-- Bold Holder Name & Profile Subtitle ("Hanz Dee" / "View profile" style) -->
-            <div>
-              <h1 id="ui-holder-name" class="profile-heading-name">Hanz Dee</h1>
-              <p id="ui-account-subtitle" class="profile-subtext">
-                Savings Account · SA-100248 · Python SavingsAccount
-              </p>
-            </div>
-
-            <!-- 3-Column Rounded Action Tile Grid ("Orders / Favourites / Addresses" layout) -->
-            <div class="action-tile-grid">
-              <label for="mode-deposit" class="action-tile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 3v12"></path>
-                  <polyline points="8 11 12 15 16 11"></polyline>
-                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-                </svg>
-                <span class="action-tile-label">Deposit</span>
-              </label>
-
-              <label for="mode-withdraw" class="action-tile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 15V3"></path>
-                  <polyline points="8 7 12 3 16 7"></polyline>
-                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-                </svg>
-                <span class="action-tile-label">Withdraw</span>
-              </label>
-
-              <label for="mode-create" class="action-tile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="8.5" cy="7" r="4"></circle>
-                  <line x1="20" y1="8" x2="20" y2="14"></line>
-                  <line x1="23" y1="11" x2="17" y2="11"></line>
-                </svg>
-                <span class="action-tile-label">New Account</span>
-              </label>
-            </div>
-
-            <!-- Wallet Section ("Wallet" + "pandapay ₱ 0.00" Pill Card from Screenshot) -->
-            <h2 class="section-heading">Wallet</h2>
-            <div class="wallet-pill-card">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <span class="wallet-badge-box">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                  </svg>
-                  ctupay
-                </span>
-                <div>
-                  <div id="ui-wallet-type" style="font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--blue-deep);">
-                    Savings Account
-                  </div>
-                  <div id="ui-max-withdrawable" class="clean-row-meta">
-                    Max withdrawable now: ₱ 14,500.00
-                  </div>
+                atmcard
+              </span>
+              <div>
+                <div id="atm-wallet-type" style="font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--blue-deep);">
+                  Savings Account
+                </div>
+                <div id="atm-max-withdrawable" class="clean-row-meta">
+                  Available to withdraw: ₱ 14,500.00
                 </div>
               </div>
-              <div id="ui-wallet-balance" class="wallet-amount">₱ 15,000.00</div>
             </div>
-
-            <!-- Polymorphic Account Rules ("Perks for you" Clean Divided Row Style) -->
-            <h2 id="ui-rules-heading" class="section-heading">Polymorphic Rules (SavingsAccount)</h2>
-            <ul class="clean-row-list">
-              <li class="clean-row-item">
-                <div class="clean-row-left">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                  <div>
-                    <div class="clean-row-title">Minimum Maintaining Balance</div>
-                    <div id="ui-rule-maint-sub" class="clean-row-meta">Protected inside SavingsAccount.withdraw()</div>
-                  </div>
-                </div>
-                <span id="ui-rule-maint" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem;">₱ 500.00</span>
-              </li>
-
-              <li class="clean-row-item">
-                <div class="clean-row-left">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                  </svg>
-                  <div>
-                    <div class="clean-row-title">Single Withdrawal Limit</div>
-                    <div class="clean-row-meta">Raises WithdrawalLimitError if exceeded</div>
-                  </div>
-                </div>
-                <span id="ui-rule-limit" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem;">₱ 20,000.00</span>
-              </li>
-
-              <li class="clean-row-item">
-                <div class="clean-row-left">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                  </svg>
-                  <div>
-                    <div class="clean-row-title">Withdrawal Processing Fee</div>
-                    <div id="ui-rule-fee-sub" class="clean-row-meta">Free withdrawal for SavingsAccount</div>
-                  </div>
-                </div>
-                <span id="ui-rule-fee" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem; color: var(--blue-primary);">₱ 0.00</span>
-              </li>
-            </ul>
+            <div id="atm-wallet-balance" class="wallet-amount">₱ 15,000.00</div>
           </div>
 
-          <!-- Predefined & Session Fictional Accounts Switcher -->
-          <div>
-            <h2 class="section-heading" style="font-size: 1.12rem;">Switch Fictional Account</h2>
-            <div id="ui-account-list" class="account-card-list">
-              <button type="button" data-acc="SA-100248" class="account-switch-btn active-account">
+          <!-- Account Limits & Rules -->
+          <h2 class="section-heading">Account Details</h2>
+          <ul class="clean-row-list">
+            <li class="clean-row-item">
+              <div class="clean-row-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
                 <div>
-                  <div style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Hanz Dee · Savings Account</div>
-                  <div style="font-size: 0.76rem; opacity: 0.85;">SA-100248 · Python SavingsAccount</div>
+                  <div class="clean-row-title">Maintaining Balance</div>
+                  <div class="clean-row-meta">Required minimum balance</div>
                 </div>
-                <span class="tabular-nums" style="font-weight: 800; font-size: 0.92rem;">₱ 15,000.00</span>
-              </button>
+              </div>
+              <span id="atm-rule-maint" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem;">₱ 500.00</span>
+            </li>
 
-              <button type="button" data-acc="CA-200519" class="account-switch-btn">
+            <li class="clean-row-item">
+              <div class="clean-row-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
                 <div>
-                  <div style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Hanz Dee · Checking Account</div>
-                  <div style="font-size: 0.76rem; opacity: 0.75;">CA-200519 · Python CheckingAccount (+₱15 Fee)</div>
+                  <div class="clean-row-title">Per-Withdrawal Limit</div>
+                  <div class="clean-row-meta">Maximum per single withdrawal</div>
                 </div>
-                <span class="tabular-nums" style="font-weight: 800; font-size: 0.92rem;">₱ 25,000.00</span>
-              </button>
+              </div>
+              <span id="atm-rule-limit" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem;">₱ 20,000.00</span>
+            </li>
 
-              <button type="button" data-acc="SA-100892" class="account-switch-btn">
+            <li class="clean-row-item">
+              <div class="clean-row-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
                 <div>
-                  <div style="font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;">Maria Clara Santos · Savings Account</div>
-                  <div style="font-size: 0.76rem; opacity: 0.75;">SA-100892 · Python SavingsAccount</div>
+                  <div class="clean-row-title">Withdrawal Fee</div>
+                  <div id="atm-rule-fee-note" class="clean-row-meta">No withdrawal fee for Savings</div>
                 </div>
-                <span class="tabular-nums" style="font-weight: 800; font-size: 0.92rem;">₱ 3,500.00</span>
-              </button>
-            </div>
-          </div>
+              </div>
+              <span id="atm-rule-fee" class="tabular-nums" style="font-weight: 800; font-size: 0.9rem; color: var(--blue-primary);">₱ 0.00</span>
+            </li>
+          </ul>
         </section>
 
-        <!-- RIGHT COLUMN: Transaction Forms & Session Transaction History -->
+        <!-- RIGHT COLUMN: ATM Cash Terminal (Keypad + Quick Cash) & Transaction History -->
         <section style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-          <!-- Operation Forms Card -->
-          <div class="glass-panel">
-            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; padding-bottom: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(56, 189, 248, 0.25);">
+          <!-- ATM Cash Operation Panel -->
+          <div id="panel-cash-op" class="glass-panel">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem;">
               <div>
-                <h2 class="section-heading" style="margin-bottom: 0.15rem;">ATM Transaction Operations</h2>
-                <p class="clean-row-meta">Validated &amp; executed by Python OOP classes (Account, SavingsAccount, CheckingAccount)</p>
+                <h2 id="op-heading" class="section-heading" style="margin-bottom: 0.1rem;">Deposit Cash</h2>
+                <p id="op-subheading" class="clean-row-meta">Enter an amount or use the ATM keypad below</p>
               </div>
-              <div style="display: flex; gap: 0.35rem; background: rgba(224, 242, 254, 0.85); padding: 0.3rem; border-radius: 12px; border: 1px solid rgba(125, 211, 252, 0.6);">
-                <label for="mode-deposit" class="seg-btn" style="padding: 0.4rem 0.8rem; border-radius: 9px; font-size: 0.78rem; font-weight: 800; cursor: pointer;">Deposit</label>
-                <label for="mode-withdraw" class="seg-btn" style="padding: 0.4rem 0.8rem; border-radius: 9px; font-size: 0.78rem; font-weight: 800; cursor: pointer;">Withdraw</label>
-                <label for="mode-create" class="seg-btn" style="padding: 0.4rem 0.8rem; border-radius: 9px; font-size: 0.78rem; font-weight: 800; cursor: pointer;">New Account</label>
-              </div>
+              <span id="op-badge" class="wallet-badge-box">DEPOSIT</span>
             </div>
 
-            <!-- 1. DEPOSIT FORM -->
-            <div id="form-panel-deposit" class="action-mode-panel">
-              <div class="form-grid-2">
-                <div>
-                  <label class="form-label" for="input-deposit-amount">Deposit Amount (PHP)</label>
-                  <input id="input-deposit-amount" type="text" placeholder="e.g. 2500.00" class="form-input" value="2500" />
-                </div>
-                <div>
-                  <label class="form-label" for="input-deposit-note">Transaction Note (Optional)</label>
-                  <input id="input-deposit-note" type="text" placeholder="e.g. Cash Deposit via Express ATM" class="form-input" value="Cash Deposit via Express ATM" />
-                </div>
-              </div>
-              <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; margin-bottom: 1.1rem;">
-                <span class="clean-row-meta" style="margin-right: 0.25rem;">Quick Fill / Test Cases:</span>
-                <button type="button" class="glass-soft-blue-btn quick-dep" data-val="500">+₱ 500</button>
-                <button type="button" class="glass-soft-blue-btn quick-dep" data-val="2500">+₱ 2,500</button>
-                <button type="button" class="glass-soft-blue-btn quick-dep" data-val="5000">+₱ 5,000</button>
-                <button type="button" class="glass-soft-blue-btn quick-dep" data-val="-500" style="color: #b91c1c; border-color: rgba(239,68,68,0.4); background: rgba(254,242,242,0.85);">Test Negative (-500)</button>
-                <button type="button" class="glass-soft-blue-btn quick-dep" data-val="abc" style="color: #b91c1c; border-color: rgba(239,68,68,0.4); background: rgba(254,242,242,0.85);">Test Non-Numeric (abc)</button>
-              </div>
-              <button type="button" id="btn-submit-deposit" class="glass-solid-blue" style="width: 100%; padding: 0.9rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 3v12"></path>
-                  <polyline points="8 11 12 15 16 11"></polyline>
-                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-                </svg>
-                Confirm Deposit via Account.deposit()
-              </button>
+            <div class="form-group">
+              <label class="form-label" for="atm-amount-input">Transaction Amount (PHP)</label>
+              <input id="atm-amount-input" type="text" class="form-input atm-amount-display" placeholder="0.00" value="" />
             </div>
 
-            <!-- 2. WITHDRAW FORM (POLYMORPHIC) -->
-            <div id="form-panel-withdraw" class="action-mode-panel">
-              <div class="form-grid-2">
-                <div>
-                  <label class="form-label" for="input-withdraw-amount">Withdrawal Amount (PHP)</label>
-                  <input id="input-withdraw-amount" type="text" placeholder="e.g. 1500.00" class="form-input" value="1500" />
-                </div>
-                <div>
-                  <label class="form-label" for="input-withdraw-note">Withdrawal Note (Optional)</label>
-                  <input id="input-withdraw-note" type="text" placeholder="e.g. ATM Cash Dispense" class="form-input" value="ATM Cash Dispense" />
-                </div>
-              </div>
-              <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; margin-bottom: 1.1rem;">
-                <span class="clean-row-meta" style="margin-right: 0.25rem;">Quick Fill / Test Rules:</span>
-                <button type="button" class="glass-soft-blue-btn quick-wd" data-val="1000">₱ 1,000</button>
-                <button type="button" class="glass-soft-blue-btn quick-wd" data-val="3000">₱ 3,000</button>
-                <button type="button" class="glass-soft-blue-btn quick-wd" data-val="14800" style="color: #b91c1c; border-color: rgba(239,68,68,0.4); background: rgba(254,242,242,0.85);">Test Maintaining Rule (14,800)</button>
-                <button type="button" class="glass-soft-blue-btn quick-wd" data-val="25000" style="color: #b91c1c; border-color: rgba(239,68,68,0.4); background: rgba(254,242,242,0.85);">Test Limit Error (25,000)</button>
-              </div>
-              <button type="button" id="btn-submit-withdraw" class="glass-solid-blue" style="width: 100%; padding: 0.9rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 15V3"></path>
-                  <polyline points="8 7 12 3 16 7"></polyline>
-                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-                </svg>
-                <span id="btn-withdraw-label">Process Withdrawal via SavingsAccount.withdraw()</span>
-              </button>
+            <div class="form-group">
+              <label class="form-label" for="atm-note-input">Transaction Note (Optional)</label>
+              <input id="atm-note-input" type="text" class="form-input" placeholder="e.g. Cash Deposit / ATM Withdrawal" />
             </div>
 
-            <!-- 3. CREATE NEW FICTIONAL ACCOUNT FORM -->
-            <div id="form-panel-create" class="action-mode-panel">
-              <div class="form-grid-3">
-                <div>
-                  <label class="form-label" for="input-create-name">Account Holder Name</label>
-                  <input id="input-create-name" type="text" placeholder="e.g. Juan Dela Cruz" class="form-input" />
-                </div>
-                <div>
-                  <label class="form-label" for="input-create-kind">Python Child Class</label>
-                  <select id="input-create-kind" class="form-select">
-                    <option value="savings">SavingsAccount (Min ₱500)</option>
-                    <option value="checking">CheckingAccount (+₱15 Fee)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="form-label" for="input-create-balance">Starting Balance (PHP)</label>
-                  <input id="input-create-balance" type="text" placeholder="e.g. 5000.00" class="form-input" value="5000" />
-                </div>
-              </div>
-              <button type="button" id="btn-submit-create" class="glass-solid-blue" style="width: 100%; padding: 0.9rem;">
-                Instantiate New Child Account Object
-              </button>
+            <!-- Quick Cash Denominations -->
+            <div class="quick-cash-grid">
+              <button type="button" class="glass-soft-blue-btn quick-amt-btn" data-amt="500">₱ 500</button>
+              <button type="button" class="glass-soft-blue-btn quick-amt-btn" data-amt="1000">₱ 1,000</button>
+              <button type="button" class="glass-soft-blue-btn quick-amt-btn" data-amt="2000">₱ 2,000</button>
+              <button type="button" class="glass-soft-blue-btn quick-amt-btn" data-amt="5000">₱ 5,000</button>
+              <button type="button" class="glass-soft-blue-btn quick-amt-btn" data-amt="10000">₱ 10,000</button>
             </div>
+
+            <!-- Interactive ATM Numeric Keypad -->
+            <div class="atm-keypad-grid">
+              <button type="button" class="keypad-btn num-key" data-key="1">1</button>
+              <button type="button" class="keypad-btn num-key" data-key="2">2</button>
+              <button type="button" class="keypad-btn num-key" data-key="3">3</button>
+              <button type="button" class="keypad-btn num-key" data-key="4">4</button>
+              <button type="button" class="keypad-btn num-key" data-key="5">5</button>
+              <button type="button" class="keypad-btn num-key" data-key="6">6</button>
+              <button type="button" class="keypad-btn num-key" data-key="7">7</button>
+              <button type="button" class="keypad-btn num-key" data-key="8">8</button>
+              <button type="button" class="keypad-btn num-key" data-key="9">9</button>
+              <button type="button" id="key-clear" class="keypad-btn" style="color: #b91c1c;">CLEAR</button>
+              <button type="button" class="keypad-btn num-key" data-key="0">0</button>
+              <button type="button" class="keypad-btn num-key" data-key="00">00</button>
+            </div>
+
+            <button type="button" id="btn-execute-tx" class="glass-solid-blue" style="width: 100%; padding: 0.95rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span id="btn-execute-label">Confirm Cash Deposit</span>
+            </button>
           </div>
 
-          <!-- Session Transaction History Table -->
-          <div class="glass-panel" style="flex: 1;">
+          <!-- Transaction History Panel -->
+          <div class="glass-panel">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem;">
               <div>
-                <h2 class="section-heading" style="margin-bottom: 0.1rem;">Session Transaction History</h2>
-                <p id="ui-tx-subtitle" class="clean-row-meta">Encapsulated Transaction objects recorded on SA-100248</p>
+                <h2 class="section-heading" style="margin-bottom: 0.1rem;">Transaction History</h2>
+                <p id="atm-tx-count" class="clean-row-meta">Recent activity for this account</p>
               </div>
             </div>
 
@@ -373,360 +351,42 @@
                 <thead>
                   <tr>
                     <th>Reference</th>
-                    <th>Operation &amp; Note</th>
-                    <th>Timestamp</th>
+                    <th>Type &amp; Note</th>
+                    <th>Date &amp; Time</th>
                     <th style="text-align: right;">Amount</th>
                     <th style="text-align: right;">Fee</th>
-                    <th style="text-align: right;">Balance After</th>
+                    <th style="text-align: right;">Balance</th>
                   </tr>
                 </thead>
-                <tbody id="ui-tx-tbody">
-                  <tr>
-                    <td class="tabular-nums" style="font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem;">TXN-248-1001</td>
-                    <td>
-                      <div style="font-family: var(--font-display); font-weight: 800;">Opening Balance</div>
-                      <div class="clean-row-meta">Initial predefined Savings Account deposit</div>
-                    </td>
-                    <td class="clean-row-meta">Nov 05, 2026 08:00:00 AM</td>
-                    <td class="tabular-nums" style="text-align: right; font-weight: 800;">₱ 15,000.00</td>
-                    <td class="tabular-nums" style="text-align: right;">₱ 0.00</td>
-                    <td class="tabular-nums" style="text-align: right; font-weight: 800; color: var(--blue-primary);">₱ 15,000.00</td>
-                  </tr>
-                </tbody>
+                <tbody id="atm-tx-tbody"></tbody>
               </table>
             </div>
           </div>
 
         </section>
       </div>
-    </div>
-
-    <!-- ====================================================================
-         PANEL 2: POLYMORPHISM LAB (SAVINGS vs CHECKING withdraw() COMPARISON)
-         ==================================================================== -->
-    <div id="panel-poly" class="tab-panel">
-      <div class="glass-panel">
-        <h1 class="section-heading" style="font-size: 1.65rem;">Interactive Polymorphism Lab: Overridden withdraw()</h1>
-        <p class="clean-row-meta" style="font-size: 0.9rem; margin-bottom: 1.4rem;">
-          Part III &amp; Part IX Requirement: Run the same overridden method <code>account.withdraw(amount)</code> on both child classes (<code>SavingsAccount</code> and <code>CheckingAccount</code>) and verify distinct results.
-        </p>
-
-        <div class="form-grid-3" style="align-items: end; margin-bottom: 1.25rem;">
-          <div>
-            <label class="form-label" for="poly-input-balance">Sample Starting Balance (PHP)</label>
-            <input id="poly-input-balance" type="text" class="form-input" value="10000" />
-          </div>
-          <div>
-            <label class="form-label" for="poly-input-amount">Test Withdrawal Amount (PHP)</label>
-            <input id="poly-input-amount" type="text" class="form-input" value="2000" />
-          </div>
-          <button type="button" id="btn-run-poly" class="glass-solid-blue" style="height: 45px;">
-            Run Polymorphic withdraw() Comparison
-          </button>
-        </div>
-
-        <div id="ui-poly-results" class="form-grid-2" style="margin-top: 1.25rem;">
-          <!-- SavingsAccount Result Card -->
-          <div class="wallet-pill-card" style="flex-direction: column; align-items: stretch; margin-bottom: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(14,165,233,0.2); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
-              <div>
-                <div style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;">SavingsAccount.withdraw(2,000.00)</div>
-                <div class="clean-row-meta">Child Class 1 · Min ₱500 Maintaining · ₱0 Fee</div>
-              </div>
-              <span class="wallet-badge-box">SUCCESS</span>
-            </div>
-            <div style="font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; justify-content: space-between;"><span>Starting Balance:</span><strong class="tabular-nums">₱ 10,000.00</strong></div>
-              <div style="display: flex; justify-content: space-between;"><span>Withdrawal Fee Charged:</span><strong class="tabular-nums">₱ 0.00</strong></div>
-              <div style="display: flex; justify-content: space-between;"><span>Total Deducted:</span><strong class="tabular-nums">₱ 2,000.00</strong></div>
-              <div style="display: flex; justify-content: space-between; padding-top: 0.4rem; border-top: 1px solid rgba(14,165,233,0.2); font-size: 1rem;">
-                <strong>Ending Balance:</strong><strong class="tabular-nums" style="color: var(--blue-primary);">₱ 8,000.00</strong>
-              </div>
-            </div>
-          </div>
-
-          <!-- CheckingAccount Result Card -->
-          <div class="wallet-pill-card" style="flex-direction: column; align-items: stretch; margin-bottom: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(14,165,233,0.2); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
-              <div>
-                <div style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;">CheckingAccount.withdraw(2,000.00)</div>
-                <div class="clean-row-meta">Child Class 2 · ₱0 Maintaining · +₱15.00 Flat Fee</div>
-              </div>
-              <span class="wallet-badge-box">SUCCESS</span>
-            </div>
-            <div style="font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; justify-content: space-between;"><span>Starting Balance:</span><strong class="tabular-nums">₱ 10,000.00</strong></div>
-              <div style="display: flex; justify-content: space-between;"><span>Withdrawal Fee Charged:</span><strong class="tabular-nums" style="color: var(--blue-primary);">₱ 15.00</strong></div>
-              <div style="display: flex; justify-content: space-between;"><span>Total Deducted:</span><strong class="tabular-nums">₱ 2,015.00</strong></div>
-              <div style="display: flex; justify-content: space-between; padding-top: 0.4rem; border-top: 1px solid rgba(14,165,233,0.2); font-size: 1rem;">
-                <strong>Ending Balance:</strong><strong class="tabular-nums" style="color: var(--blue-primary);">₱ 7,985.00</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ====================================================================
-         PANEL 3: UML CLASS DIAGRAM, OOP MAPPING & 6 DOCUMENTED TEST CASES
-         ==================================================================== -->
-    <div id="panel-uml" class="tab-panel">
-      <div class="glass-panel" style="margin-bottom: 1.5rem;">
-        <h2 class="section-heading" style="font-size: 1.5rem;">UML Class Diagram (Vector Graphic)</h2>
-        <p class="clean-row-meta" style="margin-bottom: 1rem;">
-          Shows the parent Account class, child SavingsAccount &amp; CheckingAccount classes, Transaction record, and ATMService controller.
-        </p>
-        <div style="background: rgba(255,255,255,0.92); border-radius: 18px; border: 1.5px solid rgba(125,211,252,0.8); padding: 1rem; overflow-x: auto;">
-          <svg viewBox="0 0 980 460" style="width: 100%; min-width: 740px; height: auto;">
-            <line x1="490" y1="190" x2="490" y2="230" stroke="#0284c7" stroke-width="2.5"></line>
-            <line x1="230" y1="230" x2="750" y2="230" stroke="#0284c7" stroke-width="2.5"></line>
-            <line x1="230" y1="230" x2="230" y2="260" stroke="#0284c7" stroke-width="2.5"></line>
-            <line x1="750" y1="230" x2="750" y2="260" stroke="#0284c7" stroke-width="2.5"></line>
-            <polygon points="490,178 482,192 498,192" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"></polygon>
-            <line x1="260" y1="95" x2="330" y2="95" stroke="#0284c7" stroke-width="2" stroke-dasharray="5,4"></line>
-            <line x1="650" y1="95" x2="720" y2="95" stroke="#0284c7" stroke-width="2" stroke-dasharray="5,4"></line>
-
-            <rect x="20" y="20" width="240" height="150" rx="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="2"></rect>
-            <rect x="20" y="20" width="240" height="32" rx="12" fill="#0284c7"></rect>
-            <text x="140" y="41" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="13.5" font-family="Outfit, sans-serif">ATMService (Controller)</text>
-            <text x="32" y="72" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _accounts: Dict[str, Account]</text>
-            <text x="32" y="90" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _active_account_number: str</text>
-            <text x="32" y="118" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ perform_deposit(amount)</text>
-            <text x="32" y="136" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ perform_withdrawal(amount)</text>
-            <text x="32" y="154" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ switch_account(acc_num)</text>
-
-            <rect x="330" y="15" width="320" height="162" rx="12" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"></rect>
-            <rect x="330" y="15" width="320" height="32" rx="12" fill="#0284c7"></rect>
-            <text x="490" y="36" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="14" font-family="Outfit, sans-serif">Account (Parent Class)</text>
-            <text x="344" y="65" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _account_number / _holder_name: str</text>
-            <text x="344" y="83" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _balance: float (@property)</text>
-            <text x="344" y="101" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _transactions: List[Transaction]</text>
-            <text x="344" y="128" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ deposit(raw_amount): Transaction</text>
-            <text x="344" y="146" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ withdraw(raw_amount): Transaction</text>
-            <text x="344" y="164" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ inquire_balance(): Dict</text>
-
-            <rect x="720" y="20" width="240" height="150" rx="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="2"></rect>
-            <rect x="720" y="20" width="240" height="32" rx="12" fill="#0284c7"></rect>
-            <text x="840" y="41" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="13.5" font-family="Outfit, sans-serif">Transaction (Encapsulated)</text>
-            <text x="732" y="72" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _transaction_id: str</text>
-            <text x="732" y="90" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _tx_type: str</text>
-            <text x="732" y="108" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _amount / _fee: float</text>
-            <text x="732" y="126" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">- _balance_after: float</text>
-            <text x="732" y="152" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ to_dict() / from_dict()</text>
-
-            <rect x="55" y="260" width="350" height="175" rx="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="2.2"></rect>
-            <rect x="55" y="260" width="350" height="32" rx="12" fill="#0ea5e9"></rect>
-            <text x="230" y="281" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="13.5" font-family="Outfit, sans-serif">SavingsAccount (Child Class)</text>
-            <text x="70" y="312" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ MAINTAINING_BALANCE = 500.00</text>
-            <text x="70" y="330" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ WITHDRAWAL_LIMIT = 20000.00</text>
-            <text x="70" y="348" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ WITHDRAWAL_FEE = 0.00</text>
-            <text x="70" y="380" fill="#0369a1" font-weight="700" font-size="11" font-family="JetBrains Mono, monospace">+ withdraw(raw_amount) [OVERRIDDEN]</text>
-            <text x="70" y="400" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ get_max_withdrawable() [OVERRIDDEN]</text>
-
-            <rect x="575" y="260" width="350" height="175" rx="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="2.2"></rect>
-            <rect x="575" y="260" width="350" height="32" rx="12" fill="#0ea5e9"></rect>
-            <text x="750" y="281" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="13.5" font-family="Outfit, sans-serif">CheckingAccount (Child Class)</text>
-            <text x="590" y="312" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ MAINTAINING_BALANCE = 0.00</text>
-            <text x="590" y="330" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ WITHDRAWAL_LIMIT = 50000.00</text>
-            <text x="590" y="348" fill="#0b2239" font-size="11" font-family="JetBrains Mono, monospace">+ WITHDRAWAL_FEE = 15.00</text>
-            <text x="590" y="380" fill="#0369a1" font-weight="700" font-size="11" font-family="JetBrains Mono, monospace">+ withdraw(raw_amount) [OVERRIDDEN]</text>
-            <text x="590" y="400" fill="#0369a1" font-size="11" font-family="JetBrains Mono, monospace">+ get_max_withdrawable() [OVERRIDDEN]</text>
-          </svg>
-        </div>
-      </div>
-
-      <!-- 6 Documented Test Cases Table -->
-      <div class="glass-panel">
-        <h2 class="section-heading" style="font-size: 1.5rem;">Part VI &amp; Part IX: Six (6) Documented Test Cases Report</h2>
-        <div class="data-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Case ID</th>
-                <th>Test Type</th>
-                <th>Scenario</th>
-                <th>User Input</th>
-                <th>Expected Output</th>
-                <th>Actual Output</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>TC-01</strong></td>
-                <td>Normal Operation</td>
-                <td>Deposit ₱2,500 then withdraw ₱1,500 on SavingsAccount (Start: ₱15,000)</td>
-                <td><code>deposit(2500), withdraw(1500)</code></td>
-                <td>Balance updates to ₱17,500 then ₱16,000; 2 transactions logged.</td>
-                <td>Final Balance: ₱16,000.00; 2 transactions recorded.</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-              <tr>
-                <td><strong>TC-02</strong></td>
-                <td>Boundary Input</td>
-                <td>Withdraw exact max allowed (₱3,000) from ₱3,500 SavingsAccount leaving exact ₱500 maintaining balance</td>
-                <td><code>withdraw(3000)</code></td>
-                <td>Withdrawal succeeds; remaining balance is exactly ₱500.00.</td>
-                <td>Withdrawal succeeded; Remaining Balance: ₱500.00.</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-              <tr>
-                <td><strong>TC-03</strong></td>
-                <td>Invalid Input</td>
-                <td>Attempt to deposit a negative amount (-500) into SavingsAccount</td>
-                <td><code>deposit(-500)</code></td>
-                <td>Raises InvalidAmountError; balance remains unchanged at ₱15,000.00.</td>
-                <td>Deposit rejected: Amount must be &gt; PHP 0.00 (Balance: ₱15,000.00).</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-              <tr>
-                <td><strong>TC-04</strong></td>
-                <td>Business Rule</td>
-                <td>Attempt to withdraw ₱3,200 from ₱3,500 SavingsAccount (violates ₱500 maintaining balance)</td>
-                <td><code>withdraw(3200)</code></td>
-                <td>Raises MaintainingBalanceError; balance remains unchanged at ₱3,500.00.</td>
-                <td>Savings Withdrawal rejected: Cannot drop below PHP 500.00 maintaining balance.</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-              <tr>
-                <td><strong>TC-05</strong></td>
-                <td>Polymorphism</td>
-                <td>Execute overridden withdraw(2000) on both SavingsAccount and CheckingAccount starting at ₱10,000</td>
-                <td><code>account.withdraw(2000)</code></td>
-                <td>SavingsAccount ends at ₱8,000 (₱0 fee); CheckingAccount ends at ₱7,985 (₱15 fee).</td>
-                <td>Savings: ₱8,000.00 | Checking: ₱7,985.00.</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-              <tr>
-                <td><strong>TC-06</strong></td>
-                <td>Exception Handling</td>
-                <td>Trigger custom WithdrawalLimitError by requesting ₱55,000 on CheckingAccount (Limit: ₱50,000)</td>
-                <td><code>withdraw(55000)</code></td>
-                <td>Catches custom WithdrawalLimitError with descriptive message; balance unchanged.</td>
-                <td>Checking Withdrawal rejected: Exceeds limit of PHP 50,000.00.</td>
-                <td><strong style="color: #15803d;">PASS</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ====================================================================
-         PANEL 4: PYTHON & DJANGO SOURCE FILES VIEWER
-         ==================================================================== -->
-    <div id="panel-source" class="tab-panel">
-      <div class="glass-panel">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem;">
-          <div>
-            <h2 class="section-heading" style="font-size: 1.5rem; margin-bottom: 0.15rem;">Complete Python &amp; Django OOP Source Code</h2>
-            <p class="clean-row-meta">Pure Python (<code>oop_models.py</code>, <code>views.py</code>, <code>urls.py</code>), HTML (<code>templates/atm/index.html</code>), and CSS (<code>static/atm/style.css</code>)</p>
-          </div>
-          <a href="./CTU_PELEC1_ATM_Simulator_Django.zip" download="CTU_PELEC1_ATM_Simulator_Django.zip" class="glass-solid-blue">
-            Download Complete Django Project ZIP
-          </a>
-        </div>
-
-        <div class="code-viewer-box">
-          <div class="code-viewer-header">
-            <span>atm_app/oop_models.py — Core Python OOP Classes (Account, SavingsAccount, CheckingAccount, Transaction, ATMService)</span>
-            <span>Python 3.10+</span>
-          </div>
-          <pre class="code-pre"><code>class ATMTransactionError(Exception):
-    """Base custom exception for all invalid ATM inputs and business rule violations."""
-    def __init__(self, message: str, error_code: str = "TRANSACTION_ERROR"):
-        super().__init__(message)
-        self.message = message
-        self.error_code = error_code
-
-class InvalidAmountError(ATMTransactionError):
-    pass
-
-class InsufficientFundsError(ATMTransactionError):
-    pass
-
-class WithdrawalLimitError(ATMTransactionError):
-    pass
-
-class MaintainingBalanceError(ATMTransactionError):
-    pass
-
-class Account:
-    """Parent class encapsulating _account_number, _holder_name, _balance, and _transactions."""
-    def __init__(self, account_number: str, holder_name: str, starting_balance: float, account_type: str = "Standard Account"):
-        self._account_number = account_number
-        self._holder_name = holder_name
-        self._balance = round(float(starting_balance), 2)
-        self._account_type = account_type
-        self._transactions = []
-
-    @property
-    def balance(self) -> float:
-        return self._balance
-
-    def deposit(self, raw_amount, note="Cash Deposit via Express ATM"):
-        amount = self.parse_positive_amount(raw_amount, "Deposit")
-        self._balance = round(self._balance + amount, 2)
-        return self._record_transaction("Deposit", amount, 0.0, note)
-
-    def withdraw(self, raw_amount, note="Cash Withdrawal"):
-        """Overridden by SavingsAccount and CheckingAccount (Polymorphism)."""
-        raise NotImplementedError("Subclasses must override withdraw()")
-
-class SavingsAccount(Account):
-    """Child Class 1: Requires PHP 500.00 maintaining balance, max PHP 20,000.00 per withdrawal, PHP 0.00 fee."""
-    MAINTAINING_BALANCE = 500.00
-    WITHDRAWAL_LIMIT = 20000.00
-    WITHDRAWAL_FEE = 0.00
-
-    def withdraw(self, raw_amount, note="Savings ATM Withdrawal"):
-        amount = self.parse_positive_amount(raw_amount, "Savings Withdrawal")
-        if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError("Savings withdrawal cannot exceed PHP 20,000.00 per transaction.")
-        if amount > self._balance:
-            raise InsufficientFundsError("Insufficient funds in Savings Account.")
-        if (self._balance - amount) < self.MAINTAINING_BALANCE:
-            raise MaintainingBalanceError("Cannot drop below PHP 500.00 maintaining balance.")
-        self._balance = round(self._balance - amount, 2)
-        return self._record_transaction("Withdrawal", amount, 0.0, note)
-
-class CheckingAccount(Account):
-    """Child Class 2: PHP 0.00 maintaining balance, max PHP 50,000.00 per withdrawal, flat PHP 15.00 fee."""
-    MAINTAINING_BALANCE = 0.00
-    WITHDRAWAL_LIMIT = 50000.00
-    WITHDRAWAL_FEE = 15.00
-
-    def withdraw(self, raw_amount, note="Checking ATM Withdrawal"):
-        amount = self.parse_positive_amount(raw_amount, "Checking Withdrawal")
-        if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError("Checking withdrawal cannot exceed PHP 50,000.00 per transaction.")
-        total_deduction = round(amount + self.WITHDRAWAL_FEE, 2)
-        if total_deduction > self._balance:
-            raise InsufficientFundsError("Insufficient funds to cover withdrawal plus PHP 15.00 checking fee.")
-        self._balance = round(self._balance - total_deduction, 2)
-        return self._record_transaction("Withdrawal", amount, self.WITHDRAWAL_FEE, note)</code></pre>
-        </div>
-      </div>
-    </div>
-
-  </main>
+    </main>
+  </div>
 
   <!-- ======================================================================
-       REAL PYTHON 3 OOP EXECUTION IN THE BROWSER (BRYTHON)
-       Runs the exact Python OOP classes (Account, SavingsAccount, CheckingAccount,
-       Transaction, ATMService, ATMTransactionError) directly in index.html!
+       PYTHON OOP LOGIC + JSON LOCAL STORAGE PERSISTENCE
        ====================================================================== -->
   <script type="text/python">
-from browser import document, html
+from browser import document, html, window
 from datetime import datetime
+import json
+
+STORAGE_KEY = "expressbank_atm_accounts_v1"
 
 
-# 1. Custom Exception Hierarchy
+# ============================================================================
+# 1. CUSTOM EXCEPTION CLASSES
+# ============================================================================
+
 class ATMTransactionError(Exception):
-    def __init__(self, message, error_code="TRANSACTION_ERROR"):
+    def __init__(self, message):
         super().__init__(message)
         self.message = message
-        self.error_code = error_code
 
 
 class InvalidAmountError(ATMTransactionError):
@@ -745,7 +405,10 @@ class MaintainingBalanceError(ATMTransactionError):
     pass
 
 
-# 2. Encapsulated Transaction Class
+# ============================================================================
+# 2. TRANSACTION CLASS (Encapsulation)
+# ============================================================================
+
 class Transaction:
     def __init__(self, transaction_id, tx_type, amount, fee, balance_after, note="", timestamp=None):
         self._transaction_id = str(transaction_id)
@@ -754,7 +417,7 @@ class Transaction:
         self._fee = round(float(fee), 2)
         self._balance_after = round(float(balance_after), 2)
         self._note = str(note)
-        self._timestamp = timestamp or datetime.now().strftime("%b %d, %Y %I:%M:%S %p")
+        self._timestamp = timestamp or datetime.now().strftime("%b %d, %Y %I:%M %p")
 
     @property
     def transaction_id(self):
@@ -784,17 +447,46 @@ class Transaction:
     def timestamp(self):
         return self._timestamp
 
+    def to_dict(self):
+        return {
+            "transaction_id": self._transaction_id,
+            "tx_type": self._tx_type,
+            "amount": self._amount,
+            "fee": self._fee,
+            "balance_after": self._balance_after,
+            "note": self._note,
+            "timestamp": self._timestamp,
+        }
 
-# 3. Parent Account Class (Encapsulation & Inheritance Base)
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            transaction_id=data["transaction_id"],
+            tx_type=data["tx_type"],
+            amount=data["amount"],
+            fee=data.get("fee", 0.0),
+            balance_after=data["balance_after"],
+            note=data.get("note", ""),
+            timestamp=data.get("timestamp"),
+        )
+
+
+# ============================================================================
+# 3. PARENT CLASS: Account (Encapsulation & Shared Methods)
+# ============================================================================
+
 class Account:
-    def __init__(self, account_number, holder_name, starting_balance, account_type="Standard Account"):
+    def __init__(self, account_number, holder_name, pin, starting_balance, account_type="Standard Account", transactions=None):
         if not str(holder_name).strip():
-            raise InvalidAmountError("Account holder name cannot be empty.")
+            raise InvalidAmountError("Account holder name is required.")
+        if not str(pin).strip() or len(str(pin).strip()) < 4:
+            raise InvalidAmountError("PIN must be at least 4 digits.")
         self._account_number = str(account_number).strip()
         self._holder_name = str(holder_name).strip()
+        self._pin = str(pin).strip()
         self._balance = round(float(starting_balance), 2)
         self._account_type = account_type
-        self._transactions = []
+        self._transactions = list(transactions) if transactions else []
 
     @property
     def account_number(self):
@@ -816,21 +508,20 @@ class Account:
     def transactions(self):
         return list(self._transactions)
 
+    def verify_pin(self, input_pin):
+        return self._pin == str(input_pin).strip()
+
     @staticmethod
     def parse_positive_amount(raw_value, operation_name="Transaction"):
         if raw_value is None or str(raw_value).strip() == "":
-            raise InvalidAmountError(f"{operation_name} rejected: Please enter an amount.")
+            raise InvalidAmountError(f"{operation_name} failed: Please enter an amount.")
         try:
             clean_str = str(raw_value).replace(",", "").strip()
             amount = float(clean_str)
         except Exception:
-            raise InvalidAmountError(
-                f"{operation_name} rejected: '{raw_value}' is not a valid numeric amount."
-            )
+            raise InvalidAmountError(f"{operation_name} rejected: '{raw_value}' is not a valid numeric amount.")
         if amount <= 0:
-            raise InvalidAmountError(
-                f"{operation_name} rejected: Amount must be greater than PHP 0.00 (received PHP {amount:,.2f})."
-            )
+            raise InvalidAmountError(f"{operation_name} rejected: Amount must be greater than PHP 0.00.")
         return round(amount, 2)
 
     def _record_transaction(self, tx_type, amount, fee=0.0, note=""):
@@ -840,65 +531,74 @@ class Account:
         self._transactions.insert(0, tx)
         return tx
 
-    def deposit(self, raw_amount, note="Cash Deposit via Express ATM"):
+    def deposit(self, raw_amount, note="ATM Cash Deposit"):
         amount = self.parse_positive_amount(raw_amount, "Deposit")
         self._balance = round(self._balance + amount, 2)
-        return self._record_transaction("Deposit", amount, 0.0, note or "Cash Deposit via Express ATM")
+        return self._record_transaction("Deposit", amount, 0.0, note or "ATM Cash Deposit")
 
-    def withdraw(self, raw_amount, note="ATM Withdrawal"):
+    def withdraw(self, raw_amount, note="ATM Cash Withdrawal"):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self._balance:
             raise InsufficientFundsError("Insufficient funds.")
         self._balance = round(self._balance - amount, 2)
-        return self._record_transaction("Withdrawal", amount, 0.0, note)
+        return self._record_transaction("Withdrawal", amount, 0.0, note or "ATM Cash Withdrawal")
 
     def get_max_withdrawable(self):
         return self._balance
 
+    def to_dict(self):
+        return {
+            "class_name": self.__class__.__name__,
+            "account_number": self._account_number,
+            "holder_name": self._holder_name,
+            "pin": self._pin,
+            "balance": self._balance,
+            "account_type": self._account_type,
+            "transactions": [t.to_dict() for t in self._transactions],
+        }
 
-# 4. Child Class 1: SavingsAccount
+
+# ============================================================================
+# 4. CHILD CLASSES: SavingsAccount & CheckingAccount (Inheritance & Polymorphism)
+# ============================================================================
+
 class SavingsAccount(Account):
     MAINTAINING_BALANCE = 500.00
     WITHDRAWAL_LIMIT = 20000.00
     WITHDRAWAL_FEE = 0.00
 
-    def __init__(self, account_number, holder_name, starting_balance):
-        super().__init__(account_number, holder_name, starting_balance, "Savings Account")
+    def __init__(self, account_number, holder_name, pin, starting_balance, transactions=None):
+        super().__init__(account_number, holder_name, pin, starting_balance, "Savings Account", transactions)
         if self._balance < self.MAINTAINING_BALANCE:
-            raise MaintainingBalanceError("New Savings Account requires at least PHP 500.00 starting balance.")
+            raise MaintainingBalanceError("Savings Account requires at least PHP 500.00 starting balance.")
 
     def get_max_withdrawable(self):
         avail = max(0.0, round(self._balance - self.MAINTAINING_BALANCE, 2))
         return min(avail, self.WITHDRAWAL_LIMIT)
 
     def withdraw(self, raw_amount, note="Savings ATM Withdrawal"):
-        amount = self.parse_positive_amount(raw_amount, "Savings Withdrawal")
+        amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError(
-                f"Savings Withdrawal rejected: PHP {amount:,.2f} exceeds the PHP {self.WITHDRAWAL_LIMIT:,.2f} single withdrawal limit."
-            )
+            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds Savings limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
         if amount > self._balance:
-            raise InsufficientFundsError(
-                f"Savings Withdrawal rejected: Requested PHP {amount:,.2f}, but current balance is PHP {self._balance:,.2f}."
-            )
+            raise InsufficientFundsError(f"Withdrawal rejected: Insufficient balance (Current: PHP {self._balance:,.2f}).")
         projected = round(self._balance - amount, 2)
         if projected < self.MAINTAINING_BALANCE:
             max_now = max(0.0, round(self._balance - self.MAINTAINING_BALANCE, 2))
             raise MaintainingBalanceError(
-                f"Savings Withdrawal rejected: Cannot drop below the PHP {self.MAINTAINING_BALANCE:,.2f} maintaining balance. Max withdrawable right now is PHP {max_now:,.2f}."
+                f"Withdrawal rejected: Cannot drop below PHP {self.MAINTAINING_BALANCE:,.2f} maintaining balance. Max withdrawable: PHP {max_now:,.2f}."
             )
         self._balance = projected
-        return self._record_transaction("Withdrawal", amount, 0.0, note or "Savings Withdrawal (No Fee)")
+        return self._record_transaction("Withdrawal", amount, 0.0, note or "Savings ATM Withdrawal")
 
 
-# 5. Child Class 2: CheckingAccount
 class CheckingAccount(Account):
     MAINTAINING_BALANCE = 0.00
     WITHDRAWAL_LIMIT = 50000.00
     WITHDRAWAL_FEE = 15.00
 
-    def __init__(self, account_number, holder_name, starting_balance):
-        super().__init__(account_number, holder_name, starting_balance, "Checking Account")
+    def __init__(self, account_number, holder_name, pin, starting_balance, transactions=None):
+        super().__init__(account_number, holder_name, pin, starting_balance, "Checking Account", transactions)
 
     def get_max_withdrawable(self):
         if self._balance <= self.WITHDRAWAL_FEE:
@@ -906,47 +606,130 @@ class CheckingAccount(Account):
         return min(round(self._balance - self.WITHDRAWAL_FEE, 2), self.WITHDRAWAL_LIMIT)
 
     def withdraw(self, raw_amount, note="Checking ATM Withdrawal"):
-        amount = self.parse_positive_amount(raw_amount, "Checking Withdrawal")
+        amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError(
-                f"Checking Withdrawal rejected: PHP {amount:,.2f} exceeds the PHP {self.WITHDRAWAL_LIMIT:,.2f} limit."
-            )
+            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds Checking limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
         total_deduction = round(amount + self.WITHDRAWAL_FEE, 2)
         if total_deduction > self._balance:
             raise InsufficientFundsError(
-                f"Checking Withdrawal rejected: Insufficient funds for PHP {amount:,.2f} + PHP {self.WITHDRAWAL_FEE:,.2f} fee (Total: PHP {total_deduction:,.2f}; Balance: PHP {self._balance:,.2f})."
+                f"Withdrawal rejected: Insufficient funds for PHP {amount:,.2f} + PHP {self.WITHDRAWAL_FEE:,.2f} fee (Total: PHP {total_deduction:,.2f})."
             )
         self._balance = round(self._balance - total_deduction, 2)
-        return self._record_transaction(
-            "Withdrawal", amount, self.WITHDRAWAL_FEE, note or "Checking Withdrawal (+PHP 15.00 Fee)"
-        )
+        return self._record_transaction("Withdrawal", amount, self.WITHDRAWAL_FEE, note or "Checking Withdrawal (+PHP 15.00 Fee)")
 
 
-# 6. ATMService Controller
+# ============================================================================
+# 5. ATM SERVICE (JSON Local Storage Persistence + Auth + Operations)
+# ============================================================================
+
 class ATMService:
     def __init__(self):
-        self.reset()
+        self.accounts = {}
+        self.current_account = None
+        self.op_mode = "deposit"
+        self.load_from_local_storage()
 
-    def reset(self):
-        sa1 = SavingsAccount("SA-100248", "Hanz Dee", 15000.00)
-        sa1._record_transaction("Opening Balance", 15000.00, 0.0, "Initial predefined Savings Account deposit")
+    def load_from_local_storage(self):
+        raw_json = window.localStorage.getItem(STORAGE_KEY)
+        if raw_json:
+            try:
+                data = json.loads(raw_json)
+                for acc_num, acc_dict in data.items():
+                    tx_objs = [Transaction.from_dict(t) for t in acc_dict.get("transactions", [])]
+                    if acc_dict.get("class_name") == "CheckingAccount":
+                        self.accounts[acc_num] = CheckingAccount(
+                            acc_dict["account_number"],
+                            acc_dict["holder_name"],
+                            acc_dict.get("pin", "1234"),
+                            acc_dict["balance"],
+                            tx_objs,
+                        )
+                    else:
+                        sa = SavingsAccount.__new__(SavingsAccount)
+                        Account.__init__(
+                            sa,
+                            acc_dict["account_number"],
+                            acc_dict["holder_name"],
+                            acc_dict.get("pin", "1234"),
+                            acc_dict["balance"],
+                            "Savings Account",
+                            tx_objs,
+                        )
+                        self.accounts[acc_num] = sa
+                if self.accounts:
+                    return
+            except Exception:
+                pass
 
-        ca1 = CheckingAccount("CA-200519", "Hanz Dee", 25000.00)
-        ca1._record_transaction("Opening Balance", 25000.00, 0.0, "Initial predefined Checking Account deposit")
+        # Seed default accounts if local storage is empty
+        sa_default = SavingsAccount("SA-100248", "Hanz Dee", "1234", 15000.00)
+        sa_default._record_transaction("Opening Deposit", 15000.00, 0.0, "Initial account balance")
 
-        sa2 = SavingsAccount("SA-100892", "Maria Clara Santos", 3500.00)
-        sa2._record_transaction("Opening Balance", 3500.00, 0.0, "Initial predefined Student Savings deposit")
+        ca_default = CheckingAccount("CA-200519", "Hanz Dee", "1234", 25000.00)
+        ca_default._record_transaction("Opening Deposit", 25000.00, 0.0, "Initial checking balance")
 
         self.accounts = {
-            sa1.account_number: sa1,
-            ca1.account_number: ca1,
-            sa2.account_number: sa2,
+            sa_default.account_number: sa_default,
+            ca_default.account_number: ca_default,
         }
-        self.active_number = "SA-100248"
+        self.save_to_local_storage()
 
-    @property
-    def active_account(self):
-        return self.accounts[self.active_number]
+    def save_to_local_storage(self):
+        serialized = {num: acc.to_dict() for num, acc in self.accounts.items()}
+        window.localStorage.setItem(STORAGE_KEY, json.dumps(serialized))
+
+    def authenticate(self, identifier, pin):
+        clean_id = str(identifier or "").strip()
+        if not clean_id:
+            raise ATMTransactionError("Please enter your Account Number or Holder Name.")
+        # Match by Account Number first, or by Holder Name
+        target = self.accounts.get(clean_id.upper())
+        if not target:
+            for acc in self.accounts.values():
+                if acc.holder_name.lower() == clean_id.lower() and acc.verify_pin(pin):
+                    target = acc
+                    break
+            if not target:
+                for acc in self.accounts.values():
+                    if acc.holder_name.lower() == clean_id.lower():
+                        target = acc
+                        break
+        if not target:
+            raise ATMTransactionError(f"Account '{clean_id}' was not found. Please check your Account Number or Sign Up.")
+        if not target.verify_pin(pin):
+            raise ATMTransactionError("Incorrect ATM PIN. Please try again.")
+        self.current_account = target
+        return target
+
+    def register_account(self, holder_name, class_type, pin, raw_starting_balance):
+        clean_name = str(holder_name or "").strip()
+        if not clean_name:
+            raise InvalidAmountError("Please enter your full name.")
+        clean_pin = str(pin or "").strip()
+        if len(clean_pin) < 4 or not clean_pin.isdigit():
+            raise InvalidAmountError("PIN must be a 4-to-6 digit number.")
+        if raw_starting_balance is None or str(raw_starting_balance).strip() == "":
+            raise InvalidAmountError("Please enter a starting balance.")
+        try:
+            start_bal = round(float(str(raw_starting_balance).replace(",", "").strip()), 2)
+        except Exception:
+            raise InvalidAmountError("Starting balance must be a valid number.")
+        if start_bal < 0:
+            raise InvalidAmountError("Starting balance cannot be negative.")
+
+        seq = 100248 + len(self.accounts) * 149
+        if class_type == "CheckingAccount":
+            acc_num = f"CA-{seq}"
+            new_acc = CheckingAccount(acc_num, clean_name, clean_pin, start_bal)
+        else:
+            acc_num = f"SA-{seq}"
+            new_acc = SavingsAccount(acc_num, clean_name, clean_pin, start_bal)
+
+        new_acc._record_transaction("Account Opened", start_bal, 0.0, f"Initial {new_acc.account_type} deposit")
+        self.accounts[new_acc.account_number] = new_acc
+        self.current_account = new_acc
+        self.save_to_local_storage()
+        return new_acc
 
 
 service = ATMService()
@@ -956,71 +739,106 @@ def fmt_php(val):
     return f"₱ {val:,.2f}"
 
 
-def show_feedback(kind, title, message):
-    box = document["feedback-box"]
-    box.class_name = f"feedback-banner {kind}"
-    document["feedback-title"].text = title
-    document["feedback-message"].text = message
+# ============================================================================
+# 6. UI RENDERING & EVENT HANDLERS
+# ============================================================================
 
+def render_saved_accounts_chips():
+    container = document["saved-accounts-list"]
+    container.clear()
+    for acc in service.accounts.values():
+        chip = html.BUTTON(type="button", Class="saved-account-chip")
+        left = html.DIV()
+        left <= html.DIV(
+            f"{acc.holder_name} ({acc.account_type})",
+            style={"fontFamily": "var(--font-display)", "fontWeight": "800", "fontSize": "0.86rem", "color": "var(--blue-deep)"},
+        )
+        left <= html.DIV(
+            f"Account No: {acc.account_number} · Balance: {fmt_php(acc.balance)}",
+            style={"fontSize": "0.75rem", "color": "var(--text-muted)", "fontWeight": "600"},
+        )
+        chip <= left
+        chip <= html.SPAN("Select", style={"fontSize": "0.75rem", "fontWeight": "800", "color": "var(--blue-primary)"})
 
-def render_ui():
-    acc = service.active_account
-    cls_name = acc.__class__.__name__
-
-    document["ui-holder-name"].text = acc.holder_name
-    document["ui-account-subtitle"].text = f"{acc.account_type} · {acc.account_number} · Python {cls_name}"
-    document["ui-wallet-type"].text = acc.account_type
-    document["ui-max-withdrawable"].text = f"Max withdrawable now: {fmt_php(acc.get_max_withdrawable())}"
-    document["ui-wallet-balance"].text = fmt_php(acc.balance)
-
-    document["ui-rules-heading"].text = f"Polymorphic Rules ({cls_name})"
-    document["ui-rule-maint-sub"].text = f"Protected inside {cls_name}.withdraw()"
-    document["ui-rule-maint"].text = fmt_php(acc.MAINTAINING_BALANCE)
-    document["ui-rule-limit"].text = fmt_php(acc.WITHDRAWAL_LIMIT)
-    document["ui-rule-fee"].text = fmt_php(acc.WITHDRAWAL_FEE)
-    document["ui-rule-fee-sub"].text = (
-        "Flat checking fee deducted per withdrawal" if acc.WITHDRAWAL_FEE > 0 else "Free withdrawal for SavingsAccount"
-    )
-    document["btn-withdraw-label"].text = f"Process Withdrawal via {cls_name}.withdraw()"
-    document["ui-tx-subtitle"].text = f"Encapsulated Transaction objects recorded on {acc.account_number} ({len(acc.transactions)} entries)"
-
-    # Render account switcher buttons
-    acc_list_el = document["ui-account-list"]
-    acc_list_el.clear()
-    for num, item in service.accounts.items():
-        is_active = num == service.active_number
-        btn = html.BUTTON(type="button", Class="account-switch-btn active-account" if is_active else "account-switch-btn")
-        left_div = html.DIV()
-        left_div <= html.DIV(f"{item.holder_name} · {item.account_type}", style={"fontFamily": "var(--font-display)", "fontWeight": "800", "fontSize": "0.92rem"})
-        left_div <= html.DIV(f"{item.account_number} · Python {item.__class__.__name__}", style={"fontSize": "0.76rem", "opacity": "0.85"})
-        btn <= left_div
-        btn <= html.SPAN(fmt_php(item.balance), Class="tabular-nums", style={"fontWeight": "800", "fontSize": "0.92rem"})
-
-        def make_switch_handler(target_num):
+        def make_fill(a_num, a_pin):
             def handler(_ev):
-                service.active_number = target_num
-                chosen = service.active_account
-                show_feedback(
-                    "info",
-                    f"Switched Active Account to {chosen.__class__.__name__} ({chosen.account_number})",
-                    f"Now operating on {chosen.holder_name}'s {chosen.account_type} with balance {fmt_php(chosen.balance)}."
-                )
-                render_ui()
+                document["signin-account"].value = a_num
+                document["signin-pin"].value = a_pin
             return handler
 
-        btn.bind("click", make_switch_handler(num))
-        acc_list_el <= btn
+        chip.bind("click", make_fill(acc.account_number, acc._pin))
+        container <= chip
 
-    # Render transaction table rows
-    tbody = document["ui-tx-tbody"]
+
+def show_auth_error(title, msg):
+    box = document["auth-feedback"]
+    box.class_name = "feedback-banner error"
+    document["auth-feedback-title"].text = title
+    document["auth-feedback-msg"].text = msg
+
+
+def hide_auth_error():
+    document["auth-feedback"].class_name = "feedback-banner error hidden"
+
+
+def show_atm_feedback(kind, title, msg):
+    box = document["atm-feedback"]
+    box.class_name = f"feedback-banner {kind}"
+    document["atm-feedback-title"].text = title
+    document["atm-feedback-msg"].text = msg
+
+
+def set_operation_mode(mode):
+    service.op_mode = mode
+    for btn_id in ["nav-btn-deposit", "nav-btn-withdraw", "nav-btn-inquire", "nav-btn-history"]:
+        document[btn_id].class_name = "atm-nav-btn"
+    for tile_id in ["tile-deposit", "tile-withdraw", "tile-inquire"]:
+        document[tile_id].class_name = "action-tile"
+
+    if mode == "deposit":
+        document["nav-btn-deposit"].class_name = "atm-nav-btn active"
+        document["tile-deposit"].class_name = "action-tile active"
+        document["op-heading"].text = "Deposit Cash"
+        document["op-subheading"].text = "Enter deposit amount or use the ATM keypad below"
+        document["op-badge"].text = "DEPOSIT"
+        document["btn-execute-label"].text = "Confirm Cash Deposit"
+    elif mode == "withdraw":
+        document["nav-btn-withdraw"].class_name = "atm-nav-btn active"
+        document["tile-withdraw"].class_name = "action-tile active"
+        document["op-heading"].text = "Withdraw Cash"
+        document["op-subheading"].text = f"Processed via {service.current_account.__class__.__name__}.withdraw()"
+        document["op-badge"].text = "WITHDRAWAL"
+        document["btn-execute-label"].text = "Dispense Cash Now"
+
+
+def render_atm_dashboard():
+    acc = service.current_account
+    if not acc:
+        return
+
+    document["atm-holder-name"].text = acc.holder_name
+    document["atm-account-meta"].text = f"{acc.account_type} · {acc.account_number}"
+    document["atm-wallet-type"].text = acc.account_type
+    document["atm-max-withdrawable"].text = f"Available to withdraw: {fmt_php(acc.get_max_withdrawable())}"
+    document["atm-wallet-balance"].text = fmt_php(acc.balance)
+
+    document["atm-rule-maint"].text = fmt_php(acc.MAINTAINING_BALANCE)
+    document["atm-rule-limit"].text = fmt_php(acc.WITHDRAWAL_LIMIT)
+    document["atm-rule-fee"].text = fmt_php(acc.WITHDRAWAL_FEE)
+    document["atm-rule-fee-note"].text = (
+        "Flat fee per Checking withdrawal" if acc.WITHDRAWAL_FEE > 0 else "No withdrawal fee for Savings"
+    )
+    document["atm-tx-count"].text = f"{len(acc.transactions)} transaction(s) stored in local JSON"
+
+    tbody = document["atm-tx-tbody"]
     tbody.clear()
     for tx in acc.transactions:
         row = html.TR()
         row <= html.TD(tx.transaction_id, Class="tabular-nums", style={"fontFamily": "var(--font-mono)", "fontWeight": "700", "fontSize": "0.78rem"})
-        op_td = html.TD()
-        op_td <= html.DIV(tx.tx_type, style={"fontFamily": "var(--font-display)", "fontWeight": "800"})
-        op_td <= html.DIV(tx.note, Class="clean-row-meta")
-        row <= op_td
+        info_td = html.TD()
+        info_td <= html.DIV(tx.tx_type, style={"fontFamily": "var(--font-display)", "fontWeight": "800"})
+        info_td <= html.DIV(tx.note, Class="clean-row-meta")
+        row <= info_td
         row <= html.TD(tx.timestamp, Class="clean-row-meta")
         row <= html.TD(fmt_php(tx.amount), Class="tabular-nums", style={"textAlign": "right", "fontWeight": "800"})
         row <= html.TD(fmt_php(tx.fee), Class="tabular-nums", style={"textAlign": "right"})
@@ -1028,142 +846,156 @@ def render_ui():
         tbody <= row
 
 
-def on_deposit(_ev):
-    raw_amt = document["input-deposit-amount"].value
-    note = document["input-deposit-note"].value.strip()
+# --- Auth Events ---
+def on_switch_signin(_ev):
+    hide_auth_error()
+    document["tab-btn-signin"].class_name = "auth-tab-btn active"
+    document["tab-btn-signup"].class_name = "auth-tab-btn"
+    document["form-signin"].class_name = ""
+    document["form-signup"].class_name = "hidden"
+    render_saved_accounts_chips()
+
+
+def on_switch_signup(_ev):
+    hide_auth_error()
+    document["tab-btn-signup"].class_name = "auth-tab-btn active"
+    document["tab-btn-signin"].class_name = "auth-tab-btn"
+    document["form-signup"].class_name = ""
+    document["form-signin"].class_name = "hidden"
+
+
+def on_login(_ev):
+    hide_auth_error()
+    acc_input = document["signin-account"].value
+    pin_input = document["signin-pin"].value
     try:
-        tx = service.active_account.deposit(raw_amt, note)
-        show_feedback(
-            "success",
-            "Deposit Processed Successfully via Account.deposit()",
-            f"Credited {fmt_php(tx.amount)} to {service.active_account.account_number}. Updated Balance: {fmt_php(tx.balance_after)}."
+        acc = service.authenticate(acc_input, pin_input)
+        document["view-auth"].class_name = "auth-wrapper hidden"
+        document["view-atm"].class_name = ""
+        set_operation_mode("deposit")
+        show_atm_feedback(
+            "info",
+            f"Signed In as {acc.holder_name} ({acc.account_number})",
+            f"Current {acc.account_type} balance is {fmt_php(acc.balance)}."
         )
-        render_ui()
+        render_atm_dashboard()
     except ATMTransactionError as exc:
-        show_feedback("error", f"Deposit Rejected ({exc.__class__.__name__})", exc.message)
+        show_auth_error("Sign In Failed", exc.message)
 
 
-def on_withdraw(_ev):
-    raw_amt = document["input-withdraw-amount"].value
-    note = document["input-withdraw-note"].value.strip()
+def on_register(_ev):
+    hide_auth_error()
+    name = document["signup-name"].value
+    acct_type = document["signup-type"].value
+    pin = document["signup-pin"].value
+    bal = document["signup-balance"].value
     try:
-        tx = service.active_account.withdraw(raw_amt, note)
-        cls_name = service.active_account.__class__.__name__
-        fee_info = f" (plus {fmt_php(tx.fee)} checking fee)" if tx.fee > 0 else " (₱ 0.00 fee)"
-        show_feedback(
+        new_acc = service.register_account(name, acct_type, pin, bal)
+        document["view-auth"].class_name = "auth-wrapper hidden"
+        document["view-atm"].class_name = ""
+        set_operation_mode("deposit")
+        show_atm_feedback(
             "success",
-            f"Withdrawal Approved via {cls_name}.withdraw()",
-            f"Dispensed {fmt_php(tx.amount)}{fee_info} from {service.active_account.account_number}. Remaining Balance: {fmt_php(tx.balance_after)}."
+            f"Account Created! Welcome, {new_acc.holder_name}",
+            f"Your new {new_acc.account_type} ({new_acc.account_number}) has been saved to local JSON storage with balance {fmt_php(new_acc.balance)}."
         )
-        render_ui()
+        render_atm_dashboard()
     except ATMTransactionError as exc:
-        show_feedback("error", f"Withdrawal Rejected ({exc.__class__.__name__})", exc.message)
+        show_auth_error("Sign Up Rejected", exc.message)
 
 
-def on_create_account(_ev):
-    holder = document["input-create-name"].value.strip()
-    kind = document["input-create-kind"].value
-    raw_bal = document["input-create-balance"].value
+def on_logout(_ev):
+    service.current_account = None
+    document["atm-amount-input"].value = ""
+    document["atm-note-input"].value = ""
+    document["view-atm"].class_name = "hidden"
+    document["view-auth"].class_name = "auth-wrapper"
+    on_switch_signin(None)
+
+
+# --- ATM Operation Events ---
+def on_execute_transaction(_ev):
+    acc = service.current_account
+    if not acc:
+        return
+    raw_amt = document["atm-amount-input"].value
+    note = document["atm-note-input"].value.strip()
     try:
-        if not holder:
-            raise InvalidAmountError("Account creation failed: Please enter an account holder name.")
-        start_bal = Account.parse_positive_amount(raw_bal, "Starting Balance")
-        seq = 100000 + (len(service.accounts) + 1) * 137
-        if kind == "checking":
-            new_acc = CheckingAccount(f"CA-{seq}", holder, start_bal)
+        if service.op_mode == "deposit":
+            tx = acc.deposit(raw_amt, note or "ATM Cash Deposit")
+            service.save_to_local_storage()
+            show_atm_feedback(
+                "success",
+                "Cash Deposit Successful",
+                f"Deposited {fmt_php(tx.amount)} into {acc.account_number}. New Balance: {fmt_php(tx.balance_after)}."
+            )
         else:
-            new_acc = SavingsAccount(f"SA-{seq}", holder, start_bal)
-        new_acc._record_transaction("Account Created", start_bal, 0.0, f"Opened new {new_acc.account_type} in session")
-        service.accounts[new_acc.account_number] = new_acc
-        service.active_number = new_acc.account_number
-        show_feedback(
-            "success",
-            f"Instantiated New {new_acc.__class__.__name__} ({new_acc.account_number})",
-            f"Created {new_acc.account_type} for {new_acc.holder_name} with starting balance {fmt_php(new_acc.balance)}."
-        )
-        render_ui()
+            tx = acc.withdraw(raw_amt, note or "ATM Cash Withdrawal")
+            service.save_to_local_storage()
+            fee_txt = f" (plus {fmt_php(tx.fee)} checking fee)" if tx.fee > 0 else ""
+            show_atm_feedback(
+                "success",
+                "Cash Withdrawal Approved",
+                f"Dispensed {fmt_php(tx.amount)}{fee_txt} from {acc.account_number}. Remaining Balance: {fmt_php(tx.balance_after)}."
+            )
+        document["atm-amount-input"].value = ""
+        document["atm-note-input"].value = ""
+        render_atm_dashboard()
     except ATMTransactionError as exc:
-        show_feedback("error", f"Account Creation Rejected ({exc.__class__.__name__})", exc.message)
+        show_atm_feedback("error", "Transaction Declined", exc.message)
 
 
-def on_inquire(_ev):
-    acc = service.active_account
-    show_feedback(
+def on_balance_inquiry(_ev):
+    acc = service.current_account
+    if not acc:
+        return
+    for btn_id in ["nav-btn-deposit", "nav-btn-withdraw", "nav-btn-inquire", "nav-btn-history"]:
+        document[btn_id].class_name = "atm-nav-btn"
+    document["nav-btn-inquire"].class_name = "atm-nav-btn active"
+    show_atm_feedback(
         "info",
-        f"Balance Inquiry Statement ({acc.account_number})",
-        f"{acc.holder_name}'s {acc.account_type} has current balance {fmt_php(acc.balance)} and max withdrawable now of {fmt_php(acc.get_max_withdrawable())}."
+        f"Balance Inquiry: {fmt_php(acc.balance)}",
+        f"Account {acc.account_number} ({acc.account_type}) has {fmt_php(acc.balance)} total balance and {fmt_php(acc.get_max_withdrawable())} available for withdrawal."
     )
 
 
-def on_reset(_ev):
-    service.reset()
-    show_feedback(
-        "info",
-        "Session State Reset",
-        "All predefined fictional accounts and session transaction histories have been restored to initial defaults."
-    )
-    render_ui()
+# Bindings
+document["tab-btn-signin"].bind("click", on_switch_signin)
+document["tab-btn-signup"].bind("click", on_switch_signup)
+document["btn-login"].bind("click", on_login)
+document["btn-register"].bind("click", on_register)
+document["btn-logout"].bind("click", on_logout)
 
+document["nav-btn-deposit"].bind("click", lambda _e: set_operation_mode("deposit"))
+document["tile-deposit"].bind("click", lambda _e: set_operation_mode("deposit"))
+document["nav-btn-withdraw"].bind("click", lambda _e: set_operation_mode("withdraw"))
+document["tile-withdraw"].bind("click", lambda _e: set_operation_mode("withdraw"))
+document["nav-btn-inquire"].bind("click", on_balance_inquiry)
+document["tile-inquire"].bind("click", on_balance_inquiry)
+document["btn-circle-inquire"].bind("click", on_balance_inquiry)
+document["nav-btn-history"].bind("click", lambda _e: document["atm-tx-tbody"].scrollIntoView({"behavior": "smooth"}))
+document["btn-execute-tx"].bind("click", on_execute_transaction)
 
-def on_run_poly(_ev):
-    try:
-        start_bal = Account.parse_positive_amount(document["poly-input-balance"].value, "Sample Balance")
-        test_amt = Account.parse_positive_amount(document["poly-input-amount"].value, "Test Withdrawal")
-        container = document["ui-poly-results"]
-        container.clear()
-
-        for sample_acc in [
-            SavingsAccount("DEMO-SA", "Sample Savings", start_bal),
-            CheckingAccount("DEMO-CA", "Sample Checking", start_bal),
-        ]:
-            card = html.DIV(Class="wallet-pill-card", style={"flexDirection": "column", "alignItems": "stretch", "marginBottom": "0"})
-            cls_name = sample_acc.__class__.__name__
-            try:
-                tx = sample_acc.withdraw(test_amt)
-                hdr = html.DIV(style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(14,165,233,0.2)", "paddingBottom": "0.75rem", "marginBottom": "0.75rem"})
-                hdr <= html.DIV(html.DIV(f"{cls_name}.withdraw({test_amt:,.2f})", style={"fontFamily": "var(--font-display)", "fontWeight": "800", "fontSize": "1.1rem"}))
-                hdr <= html.SPAN("SUCCESS", Class="wallet-badge-box")
-                card <= hdr
-                body = html.DIV(style={"fontSize": "0.88rem", "display": "flex", "flexDirection": "column", "gap": "0.4rem"})
-                body <= html.DIV(f"Starting Balance: {fmt_php(start_bal)}")
-                body <= html.DIV(f"Polymorphic Fee Charged: {fmt_php(tx.fee)}")
-                body <= html.DIV(f"Ending Balance: {fmt_php(sample_acc.balance)}", style={"fontWeight": "800", "color": "var(--blue-primary)", "fontSize": "1rem", "marginTop": "0.3rem"})
-                card <= body
-            except ATMTransactionError as exc:
-                hdr = html.DIV(style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "borderBottom": "1px solid rgba(239,68,68,0.25)", "paddingBottom": "0.75rem", "marginBottom": "0.75rem"})
-                hdr <= html.DIV(f"{cls_name}.withdraw({test_amt:,.2f})", style={"fontFamily": "var(--font-display)", "fontWeight": "800", "fontSize": "1.1rem"})
-                hdr <= html.SPAN("REJECTED", Class="wallet-badge-box", style={"borderColor": "#b91c1c", "color": "#b91c1c", "background": "#fef2f2"})
-                card <= hdr
-                card <= html.DIV(exc.message, style={"fontSize": "0.85rem", "color": "#991b1b", "fontWeight": "600"})
-            container <= card
-    except ATMTransactionError as exc:
-        show_feedback("error", f"Polymorphism Demo Error ({exc.__class__.__name__})", exc.message)
-
-
-# Bind buttons
-document["btn-submit-deposit"].bind("click", on_deposit)
-document["btn-submit-withdraw"].bind("click", on_withdraw)
-document["btn-submit-create"].bind("click", on_create_account)
-document["btn-inquire-top"].bind("click", on_inquire)
-document["btn-inquire-circle"].bind("click", on_inquire)
-document["btn-reset-top"].bind("click", on_reset)
-document["btn-run-poly"].bind("click", on_run_poly)
-
-for btn in document.select(".quick-dep"):
-    def bind_dep(b):
+# Quick Cash Buttons
+for qbtn in document.select(".quick-amt-btn"):
+    def bind_q(b):
         def h(_ev):
-            document["input-deposit-amount"].value = b.attrs["data-val"]
+            document["atm-amount-input"].value = b.attrs["data-amt"]
         b.bind("click", h)
-    bind_dep(btn)
+    bind_q(qbtn)
 
-for btn in document.select(".quick-wd"):
-    def bind_wd(b):
+# Numeric Keypad Buttons
+for kbtn in document.select(".num-key"):
+    def bind_k(b):
         def h(_ev):
-            document["input-withdraw-amount"].value = b.attrs["data-val"]
+            cur = document["atm-amount-input"].value
+            document["atm-amount-input"].value = cur + b.attrs["data-key"]
         b.bind("click", h)
-    bind_wd(btn)
+    bind_k(kbtn)
 
-render_ui()
+document["key-clear"].bind("click", lambda _e: setattr(document["atm-amount-input"], "value", ""))
+
+render_saved_accounts_chips()
   </script>
 
 </body>

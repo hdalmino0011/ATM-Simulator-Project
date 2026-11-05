@@ -1,43 +1,38 @@
 /* ==========================================================================
-   CTU Express ATM Simulator — Pure CSS Stylesheet
-   P ELEC 1: Object-Oriented Programming (Python and Django)
-   Theme: Light Blue & Crisp White Glassmorphism
-   Typography: Outfit & Plus Jakarta Sans (inspired by reference UI)
+   ExpressBank ATM Simulator — Pure CSS Stylesheet
+   Theme: Light Blue & White with Glassmorphism
+   Typography: Outfit & Plus Jakarta Sans
    ========================================================================== */
 
 :root {
-  --bg-canvas: #eef7ff;
-  --bg-gradient-start: #f4faff;
-  --bg-gradient-mid: #e0f2fe;
-  --bg-gradient-end: #eff8ff;
+  --bg-start: #f4faff;
+  --bg-mid: #dff1fe;
+  --bg-end: #eef8ff;
 
-  --glass-white: rgba(255, 255, 255, 0.82);
-  --glass-white-strong: rgba(255, 255, 255, 0.92);
-  --glass-blue-soft: rgba(224, 242, 254, 0.68);
-  --glass-blue-tint: rgba(186, 230, 253, 0.42);
-  --glass-border: rgba(255, 255, 255, 0.9);
-  --glass-border-blue: rgba(56, 189, 248, 0.28);
+  --glass-surface: rgba(255, 255, 255, 0.84);
+  --glass-strong: rgba(255, 255, 255, 0.94);
+  --glass-blue-tint: rgba(224, 242, 254, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.94);
+  --glass-border-blue: rgba(56, 189, 248, 0.35);
 
   --blue-primary: #0284c7;
   --blue-bright: #0ea5e9;
   --blue-light: #38bdf8;
   --blue-pale: #e0f2fe;
-  --blue-deep: #0c2340;
+  --blue-deep: #0b2239;
 
-  --text-primary: #0c2340;
+  --text-primary: #0b2239;
   --text-secondary: #335374;
   --text-muted: #5b7a9c;
 
-  --status-success-bg: rgba(240, 253, 244, 0.88);
-  --status-success-border: rgba(34, 197, 94, 0.35);
-  --status-success-text: #15803d;
+  --shadow-glass:
+    0 16px 38px -10px rgba(2, 132, 199, 0.14),
+    0 4px 14px -2px rgba(11, 34, 57, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.96);
 
-  --status-error-bg: rgba(254, 242, 242, 0.9);
-  --status-error-border: rgba(239, 68, 68, 0.38);
-  --status-error-text: #b91c1c;
-
-  --shadow-glass: 0 14px 34px -8px rgba(2, 132, 199, 0.1), 0 4px 12px -2px rgba(12, 35, 64, 0.04);
-  --shadow-blue-btn: 0 10px 22px -6px rgba(2, 132, 199, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  --shadow-blue:
+    0 12px 26px -6px rgba(2, 132, 199, 0.38),
+    inset 0 1px 1px rgba(255, 255, 255, 0.48);
 
   --font-display: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -53,16 +48,148 @@
 body {
   font-family: var(--font-body);
   color: var(--text-primary);
-  background: radial-gradient(circle at 12% 15%, rgba(56, 189, 248, 0.22) 0%, transparent 42%),
-              radial-gradient(circle at 88% 18%, rgba(14, 165, 233, 0.18) 0%, transparent 45%),
-              radial-gradient(circle at 50% 88%, rgba(125, 211, 252, 0.24) 0%, transparent 50%),
-              linear-gradient(160deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 52%, var(--bg-gradient-end) 100%);
+  background:
+    radial-gradient(circle at 12% 14%, rgba(56, 189, 248, 0.26) 0%, transparent 42%),
+    radial-gradient(circle at 88% 16%, rgba(14, 165, 233, 0.22) 0%, transparent 44%),
+    radial-gradient(circle at 50% 88%, rgba(125, 211, 252, 0.28) 0%, transparent 50%),
+    linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 52%, var(--bg-end) 100%);
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Top Navigation Bar (Strict 3-Zone Contract) */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   1. LOGIN & SIGN UP VIEW
+   ========================================================================== */
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 470px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 249, 255, 0.82) 100%);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: 28px;
+  padding: 2.25rem 2rem;
+}
+
+.auth-brand-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.auth-logo-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  box-shadow: var(--shadow-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  margin-bottom: 0.9rem;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--blue-deep);
+}
+
+.auth-subtitle {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  background: rgba(224, 242, 254, 0.85);
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid rgba(125, 211, 252, 0.65);
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+  padding: 0.6rem 1rem;
+  border-radius: 11px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: var(--blue-deep);
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
+}
+
+.saved-accounts-box {
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.saved-accounts-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 0.55rem;
+  display: block;
+}
+
+.saved-account-chip {
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.45rem;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(186, 230, 253, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.saved-account-chip:hover {
+  background: rgba(224, 242, 254, 0.85);
+  border-color: var(--blue-bright);
+}
+
+/* ==========================================================================
+   2. TOP ATM NAVIGATION BAR
+   ========================================================================== */
+
 .atm-topbar {
   position: sticky;
   top: 0;
@@ -71,21 +198,22 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 0.9rem 2rem;
-  background: rgba(255, 255, 255, 0.78);
+  padding: 0.95rem 2rem;
+  background: rgba(255, 255, 255, 0.84);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
 }
 
 .atm-brand {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--blue-deep);
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .atm-nav {
@@ -94,161 +222,36 @@ body {
   gap: 1.75rem;
 }
 
-.atm-nav-link {
+.atm-nav-btn {
   font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-secondary);
-  text-decoration: none;
-  white-space: nowrap;
-  padding: 0.35rem 0;
-  border-bottom: 2px solid transparent;
-  transition: color 150ms ease, border-color 150ms ease;
   background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  padding: 0.35rem 0;
   cursor: pointer;
+  white-space: nowrap;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
-.atm-nav-link:hover,
-.atm-nav-link.active {
+.atm-nav-btn:hover,
+.atm-nav-btn.active {
   color: var(--blue-primary);
   border-bottom-color: var(--blue-bright);
 }
 
+/* ==========================================================================
+   3. ATM SIMULATOR WORKSPACE
+   ========================================================================== */
+
 .atm-container {
-  max-width: 1240px;
+  max-width: 1220px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
 }
 
-/* Glassmorphic Card Surfaces */
-.glass-panel {
-  background: var(--glass-white);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-glass);
-  border-radius: 24px;
-  padding: 1.75rem;
-}
-
-.glass-blue-banner {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.92) 0%, rgba(2, 132, 199, 0.95) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 16px 36px -10px rgba(2, 132, 199, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45);
-  border-radius: 24px;
-  color: #ffffff;
-  padding: 1.75rem;
-}
-
-/* Profile & Wallet Header (Inspired by Uploaded Screenshot) */
-.profile-heading-name {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--blue-deep);
-  line-height: 1.15;
-}
-
-.profile-subtext {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-top: 0.25rem;
-}
-
-/* 3-Column Rounded Action Tile Grid (Screenshot Style) */
-.action-tile-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.9rem;
-  margin: 1.35rem 0;
-}
-
-.action-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 1.15rem 0.75rem;
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(186, 230, 253, 0.85);
-  border-radius: 20px;
-  cursor: pointer;
-  transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
-  text-decoration: none;
-  color: var(--blue-deep);
-}
-
-.action-tile:hover,
-.action-tile.active {
-  transform: translateY(-2px);
-  background: rgba(224, 242, 254, 0.75);
-  border-color: var(--blue-bright);
-}
-
-.action-tile-label {
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--blue-deep);
-  white-space: nowrap;
-}
-
-/* Horizontal Wallet Balance Card (Screenshot "pandapay ₱ 0.00" Style) */
-.wallet-section-title {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: var(--blue-deep);
-  margin: 1.25rem 0 0.75rem;
-}
-
-.wallet-pill-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.15rem 1.35rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.82) 100%);
-  backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(125, 211, 252, 0.7);
-  border-radius: 22px;
-  box-shadow: 0 8px 24px -6px rgba(2, 132, 199, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95);
-}
-
-.wallet-badge-box {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--blue-primary);
-  background: rgba(224, 242, 254, 0.65);
-  color: var(--blue-primary);
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.wallet-amount {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--blue-deep);
-}
-
-/* Two-Column ATM Layout */
 .atm-grid {
   display: grid;
   grid-template-columns: 5fr 7fr;
@@ -260,31 +263,223 @@ body {
   .atm-grid {
     grid-template-columns: 1fr;
   }
+  .atm-topbar {
+    padding: 0.85rem 1.15rem;
+    gap: 1rem;
+  }
 }
 
-/* Form Controls */
+.glass-panel {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 249, 255, 0.78) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: 26px;
+  padding: 1.75rem;
+}
+
+/* Account Header & Profile (Reference Screenshot Typography) */
+.account-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+}
+
+.account-top-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+}
+
+.circle-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid rgba(125, 211, 252, 0.85);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-primary);
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.circle-icon-btn:hover {
+  background: var(--blue-pale);
+  transform: scale(1.03);
+}
+
+.profile-heading-name {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--blue-deep);
+  line-height: 1.12;
+}
+
+.profile-subtext {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-top: 0.25rem;
+}
+
+/* 3-Column Rounded Action Tile Grid */
+.action-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  margin: 1.35rem 0 1.5rem;
+}
+
+.action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.1rem 0.65rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.65) 100%);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(186, 230, 253, 0.9);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  color: var(--blue-deep);
+}
+
+.action-tile:hover,
+.action-tile.active {
+  transform: translateY(-2px);
+  border-color: var(--blue-bright);
+  background: linear-gradient(160deg, rgba(240, 249, 255, 0.98) 0%, rgba(186, 230, 253, 0.85) 100%);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.24), 0 8px 20px -6px rgba(2, 132, 199, 0.16);
+}
+
+.action-tile-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  white-space: nowrap;
+}
+
+/* Wallet Balance Card */
+.section-heading {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--blue-deep);
+  margin-bottom: 0.7rem;
+}
+
+.wallet-pill-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.35rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.85) 100%);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(125, 211, 252, 0.85);
+  border-radius: 22px;
+  box-shadow: 0 10px 26px -8px rgba(2, 132, 199, 0.14), inset 0 1px 0 rgba(255, 255, 255, 1);
+  margin-bottom: 1.5rem;
+}
+
+.wallet-badge-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 8px;
+  border: 2px solid var(--blue-primary);
+  background: rgba(224, 242, 254, 0.8);
+  color: var(--blue-primary);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.wallet-amount {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-deep);
+  white-space: nowrap;
+}
+
+/* Clean Divided Rows */
+.clean-row-list {
+  list-style: none;
+  border-top: 1px solid rgba(14, 165, 233, 0.2);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.clean-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.9rem 0.15rem;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+}
+
+.clean-row-item:last-child {
+  border-bottom: none;
+}
+
+.clean-row-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.clean-row-title {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+}
+
+.clean-row-meta {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ATM Keypad & Form Controls */
 .form-group {
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   color: var(--text-secondary);
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 
 .form-input,
 .form-select {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.82rem 1rem;
   font-family: var(--font-body);
   font-size: 0.98rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--blue-deep);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1.5px solid rgba(125, 211, 252, 0.85);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid rgba(125, 211, 252, 0.9);
   border-radius: 14px;
   outline: none;
   transition: border-color 150ms ease, box-shadow 150ms ease;
@@ -293,143 +488,160 @@ body {
 .form-input:focus,
 .form-select:focus {
   border-color: var(--blue-primary);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
 }
 
-.btn-primary-glass {
+.atm-amount-display {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0.85rem 1.15rem;
+  background: linear-gradient(135deg, rgba(240, 249, 255, 0.95) 0%, rgba(224, 242, 254, 0.85) 100%);
+  border: 2px solid rgba(56, 189, 248, 0.65);
+  border-radius: 16px;
+  color: var(--blue-deep);
+}
+
+.quick-cash-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.atm-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.keypad-btn {
+  padding: 0.78rem;
+  border-radius: 14px;
+  border: 1.5px solid rgba(186, 230, 253, 0.9);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.68) 100%);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.keypad-btn:hover {
+  background: rgba(186, 230, 253, 0.85);
+  border-color: var(--blue-bright);
+  transform: translateY(-1px);
+}
+
+.keypad-btn:active {
+  transform: scale(0.98);
+}
+
+.glass-solid-blue {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.4rem;
+  padding: 0.85rem 1.4rem;
   font-family: var(--font-display);
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #ffffff;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.95) 0%, rgba(2, 132, 199, 0.98) 100%);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 14px;
-  box-shadow: var(--shadow-blue-btn);
+  box-shadow: var(--shadow-blue);
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 150ms ease, opacity 150ms ease;
   text-decoration: none;
+  transition: transform 150ms ease, opacity 150ms ease;
 }
 
-.btn-primary-glass:hover {
+.glass-solid-blue:hover {
   transform: translateY(-1px);
   opacity: 0.96;
 }
 
-.btn-secondary-glass {
+.glass-soft-blue-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.15rem;
+  gap: 0.4rem;
+  padding: 0.52rem 0.95rem;
   font-family: var(--font-display);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--blue-primary);
-  background: rgba(224, 242, 254, 0.72);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  border-radius: 12px;
+  color: #0369a1;
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(186, 230, 253, 0.72) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.48);
+  border-radius: 11px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 150ms ease;
-  text-decoration: none;
+  transition: background 150ms ease;
 }
 
-.btn-secondary-glass:hover {
-  background: rgba(186, 230, 253, 0.85);
-}
-
-/* Clean Divided Rows (Screenshot "Perks for you" / "General" List Style) */
-.clean-row-list {
-  list-style: none;
-  border-top: 1px solid rgba(14, 165, 233, 0.14);
-}
-
-.clean-row-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 0.25rem;
-  border-bottom: 1px solid rgba(14, 165, 233, 0.14);
-}
-
-.clean-row-left {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.clean-row-title {
-  font-family: var(--font-display);
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--blue-deep);
-}
-
-.clean-row-meta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 500;
+.glass-soft-blue-btn:hover {
+  background: linear-gradient(135deg, rgba(186, 230, 253, 0.95) 0%, rgba(125, 211, 252, 0.85) 100%);
 }
 
 /* Status Banner */
 .feedback-banner {
   display: flex;
   align-items: flex-start;
-  gap: 0.9rem;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 1.25rem;
   border-radius: 18px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
   backdrop-filter: blur(14px);
 }
 
-.feedback-banner.success {
-  background: var(--status-success-bg);
-  border: 1px solid var(--status-success-border);
-  color: var(--status-success-text);
+.feedback-banner.success,
+.feedback-banner.info {
+  background: rgba(240, 249, 255, 0.95);
+  border: 1.5px solid rgba(14, 165, 233, 0.45);
+  color: #075985;
 }
 
 .feedback-banner.error {
-  background: var(--status-error-bg);
-  border: 1px solid var(--status-error-border);
-  color: var(--status-error-text);
+  background: rgba(254, 242, 242, 0.96);
+  border: 1.5px solid rgba(239, 68, 68, 0.45);
+  color: #991b1b;
 }
 
-.feedback-banner.info {
-  background: rgba(224, 242, 254, 0.9);
-  border: 1px solid rgba(14, 165, 233, 0.4);
-  color: #0369a1;
+/* Transaction Table */
+.data-table-wrap {
+  width: 100%;
+  overflow-x: auto;
 }
 
-/* Data Tables */
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
 }
 
 .data-table th {
   text-align: left;
-  padding: 0.75rem 0.85rem;
+  padding: 0.75rem 0.75rem;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 800;
   color: var(--text-secondary);
-  border-bottom: 1.5px solid rgba(14, 165, 233, 0.22);
+  border-bottom: 1.5px solid rgba(14, 165, 233, 0.25);
 }
 
 .data-table td {
-  padding: 0.8rem 0.85rem;
-  border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.14);
   color: var(--blue-deep);
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
-  font-family: var(--font-mono);
 }

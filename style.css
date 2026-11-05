@@ -1,21 +1,19 @@
 /* ==========================================================================
-   CTU Express ATM Simulator — Pure CSS Stylesheet
-   P ELEC 1: Object-Oriented Programming (Python and Django)
-   Theme: Light Blue & Crisp White Glassmorphism
-   Typography: Outfit & Plus Jakarta Sans (inspired by reference UI)
+   ExpressBank ATM Simulator — Pure CSS Stylesheet
+   Theme: Light Blue & White with Glassmorphism
+   Typography: Outfit & Plus Jakarta Sans
    ========================================================================== */
 
 :root {
-  --bg-canvas: #eef7ff;
-  --bg-gradient-start: #f5faff;
-  --bg-gradient-mid: #dff1fe;
-  --bg-gradient-end: #eef8ff;
+  --bg-start: #f4faff;
+  --bg-mid: #dff1fe;
+  --bg-end: #eef8ff;
 
-  --glass-white: rgba(255, 255, 255, 0.84);
-  --glass-white-strong: rgba(255, 255, 255, 0.94);
-  --glass-blue-soft: rgba(224, 242, 254, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.92);
-  --glass-border-blue: rgba(56, 189, 248, 0.32);
+  --glass-surface: rgba(255, 255, 255, 0.84);
+  --glass-strong: rgba(255, 255, 255, 0.94);
+  --glass-blue-tint: rgba(224, 242, 254, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.94);
+  --glass-border-blue: rgba(56, 189, 248, 0.35);
 
   --blue-primary: #0284c7;
   --blue-bright: #0ea5e9;
@@ -27,19 +25,12 @@
   --text-secondary: #335374;
   --text-muted: #5b7a9c;
 
-  --status-success-bg: rgba(240, 249, 255, 0.95);
-  --status-success-border: rgba(14, 165, 233, 0.45);
-  --status-success-text: #075985;
-
-  --status-error-bg: rgba(254, 242, 242, 0.95);
-  --status-error-border: rgba(239, 68, 68, 0.45);
-  --status-error-text: #991b1b;
-
   --shadow-glass:
-    0 14px 34px -8px rgba(2, 132, 199, 0.12),
-    0 4px 12px -2px rgba(11, 34, 57, 0.04),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
-  --shadow-blue-btn:
+    0 16px 38px -10px rgba(2, 132, 199, 0.14),
+    0 4px 14px -2px rgba(11, 34, 57, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.96);
+
+  --shadow-blue:
     0 12px 26px -6px rgba(2, 132, 199, 0.38),
     inset 0 1px 1px rgba(255, 255, 255, 0.48);
 
@@ -58,21 +49,147 @@ body {
   font-family: var(--font-body);
   color: var(--text-primary);
   background:
-    radial-gradient(circle at 10% 12%, rgba(56, 189, 248, 0.25) 0%, transparent 40%),
-    radial-gradient(circle at 88% 15%, rgba(14, 165, 233, 0.2) 0%, transparent 42%),
-    radial-gradient(circle at 50% 90%, rgba(125, 211, 252, 0.26) 0%, transparent 48%),
-    linear-gradient(160deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 52%, var(--bg-gradient-end) 100%);
+    radial-gradient(circle at 12% 14%, rgba(56, 189, 248, 0.26) 0%, transparent 42%),
+    radial-gradient(circle at 88% 16%, rgba(14, 165, 233, 0.22) 0%, transparent 44%),
+    radial-gradient(circle at 50% 88%, rgba(125, 211, 252, 0.28) 0%, transparent 50%),
+    linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 52%, var(--bg-end) 100%);
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Pure CSS Radio State Controllers (Hidden Inputs) */
-.css-state-radio {
-  display: none;
+.hidden {
+  display: none !important;
 }
 
-/* Top Navigation Bar (Strict 3-Zone Contract) */
+/* ==========================================================================
+   1. LOGIN & SIGN UP VIEW
+   ========================================================================== */
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 470px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 249, 255, 0.82) 100%);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1.5px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  border-radius: 28px;
+  padding: 2.25rem 2rem;
+}
+
+.auth-brand-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.auth-logo-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  box-shadow: var(--shadow-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  margin-bottom: 0.9rem;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--blue-deep);
+}
+
+.auth-subtitle {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  background: rgba(224, 242, 254, 0.85);
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid rgba(125, 211, 252, 0.65);
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+  padding: 0.6rem 1rem;
+  border-radius: 11px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: var(--blue-deep);
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
+}
+
+.saved-accounts-box {
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.saved-accounts-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 0.55rem;
+  display: block;
+}
+
+.saved-account-chip {
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.45rem;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(186, 230, 253, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.saved-account-chip:hover {
+  background: rgba(224, 242, 254, 0.85);
+  border-color: var(--blue-bright);
+}
+
+/* ==========================================================================
+   2. TOP ATM NAVIGATION BAR
+   ========================================================================== */
+
 .atm-topbar {
   position: sticky;
   top: 0;
@@ -82,7 +199,7 @@ body {
   justify-content: space-between;
   gap: 2rem;
   padding: 0.95rem 2rem;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.84);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid rgba(56, 189, 248, 0.25);
@@ -105,92 +222,53 @@ body {
   gap: 1.75rem;
 }
 
-.atm-nav-label {
+.atm-nav-btn {
   font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-secondary);
-  white-space: nowrap;
-  padding: 0.35rem 0;
+  background: none;
+  border: none;
   border-bottom: 2.5px solid transparent;
+  padding: 0.35rem 0;
   cursor: pointer;
+  white-space: nowrap;
   transition: color 150ms ease, border-color 150ms ease;
 }
 
-.atm-nav-label:hover {
-  color: var(--blue-primary);
-}
-
-/* Pure CSS Tab Active Highlighting & Panel Switching */
-#nav-tab-terminal:checked ~ .atm-topbar label[for="nav-tab-terminal"],
-#nav-tab-poly:checked ~ .atm-topbar label[for="nav-tab-poly"],
-#nav-tab-uml:checked ~ .atm-topbar label[for="nav-tab-uml"],
-#nav-tab-source:checked ~ .atm-topbar label[for="nav-tab-source"] {
+.atm-nav-btn:hover,
+.atm-nav-btn.active {
   color: var(--blue-primary);
   border-bottom-color: var(--blue-bright);
 }
 
-.tab-panel {
-  display: none;
-}
+/* ==========================================================================
+   3. ATM SIMULATOR WORKSPACE
+   ========================================================================== */
 
-#nav-tab-terminal:checked ~ .atm-container #panel-terminal,
-#nav-tab-poly:checked ~ .atm-container #panel-poly,
-#nav-tab-uml:checked ~ .atm-container #panel-uml,
-#nav-tab-source:checked ~ .atm-container #panel-source {
-  display: block;
-}
-
-/* Pure CSS Action Mode Switching (Deposit / Withdraw / New Account) */
-.action-mode-panel {
-  display: none;
-}
-
-#mode-deposit:checked ~ .atm-container #form-panel-deposit,
-#mode-withdraw:checked ~ .atm-container #form-panel-withdraw,
-#mode-create:checked ~ .atm-container #form-panel-create {
-  display: block;
-}
-
-#mode-deposit:checked ~ .atm-container label[for="mode-deposit"].action-tile,
-#mode-withdraw:checked ~ .atm-container label[for="mode-withdraw"].action-tile,
-#mode-create:checked ~ .atm-container label[for="mode-create"].action-tile {
-  border-color: var(--blue-bright);
-  background: linear-gradient(160deg, rgba(240, 249, 255, 0.98) 0%, rgba(186, 230, 253, 0.82) 100%);
-  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.28), 0 8px 20px -6px rgba(2, 132, 199, 0.18);
-  transform: translateY(-2px);
-}
-
-#mode-deposit:checked ~ .atm-container label[for="mode-deposit"].seg-btn,
-#mode-withdraw:checked ~ .atm-container label[for="mode-withdraw"].seg-btn,
-#mode-create:checked ~ .atm-container label[for="mode-create"].seg-btn {
-  background: #ffffff;
-  color: var(--blue-deep);
-  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
-}
-
-/* Layout Container */
 .atm-container {
-  max-width: 1260px;
+  max-width: 1220px;
   margin: 0 auto;
-  padding: 1.75rem 1.5rem 4rem;
+  padding: 2rem 1.5rem 4rem;
 }
 
-.context-strip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.28);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+.atm-grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 1.75rem;
+  align-items: start;
 }
 
-/* Glassmorphism Surfaces */
+@media (max-width: 960px) {
+  .atm-grid {
+    grid-template-columns: 1fr;
+  }
+  .atm-topbar {
+    padding: 0.85rem 1.15rem;
+    gap: 1rem;
+  }
+}
+
 .glass-panel {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 249, 255, 0.78) 100%);
   backdrop-filter: blur(20px) saturate(180%);
@@ -201,81 +279,14 @@ body {
   padding: 1.75rem;
 }
 
-.glass-solid-blue {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.35rem;
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #ffffff;
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.94) 0%, rgba(2, 132, 199, 0.98) 100%);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 14px;
-  box-shadow: var(--shadow-blue-btn);
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: transform 150ms ease, opacity 150ms ease;
-}
-
-.glass-solid-blue:hover {
-  transform: translateY(-1px);
-  opacity: 0.96;
-}
-
-.glass-soft-blue-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.9rem;
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #0369a1;
-  background: linear-gradient(135deg, rgba(224, 242, 254, 0.88) 0%, rgba(186, 230, 253, 0.68) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  border-radius: 11px;
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: background 150ms ease;
-}
-
-.glass-soft-blue-btn:hover {
-  background: linear-gradient(135deg, rgba(186, 230, 253, 0.95) 0%, rgba(125, 211, 252, 0.8) 100%);
-}
-
-/* Main 2-Column ATM Grid */
-.atm-grid {
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 1.75rem;
-  align-items: stretch;
-}
-
-@media (max-width: 980px) {
-  .atm-grid {
-    grid-template-columns: 1fr;
-  }
-  .atm-nav {
-    gap: 1rem;
-    overflow-x: auto;
-  }
-}
-
-/* Reference Screenshot Typography & Components */
+/* Account Header & Profile (Reference Screenshot Typography) */
 .account-top-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 1rem;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
 }
 
 .account-top-title {
@@ -290,7 +301,7 @@ body {
   height: 42px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
-  border: 1.5px solid rgba(125, 211, 252, 0.8);
+  border: 1.5px solid rgba(125, 211, 252, 0.85);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -314,13 +325,13 @@ body {
 }
 
 .profile-subtext {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #0369a1;
-  margin-top: 0.3rem;
+  margin-top: 0.25rem;
 }
 
-/* 3-Column Rounded Action Tile Grid (Orders / Favourites / Addresses style) */
+/* 3-Column Rounded Action Tile Grid */
 .action-tile-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -340,14 +351,16 @@ body {
   border: 1.5px solid rgba(186, 230, 253, 0.9);
   border-radius: 20px;
   cursor: pointer;
-  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+  transition: all 150ms ease;
   color: var(--blue-deep);
-  text-align: center;
 }
 
-.action-tile:hover {
+.action-tile:hover,
+.action-tile.active {
   transform: translateY(-2px);
   border-color: var(--blue-bright);
+  background: linear-gradient(160deg, rgba(240, 249, 255, 0.98) 0%, rgba(186, 230, 253, 0.85) 100%);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.24), 0 8px 20px -6px rgba(2, 132, 199, 0.16);
 }
 
 .action-tile-label {
@@ -358,7 +371,7 @@ body {
   white-space: nowrap;
 }
 
-/* Wallet Section (pandapay ₱ 0.00 style) */
+/* Wallet Balance Card */
 .section-heading {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -373,7 +386,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 1.3rem;
+  padding: 1.15rem 1.35rem;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.85) 100%);
   backdrop-filter: blur(16px);
   border: 1.5px solid rgba(125, 211, 252, 0.85);
@@ -398,19 +411,18 @@ body {
 
 .wallet-amount {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.5rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: var(--blue-deep);
   white-space: nowrap;
 }
 
-/* Clean Divided Rows (Perks for you / General list style) */
+/* Clean Divided Rows */
 .clean-row-list {
   list-style: none;
   border-top: 1px solid rgba(14, 165, 233, 0.2);
   border-bottom: 1px solid rgba(14, 165, 233, 0.2);
-  margin-bottom: 1.5rem;
 }
 
 .clean-row-item {
@@ -418,8 +430,8 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.85rem;
-  padding: 0.88rem 0.15rem;
-  border-bottom: 1px solid rgba(14, 165, 233, 0.16);
+  padding: 0.9rem 0.15rem;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.15);
 }
 
 .clean-row-item:last-child {
@@ -445,59 +457,14 @@ body {
   font-weight: 600;
 }
 
-/* Account Switcher Cards */
-.account-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.account-switch-btn {
-  width: 100%;
-  text-align: left;
-  padding: 0.85rem 1rem;
-  border-radius: 18px;
-  border: 1.5px solid rgba(125, 211, 252, 0.75);
-  background: rgba(255, 255, 255, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  cursor: pointer;
-  transition: all 150ms ease;
-  color: var(--blue-deep);
-}
-
-.account-switch-btn:hover {
-  background: rgba(224, 242, 254, 0.85);
-  border-color: var(--blue-bright);
-}
-
-.account-switch-btn.active-account {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.94) 0%, rgba(2, 132, 199, 0.98) 100%);
-  border-color: rgba(255, 255, 255, 0.45);
-  color: #ffffff;
-  box-shadow: var(--shadow-blue-btn);
-}
-
-/* Forms & Inputs */
-.form-grid-2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.form-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-  gap: 0.9rem;
+/* ATM Keypad & Form Controls */
+.form-group {
   margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 800;
   color: var(--text-secondary);
   margin-bottom: 0.4rem;
@@ -506,15 +473,16 @@ body {
 .form-input,
 .form-select {
   width: 100%;
-  padding: 0.78rem 0.95rem;
+  padding: 0.82rem 1rem;
   font-family: var(--font-body);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: var(--blue-deep);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   border: 1.5px solid rgba(125, 211, 252, 0.9);
-  border-radius: 13px;
+  border-radius: 14px;
   outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .form-input:focus,
@@ -523,7 +491,105 @@ body {
   box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
 }
 
-/* Feedback Banner */
+.atm-amount-display {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0.85rem 1.15rem;
+  background: linear-gradient(135deg, rgba(240, 249, 255, 0.95) 0%, rgba(224, 242, 254, 0.85) 100%);
+  border: 2px solid rgba(56, 189, 248, 0.65);
+  border-radius: 16px;
+  color: var(--blue-deep);
+}
+
+.quick-cash-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.atm-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.keypad-btn {
+  padding: 0.78rem;
+  border-radius: 14px;
+  border: 1.5px solid rgba(186, 230, 253, 0.9);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 242, 254, 0.68) 100%);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.keypad-btn:hover {
+  background: rgba(186, 230, 253, 0.85);
+  border-color: var(--blue-bright);
+  transform: translateY(-1px);
+}
+
+.keypad-btn:active {
+  transform: scale(0.98);
+}
+
+.glass-solid-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.95) 0%, rgba(2, 132, 199, 0.98) 100%);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 14px;
+  box-shadow: var(--shadow-blue);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.glass-solid-blue:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.glass-soft-blue-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.52rem 0.95rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(186, 230, 253, 0.72) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.48);
+  border-radius: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease;
+}
+
+.glass-soft-blue-btn:hover {
+  background: linear-gradient(135deg, rgba(186, 230, 253, 0.95) 0%, rgba(125, 211, 252, 0.85) 100%);
+}
+
+/* Status Banner */
 .feedback-banner {
   display: flex;
   align-items: flex-start;
@@ -531,24 +597,24 @@ body {
   gap: 1rem;
   padding: 1rem 1.25rem;
   border-radius: 18px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
   backdrop-filter: blur(14px);
 }
 
 .feedback-banner.success,
 .feedback-banner.info {
-  background: var(--status-success-bg);
-  border: 1.5px solid var(--status-success-border);
-  color: var(--status-success-text);
+  background: rgba(240, 249, 255, 0.95);
+  border: 1.5px solid rgba(14, 165, 233, 0.45);
+  color: #075985;
 }
 
 .feedback-banner.error {
-  background: var(--status-error-bg);
-  border: 1.5px solid var(--status-error-border);
-  color: var(--status-error-text);
+  background: rgba(254, 242, 242, 0.96);
+  border: 1.5px solid rgba(239, 68, 68, 0.45);
+  color: #991b1b;
 }
 
-/* Data Tables */
+/* Transaction Table */
 .data-table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -578,36 +644,4 @@ body {
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
-}
-
-.code-viewer-box {
-  background: #08182b;
-  color: #e0f2fe;
-  border-radius: 18px;
-  border: 1.5px solid rgba(56, 189, 248, 0.35);
-  overflow: hidden;
-  margin-top: 1rem;
-}
-
-.code-viewer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.15rem;
-  background: #0c2340;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #7dd3fc;
-}
-
-.code-pre {
-  padding: 1.15rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.6;
-  overflow-x: auto;
-  max-height: 460px;
-  white-space: pre;
 }
