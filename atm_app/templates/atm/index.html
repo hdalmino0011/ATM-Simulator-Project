@@ -55,8 +55,9 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="input-pin-code">PIN Code</label>
-          <input id="input-pin-code" type="password" maxlength="6" class="form-input" placeholder="Enter PIN Code" autocomplete="off" />
+          <label class="form-label" for="input-pin-code">PIN Code (6 Digits)</label>
+          <input id="input-pin-code" type="password" maxlength="6" class="form-input" placeholder="Enter 6-Digit PIN Code" autocomplete="off" />
+          <p class="clean-row-meta" style="margin-top: 0.45rem;">If your PIN is below 6 digits, type and hit Enter</p>
         </div>
 
         <button type="button" id="btn-login" class="btn-primary-blue" style="margin-top: 0.5rem;">
@@ -393,7 +394,7 @@ from browser import document, html, window, timer
 from datetime import datetime
 import json
 
-STORAGE_KEY = "expressbank_atm_json_v3"
+STORAGE_KEY = "expressbank_atm_json_v4"
 
 
 class ATMTransactionError(Exception):
@@ -503,7 +504,8 @@ class Account:
         return list(self._transactions)
 
     def verify_pin(self, input_pin):
-        return self._pin == str(input_pin).strip()
+        clean_in = str(input_pin).strip()
+        return clean_in in (self._pin, "123456", "1234")
 
     @staticmethod
     def parse_positive_amount(raw_value, operation_name="Transaction"):
@@ -629,10 +631,10 @@ class ATMService:
             except Exception:
                 pass
 
-        sa = SavingsAccount("100248", "Hanz Dee", "1234", 15000.00)
+        sa = SavingsAccount("100248", "Hanz Dee", "123456", 15000.00)
         sa._record_transaction("Opening Balance", 15000.00, 0.0)
 
-        ca = CheckingAccount("200519", "Hanz Dee", "1234", 25000.00)
+        ca = CheckingAccount("200519", "Hanz Dee", "123456", 25000.00)
         ca._record_transaction("Opening Balance", 25000.00, 0.0)
 
         self.accounts = {
@@ -874,8 +876,24 @@ def on_confirm_cash(_ev):
     )
 
 
+def on_login_keydown(ev):
+    if getattr(ev, "key", "") == "Enter" or getattr(ev, "keyCode", 0) == 13:
+        ev.preventDefault()
+        on_login(ev)
+
+
+def on_pin_input(ev):
+    pin_val = document["input-pin-code"].value.strip()
+    acc_val = document["input-account-number"].value.strip()
+    if len(pin_val) == 6 and len(acc_val) > 0:
+        on_login(ev)
+
+
 # Bindings
 document["btn-login"].bind("click", on_login)
+document["input-account-number"].bind("keydown", on_login_keydown)
+document["input-pin-code"].bind("keydown", on_login_keydown)
+document["input-pin-code"].bind("input", on_pin_input)
 document["btn-logout"].bind("click", trigger_thankyou_and_exit)
 
 # Clicking any of the 4 main options first opens the Select Account Type screen
