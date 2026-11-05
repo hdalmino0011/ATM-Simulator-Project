@@ -1,4 +1,3 @@
-"""Root URL configuration for atm_project."""
 from django.urls import path, include
 
 urlpatterns = [

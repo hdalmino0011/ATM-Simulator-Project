@@ -1,13 +1,8 @@
-"""
-Django settings for atm_project (CTU P ELEC 1 - OOP Final Project: ATM Simulator).
-Uses signed cookie sessions so no database migration is required to run the simulator.
-"""
-
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-ctu-pelec1-oop-atm-simulator-educational-key"
+SECRET_KEY = "django-insecure-expressbank-atm-simulator-key"
 
 DEBUG = True
 
@@ -30,7 +25,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# Store session data in signed browser cookies so a database is NOT required (Part IV rule)
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
 
@@ -53,7 +47,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "atm_project.wsgi.application"
 
-# Database is out of scope per Part I & Part IV; dummy sqlite3 config provided for Django compatibility
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

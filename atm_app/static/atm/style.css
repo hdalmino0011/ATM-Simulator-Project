@@ -1,9 +1,3 @@
-/* ==========================================================================
-   ExpressBank ATM Simulator — Pure CSS Stylesheet
-   Theme: Light Blue & White Glassmorphism
-   Typography: Poppins Bold across the entire system
-   ========================================================================== */
-
 :root {
   --bg-start: #f4faff;
   --bg-mid: #dff1fe;
@@ -58,10 +52,6 @@ body {
 .hidden {
   display: none !important;
 }
-
-/* ==========================================================================
-   1. SCREEN CONTAINER & GLASS MODAL CARDS
-   ========================================================================== */
 
 .screen-wrapper {
   min-height: 100vh;
@@ -127,7 +117,6 @@ body {
   margin-top: 0.25rem;
 }
 
-/* Form Controls */
 .form-group {
   margin-bottom: 1.15rem;
 }
@@ -205,10 +194,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* ==========================================================================
-   2. LOADING CIRCLE SPINNER
-   ========================================================================== */
-
 .loading-state-box {
   display: flex;
   flex-direction: column;
@@ -250,10 +235,6 @@ body {
   color: var(--text-muted);
   margin-top: 0.25rem;
 }
-
-/* ==========================================================================
-   3. ATM HEADER & 2x2 OPTION TILES
-   ========================================================================== */
 
 .atm-top-row {
   display: flex;
@@ -334,10 +315,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   4. TRANSACTION COMPLETED, INQUIRY, TRANSACTIONS & THANK YOU SCREENS
-   ========================================================================== */
-
 .prompt-center-box {
   display: flex;
   flex-direction: column;
@@ -394,10 +371,6 @@ body {
   max-width: 360px;
   margin: 0 auto;
 }
-
-/* ==========================================================================
-   5. KEYPAD, BALANCE DETAILS & EXPANDED TRANSACTIONS TABLE
-   ========================================================================== */
 
 .atm-amount-display {
   font-size: 1.65rem;

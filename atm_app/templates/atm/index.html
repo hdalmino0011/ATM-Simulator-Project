@@ -18,13 +18,9 @@
 </head>
 <body onload="brython(1)">
 
-  <!-- ======================================================================
-       SCREEN 1: LOGIN PAGE (ACCOUNT NUMBER & PIN CODE ONLY)
-       ====================================================================== -->
   <div id="view-login" class="screen-wrapper">
     <div class="glass-card">
 
-      <!-- Login Form Content -->
       <div id="login-form-box">
         <div class="brand-header">
           <div class="logo-icon-box">
@@ -70,7 +66,6 @@
         </button>
       </div>
 
-      <!-- Login Loading Circle Spinner -->
       <div id="login-loading-box" class="loading-state-box hidden">
         <div class="spinner-circle"></div>
         <div class="loading-title">Verifying Credentials...</div>
@@ -80,13 +75,9 @@
     </div>
   </div>
 
-  <!-- ======================================================================
-       SCREEN 2: ATM SIMULATOR (SHOWN AFTER LOGIN)
-       ====================================================================== -->
   <div id="view-atm" class="screen-wrapper hidden">
     <div id="atm-modal-card" class="glass-card atm-card-wide">
 
-      <!-- Top Account Header (Hidden during Thank You exit screen) -->
       <div id="atm-header-bar" class="atm-top-row">
         <div>
           <h1 id="atm-holder-name" class="holder-name">Hanz Dee</h1>
@@ -102,23 +93,16 @@
         </button>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN 0: PROCESSING LOADING CIRCLE
-           ================================================================== -->
       <div id="screen-loading" class="loading-state-box hidden">
         <div class="spinner-circle"></div>
         <div id="atm-loading-title" class="loading-title">Processing Transaction...</div>
         <div id="atm-loading-sub" class="loading-subtitle">Please wait, do not remove your card</div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN A: MAIN ATM OPTIONS MENU
-           ================================================================== -->
       <div id="screen-menu">
         <div class="atm-menu-prompt">Please select a transaction</div>
 
         <div class="atm-menu-grid">
-          <!-- Option 1: Withdraw -->
           <button type="button" id="opt-withdraw" class="atm-option-tile">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 15V3"></path>
@@ -129,7 +113,6 @@
             <span class="atm-option-sub">Dispense cash from account</span>
           </button>
 
-          <!-- Option 2: Deposit -->
           <button type="button" id="opt-deposit" class="atm-option-tile">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 3v12"></path>
@@ -140,7 +123,6 @@
             <span class="atm-option-sub">Add funds to your account</span>
           </button>
 
-          <!-- Option 3: Balance Inquiry -->
           <button type="button" id="opt-inquire" class="atm-option-tile">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="5" width="20" height="14" rx="2"></rect>
@@ -150,7 +132,6 @@
             <span class="atm-option-sub">Check available balance</span>
           </button>
 
-          <!-- Option 4: Transactions -->
           <button type="button" id="opt-history" class="atm-option-tile">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="16" rx="2"></rect>
@@ -164,10 +145,6 @@
         </div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN A2: SELECT ACCOUNT TYPE (SAVINGS OR CHECKING)
-           Shown before typing an amount or viewing Balance / Transactions
-           ================================================================== -->
       <div id="screen-account-type" class="hidden">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.15rem;">
           <div>
@@ -197,9 +174,6 @@
         </div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN B: DEPOSIT / WITHDRAW INPUT SCREEN
-           ================================================================== -->
       <div id="screen-cash" class="hidden">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
           <div>
@@ -211,7 +185,6 @@
           <button type="button" id="btn-back-from-cash" class="btn-secondary-blue">Cancel</button>
         </div>
 
-        <!-- Validation Error Alert -->
         <div id="cash-error" class="feedback-banner error hidden">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
             <circle cx="12" cy="12" r="10"></circle>
@@ -257,9 +230,6 @@
         </button>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN C: TRANSACTION COMPLETED (ONLY FOR WITHDRAW & DEPOSIT)
-           ================================================================== -->
       <div id="screen-completed" class="prompt-center-box hidden">
         <div class="status-icon-circle">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
@@ -277,9 +247,6 @@
         </div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN D: BALANCE INQUIRY VIEW (NO "TRANSACTION COMPLETED!" TEXT)
-           ================================================================== -->
       <div id="screen-inquire" class="hidden">
         <h2 class="section-view-heading">Balance Inquiry</h2>
 
@@ -336,9 +303,6 @@
         </div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN E: TRANSACTIONS VIEW (EXPANDED MODAL, NO "TRANSACTION COMPLETED!")
-           ================================================================== -->
       <div id="screen-history" class="hidden">
         <h2 id="history-view-heading" class="section-view-heading">Transaction History</h2>
 
@@ -366,9 +330,6 @@
         </div>
       </div>
 
-      <!-- ==================================================================
-           SUB-SCREEN F: THANK YOU / CARD EJECT SCREEN
-           ================================================================== -->
       <div id="screen-thankyou" class="prompt-center-box hidden" style="padding: 2.75rem 1rem;">
         <div class="status-icon-circle">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -386,9 +347,6 @@
     </div>
   </div>
 
-  <!-- ======================================================================
-       PYTHON OOP LOGIC
-       ====================================================================== -->
   <script type="text/python">
 from browser import document, html, window, timer
 from datetime import datetime
@@ -482,6 +440,10 @@ class Transaction:
 
 
 class Account:
+    MAINTAINING_BALANCE = 0.00
+    WITHDRAWAL_LIMIT = 25000.00
+    WITHDRAWAL_FEE = 0.00
+
     def __init__(self, account_number, holder_name, pin, starting_balance, account_type="Standard Account", transactions=None):
         self._account_number = str(account_number).strip()
         self._holder_name = str(holder_name).strip()
@@ -553,6 +515,16 @@ class Account:
     def get_max_withdrawable(self):
         return self._balance
 
+    def inquire_balance(self):
+        return {
+            "account_number": self.masked_account_number,
+            "account_type": self._account_type,
+            "balance": self._balance,
+            "max_withdrawable": self.get_max_withdrawable(),
+            "maintaining_balance": self.MAINTAINING_BALANCE,
+            "withdrawal_fee": self.WITHDRAWAL_FEE,
+        }
+
     def to_dict(self):
         return {
             "class_name": self.__class__.__name__,
@@ -623,7 +595,7 @@ class ATMService:
         self.accounts = {}
         self.logged_in_card = None
         self.current_account = None
-        self.pending_action = None  # "withdraw" | "deposit" | "inquire" | "history"
+        self.pending_action = None
         self.load_storage()
 
     def load_storage(self):
@@ -685,6 +657,16 @@ class ATMService:
             self.current_account = self.accounts["savings"]
         return self.current_account
 
+    def perform_deposit(self, raw_amount):
+        tx = self.current_account.deposit(raw_amount)
+        self.save_storage()
+        return tx
+
+    def perform_withdrawal(self, raw_amount):
+        tx = self.current_account.withdraw(raw_amount)
+        self.save_storage()
+        return tx
+
 
 service = ATMService()
 
@@ -704,7 +686,6 @@ def show_subscreen(screen_id):
         "screen-history",
         "screen-thankyou",
     ]
-    # Expand modal width when viewing Transactions so table never wraps
     modal = document["atm-modal-card"]
     if screen_id == "screen-history":
         modal.class_name = "glass-card atm-card-expanded"
@@ -738,15 +719,14 @@ def refresh_atm_data():
     document["atm-holder-name"].text = acc.holder_name
     document["atm-account-meta"].text = f"{acc.account_type} · Account #{acc.masked_account_number}"
 
-    # Balance inquiry details
-    document["inq-acc-num"].text = acc.masked_account_number
-    document["inq-acc-type"].text = acc.account_type
-    document["inq-balance"].text = fmt_php(acc.balance)
-    document["inq-withdrawable"].text = fmt_php(acc.get_max_withdrawable())
-    document["inq-maint"].text = fmt_php(acc.MAINTAINING_BALANCE)
-    document["inq-fee"].text = fmt_php(acc.WITHDRAWAL_FEE)
+    info = acc.inquire_balance()
+    document["inq-acc-num"].text = info["account_number"]
+    document["inq-acc-type"].text = info["account_type"]
+    document["inq-balance"].text = fmt_php(info["balance"])
+    document["inq-withdrawable"].text = fmt_php(info["max_withdrawable"])
+    document["inq-maint"].text = fmt_php(info["maintaining_balance"])
+    document["inq-fee"].text = fmt_php(info["withdrawal_fee"])
 
-    # Transaction history rows
     document["history-view-heading"].text = f"Transaction History ({acc.account_type})"
     tbody = document["tx-history-tbody"]
     tbody.clear()
@@ -868,10 +848,9 @@ def on_confirm_cash(_ev):
     def process_tx():
         try:
             if service.pending_action == "withdraw":
-                acc.withdraw(raw_amt)
+                service.perform_withdrawal(raw_amt)
             else:
-                acc.deposit(raw_amt)
-            service.save_storage()
+                service.perform_deposit(raw_amt)
             document["input-tx-amount"].value = ""
             refresh_atm_data()
             show_subscreen("screen-completed")
@@ -894,19 +873,16 @@ def on_login_keydown(ev):
         on_login(ev)
 
 
-# Bindings
 document["btn-login"].bind("click", on_login)
 document["input-account-number"].bind("keydown", on_login_keydown)
 document["input-pin-code"].bind("keydown", on_login_keydown)
 document["btn-logout"].bind("click", trigger_thankyou_and_exit)
 
-# Clicking any of the 4 main options first opens the Select Account Type screen
 document["opt-withdraw"].bind("click", lambda _e: prompt_account_type("withdraw"))
 document["opt-deposit"].bind("click", lambda _e: prompt_account_type("deposit"))
 document["opt-inquire"].bind("click", lambda _e: prompt_account_type("inquire"))
 document["opt-history"].bind("click", lambda _e: prompt_account_type("history"))
 
-# Account Type Selection Buttons
 document["btn-choose-savings"].bind("click", lambda _e: on_choose_account_type("savings"))
 document["btn-choose-checking"].bind("click", lambda _e: on_choose_account_type("checking"))
 document["btn-cancel-acct-type"].bind("click", lambda _e: show_subscreen("screen-menu"))
