@@ -13,9 +13,9 @@
 | :--- | :--- | :--- |
 | **April Dianne Calvo** | Project Lead & Documentation Specialist | Led project planning, system workflow alignment with Part III & Part IV rules, UML class diagramming, and documentation of test cases. |
 | **Hanz Dee Dalmino** | Lead Python OOP Architect | Designed the `Account` parent class, encapsulation `@property` getters (`masked_account_number`, `balance`, `transactions`), and custom exception hierarchy (`ATMTransactionError`) in `atm_app/oop_models.py`. |
-| **Steve Niño Larino** | Inheritance & Polymorphism Developer | Implemented the `SavingsAccount` and `CheckingAccount` child classes and overridden `withdraw()` and `get_max_withdrawable()` methods enforcing maintaining balances, limits, and fees. |
+| **Diana Sismar** | Inheritance & Polymorphism Developer | Implemented the `SavingsAccount` and `CheckingAccount` child classes and overridden `withdraw()` and `get_max_withdrawable()` methods enforcing maintaining balances, limits, and fees. |
 | **Kristof Glendale Badayos** | Django Views, Routing & Session Engineer | Built `ATMService`, `Transaction` class, `atm_app/views.py`, `atm_app/urls.py`, multi-account credential verification, and session/local state serialization. |
-| **Diana Sismar** | Frontend UI/UX (HTML & CSS) & QA Tester | Designed the Light Blue & White Glassmorphic interface (`style.css` and `index.html`) using **Poppins Bold** typography, SVG vector icons, loading state transitions, and expanded transaction history modal. |
+| **Steve Niño Larino** | Frontend UI/UX (HTML & CSS) & QA Tester | Designed the Light Blue & White Glassmorphic interface (`style.css` and `index.html`) using **Poppins Bold** typography, SVG vector icons, loading state transitions, and expanded transaction history modal. |
 
 ---
 
