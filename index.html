@@ -3,347 +3,750 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ExpressBank ATM</title>
+  <title>ExpressBank ATM Simulator</title>
   <meta name="description" content="ExpressBank ATM Simulator" />
-  <meta property="og:title" content="ExpressBank ATM" />
+  <meta property="og:title" content="ExpressBank ATM Simulator" />
   <meta property="og:description" content="ExpressBank ATM Simulator" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/brython@3.12.4/brython_stdlib.js"></script>
 </head>
 <body onload="brython(1)">
 
-  <div id="view-login" class="screen-wrapper">
-    <div class="glass-card">
+  <div class="atm-kiosk-shell">
 
-      <div id="login-form-box">
-        <div class="brand-header">
-          <div class="logo-icon-box">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-          </div>
-          <h1 class="brand-title">ExpressBank ATM</h1>
-          <p class="brand-subtitle">Enter your Account Number and PIN Code</p>
-        </div>
-
-        <div id="login-error" class="feedback-banner error hidden">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          <div>
-            <div style="font-size: 0.92rem;">Login Declined</div>
-            <div id="login-error-msg" style="font-size: 0.82rem; margin-top: 0.1rem;"></div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="input-account-number">Account Number</label>
-          <input id="input-account-number" type="text" class="form-input" placeholder="Enter Account Number (At least 9 digits)" autocomplete="off" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="input-pin-code">PIN Code (6 Digits)</label>
-          <input id="input-pin-code" type="password" maxlength="6" class="form-input" placeholder="Enter 6-Digit PIN Code" autocomplete="off" />
-          <p class="clean-row-meta" style="margin-top: 0.45rem;">If your PIN is below 6 digits, type and hit Enter</p>
-        </div>
-
-        <button type="button" id="btn-login" class="btn-primary-blue" style="margin-top: 0.5rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-            <polyline points="10 17 15 12 10 7"></polyline>
-            <line x1="15" y1="12" x2="3" y2="12"></line>
-          </svg>
-          Enter ATM
-        </button>
-      </div>
-
-      <div id="login-loading-box" class="loading-state-box hidden">
-        <div class="spinner-circle"></div>
-        <div class="loading-title">Verifying Credentials...</div>
-        <div class="loading-subtitle">Please wait while we access your account</div>
-      </div>
-
-    </div>
-  </div>
-
-  <div id="view-atm" class="screen-wrapper hidden">
-    <div id="atm-modal-card" class="glass-card atm-card-wide">
-
-      <div id="atm-header-bar" class="atm-top-row">
-        <div>
-          <h1 id="atm-holder-name" class="holder-name">Hanz Dalmino</h1>
-          <p id="atm-account-meta" class="account-meta">Card Account #******248</p>
-        </div>
-        <button type="button" id="btn-logout" class="btn-secondary-blue">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
-          Exit ATM
-        </button>
-      </div>
-
-      <div id="screen-loading" class="loading-state-box hidden">
-        <div class="spinner-circle"></div>
-        <div id="atm-loading-title" class="loading-title">Processing Transaction...</div>
-        <div id="atm-loading-sub" class="loading-subtitle">Please wait, do not remove your card</div>
-      </div>
-
-      <div id="screen-menu">
-        <div class="atm-menu-prompt">Please select a transaction</div>
-
-        <div class="atm-menu-grid">
-          <button type="button" id="opt-withdraw" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 15V3"></path>
-              <polyline points="8 7 12 3 16 7"></polyline>
-              <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-            </svg>
-            <span class="atm-option-title">Withdraw</span>
-            <span class="atm-option-sub">Dispense cash from account</span>
-          </button>
-
-          <button type="button" id="opt-deposit" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3v12"></path>
-              <polyline points="8 11 12 15 16 11"></polyline>
-              <rect x="4" y="17" width="16" height="4" rx="1"></rect>
-            </svg>
-            <span class="atm-option-title">Deposit</span>
-            <span class="atm-option-sub">Add funds to your account</span>
-          </button>
-
-          <button type="button" id="opt-inquire" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-            <span class="atm-option-title">Balance Inquiry</span>
-            <span class="atm-option-sub">Check available balance</span>
-          </button>
-
-          <button type="button" id="opt-history" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-              <line x1="7" y1="9" x2="17" y2="9"></line>
-              <line x1="7" y1="13" x2="17" y2="13"></line>
-              <line x1="7" y1="17" x2="13" y2="17"></line>
-            </svg>
-            <span class="atm-option-title">Transactions</span>
-            <span class="atm-option-sub">View recent activity</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="screen-account-type" class="hidden">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.15rem;">
-          <div>
-            <h2 style="font-size: 1.35rem; color: var(--blue-deep);">Select Account Type</h2>
-            <p class="clean-row-meta">Choose which account to use for this transaction</p>
-          </div>
-          <button type="button" id="btn-cancel-acct-type" class="btn-secondary-blue">Cancel</button>
-        </div>
-
-        <div class="atm-menu-grid">
-          <button type="button" id="btn-choose-savings" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <span class="atm-option-title">Savings Account</span>
-            <span class="atm-option-sub">₱500 Maintaining · ₱0 Fee</span>
-          </button>
-
-          <button type="button" id="btn-choose-checking" class="atm-option-tile">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-            <span class="atm-option-title">Checking Account</span>
-            <span class="atm-option-sub">₱0 Maintaining · ₱15 Fee</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="screen-cash" class="hidden">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-          <div>
-            <h2 id="cash-screen-title" style="font-size: 1.35rem; color: var(--blue-deep);">
-              Withdraw Cash
-            </h2>
-            <p id="cash-screen-sub" class="clean-row-meta">Enter an amount or select a denomination</p>
-          </div>
-          <button type="button" id="btn-back-from-cash" class="btn-secondary-blue">Cancel</button>
-        </div>
-
-        <div id="cash-error" class="feedback-banner error hidden">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          <div>
-            <div style="font-size: 0.92rem;">Transaction Declined</div>
-            <div id="cash-error-msg" style="font-size: 0.82rem; margin-top: 0.1rem;"></div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="input-tx-amount">Amount (PHP)</label>
-          <input id="input-tx-amount" type="text" class="form-input atm-amount-display" placeholder="0.00" value="" />
-        </div>
-
-        <div class="quick-cash-row">
-          <button type="button" class="btn-secondary-blue quick-amt" data-amt="500">₱ 500</button>
-          <button type="button" class="btn-secondary-blue quick-amt" data-amt="1000">₱ 1,000</button>
-          <button type="button" class="btn-secondary-blue quick-amt" data-amt="2000">₱ 2,000</button>
-          <button type="button" class="btn-secondary-blue quick-amt" data-amt="5000">₱ 5,000</button>
-          <button type="button" class="btn-secondary-blue quick-amt" data-amt="10000">₱ 10,000</button>
-        </div>
-
-        <div class="keypad-grid">
-          <button type="button" class="keypad-btn num-key" data-key="1">1</button>
-          <button type="button" class="keypad-btn num-key" data-key="2">2</button>
-          <button type="button" class="keypad-btn num-key" data-key="3">3</button>
-          <button type="button" class="keypad-btn num-key" data-key="4">4</button>
-          <button type="button" class="keypad-btn num-key" data-key="5">5</button>
-          <button type="button" class="keypad-btn num-key" data-key="6">6</button>
-          <button type="button" class="keypad-btn num-key" data-key="7">7</button>
-          <button type="button" class="keypad-btn num-key" data-key="8">8</button>
-          <button type="button" class="keypad-btn num-key" data-key="9">9</button>
-          <button type="button" id="key-clear" class="keypad-btn" style="color: #b91c1c;">CLEAR</button>
-          <button type="button" class="keypad-btn num-key" data-key="0">0</button>
-          <button type="button" class="keypad-btn num-key" data-key="00">00</button>
-        </div>
-
-        <button type="button" id="btn-confirm-cash" class="btn-primary-blue">
-          Confirm Transaction
-        </button>
-      </div>
-
-      <div id="screen-completed" class="prompt-center-box hidden">
-        <div class="status-icon-circle">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-
-        <h2 class="completed-heading">Transaction Completed!</h2>
-
-        <p class="another-tx-question">Would you like to perform another transaction?</p>
-
-        <div class="yes-no-row">
-          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
-          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
-        </div>
-      </div>
-
-      <div id="screen-inquire" class="hidden">
-        <h2 class="section-view-heading">Balance Inquiry</h2>
-
-        <ul class="clean-row-list">
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Account Number</div>
-              <div class="clean-row-meta">Active Card Account</div>
-            </div>
-            <span id="inq-acc-num" class="tabular-nums">******248</span>
-          </li>
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Account Type</div>
-              <div class="clean-row-meta">Selected account type</div>
-            </div>
-            <span id="inq-acc-type">Savings Account</span>
-          </li>
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Current Balance</div>
-              <div class="clean-row-meta">Total funds in account</div>
-            </div>
-            <span id="inq-balance" class="tabular-nums" style="font-size: 1.25rem; color: var(--blue-primary);">₱ 15,000.00</span>
-          </li>
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Available for Withdrawal</div>
-              <div class="clean-row-meta">Maximum single withdrawal allowed</div>
-            </div>
-            <span id="inq-withdrawable" class="tabular-nums">₱ 14,500.00</span>
-          </li>
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Maintaining Balance</div>
-              <div class="clean-row-meta">Minimum required balance</div>
-            </div>
-            <span id="inq-maint" class="tabular-nums">₱ 500.00</span>
-          </li>
-          <li class="clean-row-item">
-            <div>
-              <div class="clean-row-title">Withdrawal Fee</div>
-              <div class="clean-row-meta">Service charge per withdrawal</div>
-            </div>
-            <span id="inq-fee" class="tabular-nums">₱ 0.00</span>
-          </li>
-        </ul>
-
-        <p class="another-tx-question">Would you like to perform another transaction?</p>
-
-        <div class="yes-no-row">
-          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
-          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
-        </div>
-      </div>
-
-      <div id="screen-history" class="hidden">
-        <h2 id="history-view-heading" class="section-view-heading">Transaction History</h2>
-
-        <div class="data-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Reference</th>
-                <th>Type</th>
-                <th>Date &amp; Time</th>
-                <th style="text-align: right;">Amount</th>
-                <th style="text-align: right;">Fee</th>
-                <th style="text-align: right;">Balance</th>
-              </tr>
-            </thead>
-            <tbody id="tx-history-tbody"></tbody>
-          </table>
-        </div>
-
-        <p class="another-tx-question">Would you like to perform another transaction?</p>
-
-        <div class="yes-no-row">
-          <button type="button" class="btn-primary-blue btn-another-yes">Yes</button>
-          <button type="button" class="btn-secondary-blue btn-another-no" style="width: 100%; padding: 0.92rem 1.4rem; font-size: 0.98rem;">No</button>
-        </div>
-      </div>
-
-      <div id="screen-thankyou" class="prompt-center-box hidden" style="padding: 2.75rem 1rem;">
-        <div class="status-icon-circle">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+    <header class="kiosk-fascia-top">
+      <div class="fascia-brand">
+        <span class="fascia-brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <line x1="2" y1="10" x2="22" y2="10"></line>
           </svg>
+        </span>
+        <span>ExpressBank Automated Teller Terminal</span>
+      </div>
+      <div id="fascia-terminal-label" class="fascia-meta tabular-nums">Terminal EB-ATM-4820 · 24/7 Self-Service</div>
+    </header>
+
+    <main class="atm-monitor-stage">
+      <div class="atm-screen-bezel">
+        <div class="atm-screen-display">
+
+          <div id="atm-header-bar" class="atm-screen-header hidden">
+            <div>
+              <h2 id="atm-holder-name" class="screen-holder-title">Hanz Dalmino</h2>
+              <p id="atm-account-meta" class="screen-holder-meta">Local Card · **** **** **** 0248</p>
+            </div>
+            <button type="button" id="btn-logout" class="btn-screen-danger">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Exit ATM
+            </button>
+          </div>
+
+          <section id="screen-welcome" class="welcome-screen">
+            <div class="welcome-carousel-layer">
+              <div id="welcome-carousel-track" class="carousel-track">
+                <div class="carousel-slide carousel-slide-1">
+                  <p class="carousel-banner-text">Fast, Secure, and Reliable Transactions</p>
+                </div>
+                <div class="carousel-slide carousel-slide-2">
+                  <p class="carousel-banner-text">24/7 Access to Your Funds</p>
+                </div>
+                <div class="carousel-slide carousel-slide-3">
+                  <p class="carousel-banner-text">International Card Accepted Here</p>
+                </div>
+                <div class="carousel-slide carousel-slide-4">
+                  <p class="carousel-banner-text">Your Security is Our Priority</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="welcome-foreground">
+              <h1 class="welcome-headline">Welcome to ExpressBank ATM</h1>
+              <p class="welcome-subheadline">Please insert your card or enter account details to begin your transaction.</p>
+
+              <div class="welcome-actions">
+                <button type="button" id="btn-welcome-select-card" class="btn-screen-primary">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                  </svg>
+                  Insert / Select Card
+                </button>
+                <button type="button" id="btn-welcome-manual" class="btn-screen-secondary">
+                  Enter Account Details Manually
+                </button>
+              </div>
+            </div>
+
+            <div class="carousel-indicators">
+              <button type="button" class="carousel-bar active" data-slide="0" aria-label="Slide 1"></button>
+              <button type="button" class="carousel-bar" data-slide="1" aria-label="Slide 2"></button>
+              <button type="button" class="carousel-bar" data-slide="2" aria-label="Slide 3"></button>
+              <button type="button" class="carousel-bar" data-slide="3" aria-label="Slide 4"></button>
+            </div>
+          </section>
+
+          <section id="screen-card-pin" class="hidden">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; gap: 1rem;">
+              <div>
+                <h2 class="screen-section-heading">Card Detected</h2>
+                <p id="detected-card-subtitle" class="screen-section-sub" style="margin-bottom: 0;">Review detected network fees and enter your PIN</p>
+              </div>
+              <button type="button" id="btn-card-pin-cancel" class="btn-screen-secondary">Cancel</button>
+            </div>
+
+            <div class="card-detected-grid">
+              <div class="detected-summary-box">
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.25rem;">Detected Card Profile</div>
+                <div id="det-card-title" style="font-size: 1.12rem; font-weight: 700; color: #ffffff;">ExpressBank Everyday Debit</div>
+                <div id="det-card-meta" style="font-size: 0.84rem; color: var(--accent-cyan); margin-top: 0.2rem;">
+                  Local Card · BancNet · BIN 421900
+                </div>
+
+                <div class="fee-preview-panel" style="margin-top: 1rem;">
+                  <div class="fee-preview-row">
+                    <span>Card Number</span>
+                    <span id="det-card-pan" class="tabular-nums">**** **** **** 0248</span>
+                  </div>
+                  <div class="fee-preview-row">
+                    <span>Classification</span>
+                    <span id="det-card-classification" style="font-weight: 600;">Local Card</span>
+                  </div>
+                  <div class="fee-preview-row">
+                    <span>Withdrawal Fee</span>
+                    <span id="det-card-wd-fee" class="tabular-nums">₱ 0.00</span>
+                  </div>
+                  <div class="fee-preview-row">
+                    <span>FX Conversion Fee</span>
+                    <span id="det-card-fx-fee" class="tabular-nums">0.00%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div id="card-pin-error" class="feedback-banner error hidden">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <div id="card-pin-error-msg"></div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="input-card-pin">Enter PIN Code (6 Digits)</label>
+                  <input id="input-card-pin" type="password" maxlength="6" class="form-input tabular-nums" placeholder="Enter PIN (e.g. 123456 or 1234)" autocomplete="off" />
+                  <p class="form-hint">If your PIN is below 6 digits, type and hit Enter. Demo PIN: 123456 or 1234.</p>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.15rem;">
+                  <button type="button" id="btn-card-login" class="btn-screen-primary" style="flex: 1;">
+                    Enter ATM
+                  </button>
+                  <button type="button" id="btn-switch-card-in-pin" class="btn-screen-secondary">
+                    Change Card
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="screen-manual-login" class="hidden">
+            <div class="screen-form-box">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; gap: 1rem;">
+                <div>
+                  <h2 class="screen-section-heading">Account Sign In</h2>
+                  <p class="screen-section-sub" style="margin-bottom: 0;">Enter your Account Number and PIN Code</p>
+                </div>
+                <button type="button" id="btn-manual-back" class="btn-screen-secondary">Back</button>
+              </div>
+
+              <div id="login-error" class="feedback-banner error hidden">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div id="login-error-msg"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-account-number">Account Number</label>
+                <input id="input-account-number" type="text" class="form-input tabular-nums" placeholder="Enter Account Number (At least 9 digits)" autocomplete="off" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-pin-code">PIN Code (6 Digits)</label>
+                <input id="input-pin-code" type="password" maxlength="6" class="form-input tabular-nums" placeholder="Enter 6-Digit PIN Code" autocomplete="off" />
+                <p class="form-hint">If your PIN is below 6 digits, type and hit Enter</p>
+              </div>
+
+              <button type="button" id="btn-login" class="btn-screen-primary" style="width: 100%; margin-top: 0.4rem;">
+                Enter ATM
+              </button>
+            </div>
+          </section>
+
+          <section id="screen-loading" class="center-prompt-box hidden">
+            <div class="spinner-circle"></div>
+            <h2 id="atm-loading-title" class="screen-section-heading">Processing Transaction...</h2>
+            <p id="atm-loading-sub" class="screen-section-sub" style="margin-bottom: 0;">Please wait, do not remove your card</p>
+          </section>
+
+          <section id="screen-menu" class="hidden">
+            <h2 class="screen-section-heading">Select a Transaction</h2>
+            <p class="screen-section-sub">Choose an operation to continue</p>
+
+            <div class="atm-options-grid">
+              <button type="button" id="opt-withdraw" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 15V3"></path>
+                  <polyline points="8 7 12 3 16 7"></polyline>
+                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
+                </svg>
+                <span class="atm-tile-title">Withdraw</span>
+                <span class="atm-tile-sub">Dispense cash from your account</span>
+              </button>
+
+              <button type="button" id="opt-deposit" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v12"></path>
+                  <polyline points="8 11 12 15 16 11"></polyline>
+                  <rect x="4" y="17" width="16" height="4" rx="1"></rect>
+                </svg>
+                <span class="atm-tile-title">Deposit</span>
+                <span class="atm-tile-sub">Add funds to your balance</span>
+              </button>
+
+              <button type="button" id="opt-inquire" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                <span class="atm-tile-title">Balance Inquiry</span>
+                <span class="atm-tile-sub">Check available funds and limits</span>
+              </button>
+
+              <button type="button" id="opt-history" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                  <line x1="7" y1="9" x2="17" y2="9"></line>
+                  <line x1="7" y1="13" x2="17" y2="13"></line>
+                  <line x1="7" y1="17" x2="13" y2="17"></line>
+                </svg>
+                <span class="atm-tile-title">Transactions</span>
+                <span class="atm-tile-sub">Review active session activity</span>
+              </button>
+            </div>
+          </section>
+
+          <section id="screen-account-type" class="hidden">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; gap: 1rem;">
+              <div>
+                <h2 class="screen-section-heading">Select Account Type</h2>
+                <p class="screen-section-sub" style="margin-bottom: 0;">Choose which account to access for this transaction</p>
+              </div>
+              <button type="button" id="btn-cancel-acct-type" class="btn-screen-secondary">Cancel</button>
+            </div>
+
+            <div class="atm-options-grid">
+              <button type="button" id="btn-choose-savings" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span class="atm-tile-title">Savings Account</span>
+                <span class="atm-tile-sub">₱500 Maintaining · ₱20,000 Max Limit · ₱0 Account Fee</span>
+              </button>
+
+              <button type="button" id="btn-choose-checking" class="atm-tile-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                <span class="atm-tile-title">Checking Account</span>
+                <span class="atm-tile-sub">₱0 Maintaining · ₱50,000 Max Limit · ₱15 Account Fee</span>
+              </button>
+            </div>
+          </section>
+
+          <section id="screen-cash" class="hidden">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem;">
+              <div>
+                <h2 id="cash-screen-title" class="screen-section-heading">Withdraw Cash</h2>
+                <p id="cash-screen-sub" class="screen-section-sub" style="margin-bottom: 0;">Enter an amount or choose a preset denomination</p>
+              </div>
+              <button type="button" id="btn-back-from-cash" class="btn-screen-secondary">Cancel</button>
+            </div>
+
+            <div id="cash-error" class="feedback-banner error hidden">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <div id="cash-error-msg"></div>
+            </div>
+
+            <div class="cash-layout-grid">
+              <div>
+                <div class="form-group">
+                  <label class="form-label" for="input-tx-amount">Amount (PHP)</label>
+                  <input id="input-tx-amount" type="text" class="form-input atm-amount-display" placeholder="0.00" value="" />
+                </div>
+
+                <div class="quick-cash-row">
+                  <button type="button" class="quick-cash-chip quick-amt" data-amt="500">₱ 500</button>
+                  <button type="button" class="quick-cash-chip quick-amt" data-amt="1000">₱ 1,000</button>
+                  <button type="button" class="quick-cash-chip quick-amt" data-amt="2000">₱ 2,000</button>
+                  <button type="button" class="quick-cash-chip quick-amt" data-amt="5000">₱ 5,000</button>
+                  <button type="button" class="quick-cash-chip quick-amt" data-amt="10000">₱ 10,000</button>
+                </div>
+
+                <div id="cash-fee-preview" class="fee-preview-panel">
+                  <div class="fee-preview-row">
+                    <span>Card Classification</span>
+                    <span id="fee-prev-class">Local Card</span>
+                  </div>
+                  <div class="fee-preview-row">
+                    <span>Account Processing Fee</span>
+                    <span id="fee-prev-acct" class="tabular-nums">₱ 0.00</span>
+                  </div>
+                  <div class="fee-preview-row">
+                    <span id="fee-prev-net-label">Network / Bank Fee</span>
+                    <span id="fee-prev-net" class="tabular-nums">₱ 0.00</span>
+                  </div>
+                  <div id="fee-prev-fx-row" class="fee-preview-row hidden">
+                    <span>Foreign Currency Conversion (3%)</span>
+                    <span id="fee-prev-fx" class="tabular-nums">₱ 0.00</span>
+                  </div>
+                  <div class="fee-preview-row total">
+                    <span>Estimated Total Debit</span>
+                    <span id="fee-prev-total" class="tabular-nums">₱ 0.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="keypad-grid">
+                  <button type="button" class="keypad-btn num-key" data-key="1">1</button>
+                  <button type="button" class="keypad-btn num-key" data-key="2">2</button>
+                  <button type="button" class="keypad-btn num-key" data-key="3">3</button>
+                  <button type="button" class="keypad-btn num-key" data-key="4">4</button>
+                  <button type="button" class="keypad-btn num-key" data-key="5">5</button>
+                  <button type="button" class="keypad-btn num-key" data-key="6">6</button>
+                  <button type="button" class="keypad-btn num-key" data-key="7">7</button>
+                  <button type="button" class="keypad-btn num-key" data-key="8">8</button>
+                  <button type="button" class="keypad-btn num-key" data-key="9">9</button>
+                  <button type="button" id="key-clear" class="keypad-btn" style="color: #fca5a5;">CLR</button>
+                  <button type="button" class="keypad-btn num-key" data-key="0">0</button>
+                  <button type="button" class="keypad-btn num-key" data-key="00">00</button>
+                </div>
+
+                <button type="button" id="btn-confirm-cash" class="btn-screen-primary" style="width: 100%; margin-top: 0.85rem;">
+                  Confirm Transaction
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section id="screen-receipt-prompt" class="center-prompt-box hidden">
+            <div class="status-circle-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2 3-2V4a2 2 0 0 0-2-2z"></path>
+                <line x1="8" y1="8" x2="16" y2="8"></line>
+                <line x1="8" y1="12" x2="14" y2="12"></line>
+              </svg>
+            </div>
+
+            <h2 class="screen-section-heading">Do you want a receipt?</h2>
+            <p id="receipt-prompt-summary" class="screen-section-sub" style="max-width: 44ch;">
+              Confirming will finalize your transaction and prepare your printed slip if selected.
+            </p>
+
+            <div class="yes-no-grid">
+              <button type="button" id="btn-receipt-yes" class="btn-screen-primary">Yes</button>
+              <button type="button" id="btn-receipt-no" class="btn-screen-secondary">No</button>
+            </div>
+          </section>
+
+          <section id="screen-completed" class="center-prompt-box hidden">
+            <div class="status-circle-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+
+            <h2 class="screen-section-heading">Transaction Completed!</h2>
+            <p id="completed-receipt-hint" class="screen-section-sub">Would you like to perform another transaction?</p>
+
+            <div class="yes-no-grid">
+              <button type="button" class="btn-screen-primary btn-another-yes">Yes</button>
+              <button type="button" class="btn-screen-secondary btn-another-no">No</button>
+            </div>
+          </section>
+
+          <section id="screen-inquire" class="hidden">
+            <h2 class="screen-section-heading">Balance Inquiry</h2>
+            <p id="inq-receipt-note" class="screen-section-sub">Account funds and applicable limits</p>
+
+            <ul class="clean-row-list">
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Account / Card</div>
+                  <div class="clean-row-meta">Active masked reference</div>
+                </div>
+                <span id="inq-acc-num" class="tabular-nums">******248</span>
+              </li>
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Account Type</div>
+                  <div class="clean-row-meta">Selected account tier</div>
+                </div>
+                <span id="inq-acc-type">Savings Account</span>
+              </li>
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Current Balance</div>
+                  <div class="clean-row-meta">Total funds available</div>
+                </div>
+                <span id="inq-balance" class="tabular-nums" style="font-size: 1.15rem; font-weight: 700; color: var(--accent-cyan);">₱ 15,000.00</span>
+              </li>
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Available for Withdrawal</div>
+                  <div class="clean-row-meta">Maximum single withdrawal allowed</div>
+                </div>
+                <span id="inq-withdrawable" class="tabular-nums">₱ 14,500.00</span>
+              </li>
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Maintaining Balance</div>
+                  <div class="clean-row-meta">Minimum required balance</div>
+                </div>
+                <span id="inq-maint" class="tabular-nums">₱ 500.00</span>
+              </li>
+              <li class="clean-row-item">
+                <div>
+                  <div class="clean-row-title">Account Fee / Card Fee</div>
+                  <div class="clean-row-meta">Withdrawal fee policy</div>
+                </div>
+                <span id="inq-fee" class="tabular-nums">₱ 0.00</span>
+              </li>
+            </ul>
+
+            <p style="text-align: center; font-size: 0.92rem; color: var(--text-soft);">Would you like to perform another transaction?</p>
+            <div class="yes-no-grid" style="margin: 0.9rem auto 0;">
+              <button type="button" class="btn-screen-primary btn-another-yes">Yes</button>
+              <button type="button" class="btn-screen-secondary btn-another-no">No</button>
+            </div>
+          </section>
+
+          <section id="screen-history" class="hidden">
+            <h2 id="history-view-heading" class="screen-section-heading">Transaction History</h2>
+            <p class="screen-section-sub">Recorded transactions in active session</p>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Type</th>
+                    <th>Date &amp; Time</th>
+                    <th style="text-align: right;">Amount</th>
+                    <th style="text-align: right;">Fee</th>
+                    <th style="text-align: right;">Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-history-tbody"></tbody>
+              </table>
+            </div>
+
+            <p style="text-align: center; font-size: 0.92rem; color: var(--text-soft);">Would you like to perform another transaction?</p>
+            <div class="yes-no-grid" style="margin: 0.9rem auto 0;">
+              <button type="button" class="btn-screen-primary btn-another-yes">Yes</button>
+              <button type="button" class="btn-screen-secondary btn-another-no">No</button>
+            </div>
+          </section>
+
+          <section id="screen-thankyou" class="center-prompt-box hidden">
+            <div class="status-circle-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+            </div>
+            <h2 class="screen-section-heading">Thank you for using ExpressBank ATM!</h2>
+            <p class="screen-section-sub">Please take your card. Returning to welcome screen...</p>
+            <div class="spinner-circle" style="width: 34px; height: 34px; border-width: 3px; margin-bottom: 0;"></div>
+          </section>
+
         </div>
-        <h2 class="completed-heading">Thank you for using ExpressBank ATM!</h2>
-        <p class="loading-subtitle" style="font-size: 0.95rem; margin-top: 0.35rem; margin-bottom: 1.5rem;">
-          Please take your card. Returning to login screen...
-        </p>
-        <div class="spinner-circle" style="width: 36px; height: 36px; border-width: 3px; margin-bottom: 0;"></div>
+      </div>
+    </main>
+
+    <footer class="kiosk-hardware-deck">
+
+      <div class="hardware-corner-left">
+        <div class="hardware-module">
+          <div id="receipt-slot-housing" class="slot-housing">
+            <div class="slot-slit"></div>
+          </div>
+          <button type="button" id="btn-claim-receipt" class="btn-hardware-metal" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16l3-2 3 2 3-2 3 2 3-2V4a2 2 0 0 0-2-2z"></path>
+              <line x1="8" y1="8" x2="16" y2="8"></line>
+              <line x1="8" y1="12" x2="14" y2="12"></line>
+            </svg>
+            CLAIM RECEIPT
+          </button>
+          <span id="receipt-slot-status" class="hardware-subtext">No Transaction</span>
+        </div>
       </div>
 
+      <div class="hardware-corner-center">
+        <div class="hardware-module" style="min-width: 225px;">
+          <button type="button" id="btn-select-card" class="btn-hardware-metal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+            Select Card
+          </button>
+          <span id="selected-card-status" class="hardware-subtext">Choose from 4 Cards</span>
+        </div>
+      </div>
+
+      <div class="hardware-corner-right">
+        <div class="hardware-module">
+          <div id="card-slot-housing" class="slot-housing card-slot-active">
+            <div class="slot-slit"></div>
+          </div>
+          <button type="button" id="btn-enter-card" class="btn-hardware-metal card-slot-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="6" y1="14" x2="10" y2="14"></line>
+            </svg>
+            ENTER CARD HERE
+          </button>
+          <span id="card-slot-status" class="hardware-subtext">Ready for Card Insertion</span>
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <div id="modal-card-selector" class="modal-backdrop hidden">
+    <div class="card-drawer-panel">
+      <div class="card-drawer-header">
+        <div>
+          <h2 class="screen-section-heading" style="margin-bottom: 0.15rem;">Select a Bank Card to Insert</h2>
+          <p class="screen-section-sub" style="margin-bottom: 0;">The ATM automatically detects Local vs. International cards and applies applicable fees</p>
+        </div>
+        <button type="button" id="btn-close-card-modal" class="btn-screen-secondary">Close</button>
+      </div>
+
+      <div class="cards-carousel-grid">
+
+        <button type="button" class="bank-card card-theme-local-debit" data-card-id="local_debit" data-type="local" data-bin="421900">
+          <div class="bank-card-top">
+            <div>
+              <div class="bank-card-issuer">ExpressBank PH</div>
+              <div class="bank-card-kind">Local Debit Card · BancNet</div>
+            </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+          </div>
+          <div class="bank-card-chip-row">
+            <div class="emv-chip"></div>
+            <span style="font-size: 0.76rem; color: rgba(255,255,255,0.85);">Local Network · ₱0 Fee</span>
+          </div>
+          <div class="bank-card-pan">**** **** **** 0248</div>
+          <div class="bank-card-bottom">
+            <span>Hanz Dalmino</span>
+            <span class="tabular-nums">BIN 421900</span>
+          </div>
+        </button>
+
+        <button type="button" class="bank-card card-theme-local-gold" data-card-id="local_gold" data-type="local" data-bin="542810">
+          <div class="bank-card-top">
+            <div>
+              <div class="bank-card-issuer">MetroGold Bank PH</div>
+              <div class="bank-card-kind">Premium Credit Card · Local</div>
+            </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(253,224,71,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+          </div>
+          <div class="bank-card-chip-row">
+            <div class="emv-chip"></div>
+            <span style="font-size: 0.76rem; color: rgba(254,240,138,0.9);">Local Interbank · ₱18 Fee</span>
+          </div>
+          <div class="bank-card-pan">**** **** **** 0519</div>
+          <div class="bank-card-bottom">
+            <span>Kristof Badayos</span>
+            <span class="tabular-nums">BIN 542810</span>
+          </div>
+        </button>
+
+        <button type="button" class="bank-card card-theme-intl-platinum" data-card-id="intl_platinum" data-type="international" data-bin="453288">
+          <div class="bank-card-top">
+            <div>
+              <div class="bank-card-issuer">GlobalPass International</div>
+              <div class="bank-card-kind">Travel Card · Visa Global</div>
+            </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="3.6" y1="9" x2="20.4" y2="9"></line>
+              <line x1="3.6" y1="15" x2="20.4" y2="15"></line>
+              <path d="M11.5 3a17 17 0 0 0 0 18"></path>
+              <path d="M12.5 3a17 17 0 0 1 0 18"></path>
+            </svg>
+          </div>
+          <div class="bank-card-chip-row">
+            <div class="emv-chip"></div>
+            <span style="font-size: 0.76rem; color: #7dd3fc;">International · $3.50/1.75% + 3% FX</span>
+          </div>
+          <div class="bank-card-pan">**** **** **** 1234</div>
+          <div class="bank-card-bottom">
+            <span>April Dianne Calvo</span>
+            <span class="tabular-nums">BIN 453288</span>
+          </div>
+        </button>
+
+        <button type="button" class="bank-card card-theme-intl-silver" data-card-id="intl_silver" data-type="international" data-bin="529104">
+          <div class="bank-card-top">
+            <div>
+              <div class="bank-card-issuer">CitiReach Global</div>
+              <div class="bank-card-kind">Basic ATM Card · Plus/Cirrus</div>
+            </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="3.6" y1="9" x2="20.4" y2="9"></line>
+              <line x1="3.6" y1="15" x2="20.4" y2="15"></line>
+              <path d="M11.5 3a17 17 0 0 0 0 18"></path>
+              <path d="M12.5 3a17 17 0 0 1 0 18"></path>
+            </svg>
+          </div>
+          <div class="bank-card-chip-row">
+            <div class="emv-chip"></div>
+            <span style="font-size: 0.76rem; color: #bae6fd;">International · $3.50/1.75% + 3% FX</span>
+          </div>
+          <div class="bank-card-pan">**** **** **** 5678</div>
+          <div class="bank-card-bottom">
+            <span>Diana Sismar</span>
+            <span class="tabular-nums">BIN 529104</span>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-receipt" class="modal-backdrop hidden">
+    <div class="receipt-paper-wrapper">
+      <div class="receipt-header">
+        <div class="receipt-brand-row">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          <span>ExpressBank</span>
+        </div>
+        <div class="receipt-sub">Official Customer Transaction Record</div>
+      </div>
+
+      <div class="receipt-line">
+        <span>Terminal ID</span>
+        <span id="rec-terminal-id">EB-ATM-4820</span>
+      </div>
+      <div class="receipt-line">
+        <span>Date &amp; Time</span>
+        <span id="rec-datetime">Nov 16, 2026 06:30 PM</span>
+      </div>
+      <div class="receipt-line">
+        <span>Card Number</span>
+        <span id="rec-card-pan">**** **** **** 1234</span>
+      </div>
+      <div class="receipt-line">
+        <span>Card Type</span>
+        <span id="rec-card-type">International Card</span>
+      </div>
+      <div class="receipt-line">
+        <span>Account Tier</span>
+        <span id="rec-acct-type">Savings Account</span>
+      </div>
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-line emphasis">
+        <span>Transaction</span>
+        <span id="rec-tx-type">Cash Withdrawal</span>
+      </div>
+      <div class="receipt-line">
+        <span>Amount Dispensed</span>
+        <span id="rec-amount">₱ 2,000.00</span>
+      </div>
+      <div class="receipt-line">
+        <span>Account Fee</span>
+        <span id="rec-acct-fee">₱ 0.00</span>
+      </div>
+      <div id="rec-local-fee-row" class="receipt-line hidden">
+        <span>Local Bank Fee</span>
+        <span id="rec-local-fee">₱ 0.00</span>
+      </div>
+      <div id="rec-intl-fee-row" class="receipt-line hidden">
+        <span>International Fee ($3.50/1.75%)</span>
+        <span id="rec-intl-fee">₱ 203.00</span>
+      </div>
+      <div id="rec-fx-fee-row" class="receipt-line hidden">
+        <span>FX Conversion Fee (3.00%)</span>
+        <span id="rec-fx-fee">₱ 60.00</span>
+      </div>
+      <div class="receipt-line emphasis">
+        <span>Total Amount Debited</span>
+        <span id="rec-total-debited">₱ 2,263.00</span>
+      </div>
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-line emphasis">
+        <span>Available Balance</span>
+        <span id="rec-avail-balance">₱ 42,737.00</span>
+      </div>
+      <div class="receipt-line">
+        <span>Authorization Code</span>
+        <span id="rec-auth-code">AUTH-9X42K</span>
+      </div>
+      <div class="receipt-line">
+        <span>Reference ID</span>
+        <span id="rec-ref-id">TXN-814-1002</span>
+      </div>
+
+      <div class="receipt-footer">
+        <div style="font-weight: 700; margin-bottom: 0.25rem;">Thank you for banking with ExpressBank!</div>
+        <div>Please retain this receipt for your records.</div>
+      </div>
+
+      <div class="receipt-actions">
+        <button type="button" id="btn-print-receipt" class="receipt-btn">Print Slip</button>
+        <button type="button" id="btn-close-receipt" class="receipt-btn primary">Done</button>
+      </div>
     </div>
   </div>
 
@@ -351,8 +754,9 @@
 from browser import document, html, window, timer
 from datetime import datetime
 import json
+import random
 
-STORAGE_KEY = "expressbank_atm_json_v6"
+STORAGE_KEY = "expressbank_kiosk_atm_v7"
 
 
 def mask_account_number(acc_num):
@@ -360,6 +764,15 @@ def mask_account_number(acc_num):
     if len(s) <= 3:
         return s
     return ("*" * (len(s) - 3)) + s[-3:]
+
+
+def generate_terminal_id():
+    return f"EB-ATM-{random.randint(1040, 9899)}"
+
+
+def generate_auth_code():
+    chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    return "AUTH-" + "".join(random.choice(chars) for _ in range(5))
 
 
 class ATMTransactionError(Exception):
@@ -505,12 +918,18 @@ class Account:
         self._balance = round(self._balance + amount, 2)
         return self._record_transaction("Deposit", amount, 0.0)
 
-    def withdraw(self, raw_amount):
+    def validate_withdrawal(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
-        if amount > self._balance:
+        total_fee = round(float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
+        if total_deduction > self._balance:
             raise InsufficientFundsError("Insufficient funds.")
-        self._balance = round(self._balance - amount, 2)
-        return self._record_transaction("Withdrawal", amount, 0.0)
+        return amount, total_fee, total_deduction
+
+    def withdraw(self, raw_amount, extra_fee=0.0):
+        amount, total_fee, total_deduction = self.validate_withdrawal(raw_amount, extra_fee)
+        self._balance = round(self._balance - total_deduction, 2)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
     def get_max_withdrawable(self):
         return self._balance
@@ -549,19 +968,27 @@ class SavingsAccount(Account):
         avail = max(0.0, round(self._balance - self.MAINTAINING_BALANCE, 2))
         return min(avail, self.WITHDRAWAL_LIMIT)
 
-    def withdraw(self, raw_amount):
+    def validate_withdrawal(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
-        if amount > self._balance:
-            raise InsufficientFundsError("Withdrawal rejected: Insufficient funds.")
-        projected = round(self._balance - amount, 2)
+            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds Savings limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
+        total_fee = round(float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
+        if total_deduction > self._balance:
+            raise InsufficientFundsError(
+                f"Withdrawal rejected: Insufficient funds to cover PHP {amount:,.2f} plus PHP {total_fee:,.2f} fee."
+            )
+        projected = round(self._balance - total_deduction, 2)
         if projected < self.MAINTAINING_BALANCE:
             raise MaintainingBalanceError(
                 f"Withdrawal rejected: PHP {self.MAINTAINING_BALANCE:,.2f} maintaining balance required."
             )
-        self._balance = projected
-        return self._record_transaction("Withdrawal", amount, 0.0)
+        return amount, total_fee, total_deduction
+
+    def withdraw(self, raw_amount, extra_fee=0.0):
+        amount, total_fee, total_deduction = self.validate_withdrawal(raw_amount, extra_fee)
+        self._balance = round(self._balance - total_deduction, 2)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
 
 class CheckingAccount(Account):
@@ -577,25 +1004,86 @@ class CheckingAccount(Account):
             return 0.0
         return min(round(self._balance - self.WITHDRAWAL_FEE, 2), self.WITHDRAWAL_LIMIT)
 
-    def withdraw(self, raw_amount):
+    def validate_withdrawal(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
-            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
-        total_deduction = round(amount + self.WITHDRAWAL_FEE, 2)
+            raise WithdrawalLimitError(f"Withdrawal rejected: Exceeds Checking limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}.")
+        total_fee = round(self.WITHDRAWAL_FEE + float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
         if total_deduction > self._balance:
             raise InsufficientFundsError(
-                f"Withdrawal rejected: Insufficient funds to cover withdrawal plus PHP {self.WITHDRAWAL_FEE:,.2f} fee."
+                f"Withdrawal rejected: Insufficient funds to cover withdrawal plus PHP {total_fee:,.2f} total fee."
             )
+        return amount, total_fee, total_deduction
+
+    def withdraw(self, raw_amount, extra_fee=0.0):
+        amount, total_fee, total_deduction = self.validate_withdrawal(raw_amount, extra_fee)
         self._balance = round(self._balance - total_deduction, 2)
-        return self._record_transaction("Withdrawal", amount, self.WITHDRAWAL_FEE)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
 
 class ATMService:
+    USD_EXCHANGE_RATE = 58.00
+    INTL_USD_FEE = 3.50
+    INTL_PCT_FEE = 0.0175
+    INTL_FX_FEE = 0.03
+
+    CARD_CATALOG = {
+        "local_debit": {
+            "id": "local_debit",
+            "title": "ExpressBank Everyday Debit",
+            "type": "local",
+            "bin": "421900",
+            "masked_pan": "**** **** **** 0248",
+            "network": "BancNet Local",
+            "account_number": "100000248",
+            "holder_name": "Hanz Dalmino",
+            "local_bank_fee": 0.00,
+        },
+        "local_gold": {
+            "id": "local_gold",
+            "title": "MetroGold Premier Credit",
+            "type": "local",
+            "bin": "542810",
+            "masked_pan": "**** **** **** 0519",
+            "network": "Mastercard Local",
+            "account_number": "200000519",
+            "holder_name": "Kristof Badayos",
+            "local_bank_fee": 18.00,
+        },
+        "intl_platinum": {
+            "id": "intl_platinum",
+            "title": "GlobalPass Platinum Travel",
+            "type": "international",
+            "bin": "453288",
+            "masked_pan": "**** **** **** 1234",
+            "network": "Visa Global",
+            "account_number": "300000814",
+            "holder_name": "April Dianne Calvo",
+            "local_bank_fee": 0.00,
+        },
+        "intl_silver": {
+            "id": "intl_silver",
+            "title": "CitiReach Classic Global ATM",
+            "type": "international",
+            "bin": "529104",
+            "masked_pan": "**** **** **** 5678",
+            "network": "Plus / Cirrus Global",
+            "account_number": "400000932",
+            "holder_name": "Diana Sismar",
+            "local_bank_fee": 0.00,
+        },
+    }
+
     def __init__(self):
         self.accounts = {}
         self.logged_in_card = None
+        self.selected_card_id = None
         self.current_account = None
         self.pending_action = None
+        self.pending_amount = None
+        self.last_receipt = None
+        self.terminal_id = generate_terminal_id()
         self.load_storage()
 
     @staticmethod
@@ -605,14 +1093,26 @@ class ATMService:
         ca1 = CheckingAccount("100000248", "Hanz Dalmino", "123456", 25000.00)
         ca1._record_transaction("Opening Balance", 25000.00, 0.0)
 
-        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 15000.00)
-        sa2._record_transaction("Opening Balance", 15000.00, 0.0)
-        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 25000.00)
-        ca2._record_transaction("Opening Balance", 25000.00, 0.0)
+        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 20000.00)
+        sa2._record_transaction("Opening Balance", 20000.00, 0.0)
+        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 35000.00)
+        ca2._record_transaction("Opening Balance", 35000.00, 0.0)
+
+        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "123456", 45000.00)
+        sa3._record_transaction("Opening Balance", 45000.00, 0.0)
+        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "123456", 60000.00)
+        ca3._record_transaction("Opening Balance", 60000.00, 0.0)
+
+        sa4 = SavingsAccount("400000932", "Diana Sismar", "123456", 30000.00)
+        sa4._record_transaction("Opening Balance", 30000.00, 0.0)
+        ca4 = CheckingAccount("400000932", "Diana Sismar", "123456", 40000.00)
+        ca4._record_transaction("Opening Balance", 40000.00, 0.0)
 
         return {
             "100000248": {"savings": sa1, "checking": ca1},
             "200000519": {"savings": sa2, "checking": ca2},
+            "300000814": {"savings": sa3, "checking": ca3},
+            "400000932": {"savings": sa4, "checking": ca4},
         }
 
     def load_storage(self):
@@ -628,12 +1128,11 @@ class ATMService:
                         c_v = pair["checking"]
                         s_txs = [Transaction.from_dict(t) for t in s_v.get("transactions", [])]
                         c_txs = [Transaction.from_dict(t) for t in c_v.get("transactions", [])]
-                        default_holder = defaults[card_num]["savings"].holder_name if card_num in defaults else s_v["holder_name"]
                         rebuilt[card_num] = {
-                            "savings": SavingsAccount(s_v["account_number"], default_holder, s_v["pin"], s_v["balance"], s_txs),
-                            "checking": CheckingAccount(c_v["account_number"], default_holder, c_v["pin"], c_v["balance"], c_txs),
+                            "savings": SavingsAccount(s_v["account_number"], s_v["holder_name"], s_v["pin"], s_v["balance"], s_txs),
+                            "checking": CheckingAccount(c_v["account_number"], c_v["holder_name"], c_v["pin"], c_v["balance"], c_txs),
                         }
-                if "100000248" in rebuilt and "200000519" in rebuilt:
+                if all(k in rebuilt for k in ("100000248", "200000519", "300000814", "400000932")):
                     self.accounts = rebuilt
                     return
             except Exception:
@@ -651,13 +1150,66 @@ class ATMService:
             }
         window.localStorage.setItem(STORAGE_KEY, json.dumps(payload))
 
-    def login(self, raw_acc, raw_pin):
-        acc_in = str(raw_acc or "").strip().upper()
+    def get_active_card(self):
+        if self.selected_card_id and self.selected_card_id in self.CARD_CATALOG:
+            return self.CARD_CATALOG[self.selected_card_id]
+        return self.CARD_CATALOG["local_debit"]
+
+    def compute_fees(self, raw_amount, action_name="withdraw"):
+        card = self.get_active_card()
+        acc = self.current_account
+        acct_fee = round(acc.WITHDRAWAL_FEE, 2) if (acc and action_name == "withdraw") else 0.00
+        if action_name != "withdraw":
+            return {
+                "card_type": card["type"],
+                "account_fee": 0.00,
+                "local_bank_fee": 0.00,
+                "intl_withdrawal_fee": 0.00,
+                "fx_conversion_fee": 0.00,
+                "network_fee": 0.00,
+                "total_fee": 0.00,
+            }
+        try:
+            amt = float(str(raw_amount).replace(",", "").strip()) if raw_amount else 0.0
+        except Exception:
+            amt = 0.0
+        if amt < 0:
+            amt = 0.0
+
+        if card["type"] == "international":
+            usd_min_php = round(self.INTL_USD_FEE * self.USD_EXCHANGE_RATE, 2)
+            pct_php = round(amt * self.INTL_PCT_FEE, 2)
+            intl_wd_fee = max(usd_min_php, pct_php) if amt > 0 else usd_min_php
+            fx_fee = round(amt * self.INTL_FX_FEE, 2)
+            net_fee = round(intl_wd_fee + fx_fee, 2)
+            return {
+                "card_type": "international",
+                "account_fee": acct_fee,
+                "local_bank_fee": 0.00,
+                "intl_withdrawal_fee": intl_wd_fee,
+                "fx_conversion_fee": fx_fee,
+                "network_fee": net_fee,
+                "total_fee": round(acct_fee + net_fee, 2),
+            }
+
+        local_fee = round(card.get("local_bank_fee", 0.0), 2)
+        return {
+            "card_type": "local",
+            "account_fee": acct_fee,
+            "local_bank_fee": local_fee,
+            "intl_withdrawal_fee": 0.00,
+            "fx_conversion_fee": 0.00,
+            "network_fee": local_fee,
+            "total_fee": round(acct_fee + local_fee, 2),
+        }
+
+    def login(self, raw_acc, raw_pin, card_id=None):
+        acc_in = str(raw_acc or "").strip()
         pin_in = str(raw_pin or "").strip()
         if not acc_in or not pin_in:
             raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
 
-        normalized = acc_in.replace("SA-", "").replace("CA-", "").replace(" ", "").replace("-", "")
+        normalized = acc_in.replace(" ", "").replace("-", "")
         if not normalized.isdigit() or len(normalized) < 9:
             raise ATMTransactionError("Account Number must be at least 9 digits.")
 
@@ -670,6 +1222,13 @@ class ATMService:
             raise ATMTransactionError("Invalid Account Number or PIN Code.")
 
         self.logged_in_card = normalized
+        if card_id and card_id in self.CARD_CATALOG:
+            self.selected_card_id = card_id
+        else:
+            for cid, cinfo in self.CARD_CATALOG.items():
+                if cinfo["account_number"] == normalized:
+                    self.selected_card_id = cid
+                    break
         self.current_account = user_accounts["savings"]
         return self.current_account
 
@@ -681,75 +1240,181 @@ class ATMService:
             self.current_account = user_accounts["savings"]
         return self.current_account
 
+    def validate_cash_action(self, raw_amount):
+        if self.pending_action == "withdraw":
+            fee_info = self.compute_fees(raw_amount, "withdraw")
+            amount, _tf, _td = self.current_account.validate_withdrawal(raw_amount, extra_fee=fee_info["network_fee"])
+            return amount, fee_info
+        amount = Account.parse_positive_amount(raw_amount, "Deposit")
+        fee_info = self.compute_fees(amount, "deposit")
+        return amount, fee_info
+
     def perform_deposit(self, raw_amount):
         tx = self.current_account.deposit(raw_amount)
         self.save_storage()
         return tx
 
     def perform_withdrawal(self, raw_amount):
-        tx = self.current_account.withdraw(raw_amount)
+        fee_info = self.compute_fees(raw_amount, "withdraw")
+        tx = self.current_account.withdraw(raw_amount, extra_fee=fee_info["network_fee"])
         self.save_storage()
         return tx
 
 
 service = ATMService()
+document["fascia-terminal-label"].text = f"Terminal {service.terminal_id} · 24/7 Self-Service"
+current_slide = 0
 
 
 def fmt_php(val):
     return f"₱ {val:,.2f}"
 
 
-def show_subscreen(screen_id):
+def update_carousel(slide_idx):
+    global current_slide
+    current_slide = slide_idx % 4
+    offset = current_slide * 25
+    document["welcome-carousel-track"].style.transform = f"translateX(-{offset}%)"
+    for bar in document.select(".carousel-bar"):
+        idx = int(bar.attrs["data-slide"])
+        if idx == current_slide:
+            bar.class_name = "carousel-bar active"
+        else:
+            bar.class_name = "carousel-bar"
+
+
+def advance_carousel():
+    update_carousel(current_slide + 1)
+
+
+timer.set_interval(advance_carousel, 5000)
+
+
+def show_screen(screen_id, show_header=False):
     all_screens = [
+        "screen-welcome",
+        "screen-card-pin",
+        "screen-manual-login",
         "screen-loading",
         "screen-menu",
         "screen-account-type",
         "screen-cash",
+        "screen-receipt-prompt",
         "screen-completed",
         "screen-inquire",
         "screen-history",
         "screen-thankyou",
     ]
-    modal = document["atm-modal-card"]
-    if screen_id == "screen-history":
-        modal.class_name = "glass-card atm-card-expanded"
+    if show_header:
+        document["atm-header-bar"].class_name = "atm-screen-header"
     else:
-        modal.class_name = "glass-card atm-card-wide"
+        document["atm-header-bar"].class_name = "atm-screen-header hidden"
 
     for sid in all_screens:
         if sid == screen_id:
-            if sid == "screen-loading":
-                document[sid].class_name = "loading-state-box"
-            elif sid in ("screen-completed", "screen-thankyou"):
-                document[sid].class_name = "prompt-center-box"
+            if sid == "screen-welcome":
+                document[sid].class_name = "welcome-screen"
+            elif sid in ("screen-loading", "screen-receipt-prompt", "screen-completed", "screen-thankyou"):
+                document[sid].class_name = "center-prompt-box"
             else:
                 document[sid].class_name = ""
         else:
             document[sid].class_name = "hidden"
 
 
-def run_with_loading(title, subtitle, delay_ms, next_fn):
+def run_with_loading(title, subtitle, delay_ms, next_fn, keep_header=True):
     document["atm-loading-title"].text = title
     document["atm-loading-sub"].text = subtitle
-    show_subscreen("screen-loading")
+    show_screen("screen-loading", show_header=keep_header)
     timer.set_timeout(next_fn, delay_ms)
+
+
+def set_receipt_hardware_state(ready):
+    btn = document["btn-claim-receipt"]
+    housing = document["receipt-slot-housing"]
+    status = document["receipt-slot-status"]
+    if ready:
+        btn.disabled = False
+        btn.class_name = "btn-hardware-metal receipt-active"
+        housing.class_name = "slot-housing receipt-slot-ready"
+        status.text = "Receipt Ready — Click to Claim"
+    else:
+        btn.disabled = True
+        btn.class_name = "btn-hardware-metal"
+        housing.class_name = "slot-housing"
+        status.text = "No Transaction"
+
+
+def update_card_hardware_labels():
+    if service.selected_card_id and service.selected_card_id in service.CARD_CATALOG:
+        c = service.CARD_CATALOG[service.selected_card_id]
+        kind_lbl = "International" if c["type"] == "international" else "Local"
+        document["selected-card-status"].text = f"{c['masked_pan'][-4:]} · {kind_lbl}"
+        document["card-slot-status"].text = f"Card Selected: {c['masked_pan']}"
+    else:
+        document["selected-card-status"].text = "Choose from 4 Cards"
+        document["card-slot-status"].text = "Ready for Card Insertion"
+
+
+def update_cash_fee_preview(_ev=None):
+    action = service.pending_action or "withdraw"
+    raw_val = document["input-tx-amount"].value
+    try:
+        amt = float(str(raw_val).replace(",", "").strip()) if raw_val else 0.0
+    except Exception:
+        amt = 0.0
+    if amt < 0:
+        amt = 0.0
+
+    fees = service.compute_fees(amt, action)
+    is_intl = fees["card_type"] == "international"
+    document["fee-prev-class"].text = "International Card" if is_intl else "Local Card"
+    document["fee-prev-acct"].text = fmt_php(fees["account_fee"])
+
+    if action == "deposit":
+        document["fee-prev-net-label"].text = "Deposit Fee"
+        document["fee-prev-net"].text = fmt_php(0.0)
+        document["fee-prev-fx-row"].class_name = "fee-preview-row hidden"
+        document["fee-prev-total"].text = fmt_php(amt)
+        return
+
+    if is_intl:
+        document["fee-prev-net-label"].text = "Intl Withdrawal Fee ($3.50 or 1.75%)"
+        document["fee-prev-net"].text = fmt_php(fees["intl_withdrawal_fee"])
+        document["fee-prev-fx-row"].class_name = "fee-preview-row"
+        document["fee-prev-fx"].text = fmt_php(fees["fx_conversion_fee"])
+    else:
+        document["fee-prev-net-label"].text = "Local Bank Fee"
+        document["fee-prev-net"].text = fmt_php(fees["local_bank_fee"])
+        document["fee-prev-fx-row"].class_name = "fee-preview-row hidden"
+
+    total_debit = round(amt + fees["total_fee"], 2) if amt > 0 else 0.0
+    document["fee-prev-total"].text = fmt_php(total_debit)
 
 
 def refresh_atm_data():
     acc = service.current_account
     if not acc:
         return
+    card = service.get_active_card()
+    kind_text = "International Card" if card["type"] == "international" else "Local Card"
 
     document["atm-holder-name"].text = acc.holder_name
-    document["atm-account-meta"].text = f"{acc.account_type} · Account #{acc.masked_account_number}"
+    document["atm-account-meta"].text = f"{acc.account_type} · Account #{acc.masked_account_number} · {kind_text}"
 
     info = acc.inquire_balance()
-    document["inq-acc-num"].text = info["account_number"]
+    fees = service.compute_fees(0, "withdraw")
+    document["inq-acc-num"].text = f"{info['account_number']} ({card['masked_pan']})"
     document["inq-acc-type"].text = info["account_type"]
     document["inq-balance"].text = fmt_php(info["balance"])
     document["inq-withdrawable"].text = fmt_php(info["max_withdrawable"])
     document["inq-maint"].text = fmt_php(info["maintaining_balance"])
-    document["inq-fee"].text = fmt_php(info["withdrawal_fee"])
+    if fees["card_type"] == "international":
+        document["inq-fee"].text = f"{fmt_php(info['withdrawal_fee'])} + $3.50/1.75% + 3% FX"
+    elif fees["local_bank_fee"] > 0:
+        document["inq-fee"].text = f"{fmt_php(info['withdrawal_fee'])} + {fmt_php(fees['local_bank_fee'])} Local Bank"
+    else:
+        document["inq-fee"].text = fmt_php(info["withdrawal_fee"])
 
     document["history-view-heading"].text = f"Transaction History ({acc.account_type})"
     tbody = document["tx-history-tbody"]
@@ -761,66 +1426,147 @@ def refresh_atm_data():
         row <= html.TD(tx.timestamp, Class="clean-row-meta")
         row <= html.TD(fmt_php(tx.amount), Class="tabular-nums", style={"textAlign": "right"})
         row <= html.TD(fmt_php(tx.fee), Class="tabular-nums", style={"textAlign": "right"})
-        row <= html.TD(fmt_php(tx.balance_after), Class="tabular-nums", style={"textAlign": "right", "color": "var(--blue-primary)"})
+        row <= html.TD(fmt_php(tx.balance_after), Class="tabular-nums", style={"textAlign": "right", "color": "var(--accent-cyan)"})
         tbody <= row
 
 
-def on_login(_ev):
+def open_card_selector(_ev=None):
+    for btn in document.select(".bank-card"):
+        cid = btn.attrs["data-card-id"]
+        theme = btn.class_name.replace(" selected-card", "")
+        if cid == service.selected_card_id:
+            btn.class_name = theme + " selected-card"
+        else:
+            btn.class_name = theme
+    document["modal-card-selector"].class_name = "modal-backdrop"
+
+
+def close_card_selector(_ev=None):
+    document["modal-card-selector"].class_name = "modal-backdrop hidden"
+
+
+def on_pick_card(btn):
+    cid = btn.attrs["data-card-id"]
+    detected_type = btn.attrs["data-type"]
+    service.selected_card_id = cid
+    card = service.CARD_CATALOG[cid]
+    update_card_hardware_labels()
+    close_card_selector()
+
+    document["det-card-title"].text = card["title"]
+    document["det-card-pan"].text = card["masked_pan"]
+    if detected_type == "international":
+        document["det-card-meta"].text = f"International Card · {card['network']} · BIN {card['bin']}"
+        document["det-card-classification"].text = "International Card"
+        document["det-card-wd-fee"].text = "$3.50 (₱203) or 1.75%"
+        document["det-card-fx-fee"].text = "3.00% FX Conversion"
+    else:
+        document["det-card-meta"].text = f"Local Card · {card['network']} · BIN {card['bin']}"
+        document["det-card-classification"].text = "Local Card"
+        document["det-card-wd-fee"].text = fmt_php(card["local_bank_fee"])
+        document["det-card-fx-fee"].text = "0.00% (PHP Local)"
+
+    document["card-pin-error"].class_name = "feedback-banner error hidden"
+    document["input-card-pin"].value = ""
+
+    def show_detected_pin():
+        show_screen("screen-card-pin", show_header=False)
+        document["input-card-pin"].focus()
+
+    run_with_loading(
+        "Reading Card Chip...",
+        f"Detecting {card['network']} card classification",
+        550,
+        show_detected_pin,
+        keep_header=False,
+    )
+
+
+def on_enter_card_slot(_ev):
+    if service.current_account:
+        return
+    if service.selected_card_id and service.selected_card_id in service.CARD_CATALOG:
+        for b in document.select(".bank-card"):
+            if b.attrs["data-card-id"] == service.selected_card_id:
+                on_pick_card(b)
+                return
+    open_card_selector()
+
+
+def on_card_pin_login(_ev):
+    document["card-pin-error"].class_name = "feedback-banner error hidden"
+    pin_code = document["input-card-pin"].value
+    card = service.get_active_card()
+
+    def finish():
+        try:
+            acc = service.login(card["account_number"], pin_code, card_id=card["id"])
+            document["input-card-pin"].value = ""
+            kind_lbl = "International Card" if card["type"] == "international" else "Local Card"
+            document["atm-holder-name"].text = acc.holder_name
+            document["atm-account-meta"].text = f"{kind_lbl} · {card['masked_pan']}"
+            show_screen("screen-menu", show_header=True)
+        except ATMTransactionError as exc:
+            show_screen("screen-card-pin", show_header=False)
+            document["card-pin-error"].class_name = "feedback-banner error"
+            document["card-pin-error-msg"].text = exc.message
+
+    run_with_loading("Verifying Card PIN...", "Authenticating with card issuer", 700, finish, keep_header=False)
+
+
+def on_manual_login(_ev):
     document["login-error"].class_name = "feedback-banner error hidden"
     acc_num = document["input-account-number"].value
     pin_code = document["input-pin-code"].value
 
-    document["login-form-box"].class_name = "hidden"
-    document["login-loading-box"].class_name = "loading-state-box"
-
-    def finish_login():
+    def finish():
         try:
             acc = service.login(acc_num, pin_code)
             document["input-account-number"].value = ""
             document["input-pin-code"].value = ""
-            document["login-loading-box"].class_name = "loading-state-box hidden"
-            document["login-form-box"].class_name = ""
-
-            document["view-login"].class_name = "screen-wrapper hidden"
-            document["view-atm"].class_name = "screen-wrapper"
-            document["atm-header-bar"].class_name = "atm-top-row"
+            card = service.get_active_card()
+            update_card_hardware_labels()
+            kind_lbl = "International Card" if card["type"] == "international" else "Local Card"
             document["atm-holder-name"].text = acc.holder_name
-            document["atm-account-meta"].text = f"Card Account #{mask_account_number(service.logged_in_card)}"
-            show_subscreen("screen-menu")
+            document["atm-account-meta"].text = f"{kind_lbl} · Account #{mask_account_number(service.logged_in_card)}"
+            show_screen("screen-menu", show_header=True)
         except ATMTransactionError as exc:
-            document["login-loading-box"].class_name = "loading-state-box hidden"
-            document["login-form-box"].class_name = ""
+            show_screen("screen-manual-login", show_header=False)
             document["login-error"].class_name = "feedback-banner error"
             document["login-error-msg"].text = exc.message
 
-    timer.set_timeout(finish_login, 800)
+    run_with_loading("Verifying Credentials...", "Please wait while we access your account", 700, finish, keep_header=False)
 
 
 def trigger_thankyou_and_exit(_ev=None):
-    document["atm-header-bar"].class_name = "atm-top-row hidden"
-    show_subscreen("screen-thankyou")
+    show_screen("screen-thankyou", show_header=False)
 
-    def back_to_login():
+    def back_to_welcome():
         service.current_account = None
+        service.logged_in_card = None
+        service.selected_card_id = None
+        service.pending_action = None
+        service.pending_amount = None
         document["input-tx-amount"].value = ""
-        document["view-atm"].class_name = "screen-wrapper hidden"
-        document["view-login"].class_name = "screen-wrapper"
+        update_card_hardware_labels()
+        show_screen("screen-welcome", show_header=False)
 
-    timer.set_timeout(back_to_login, 1800)
+    timer.set_timeout(back_to_welcome, 1800)
 
 
 def on_another_yes(_ev):
     run_with_loading(
         "Loading Main Menu...",
         "Please wait a moment",
-        500,
-        lambda: show_subscreen("screen-menu")
+        450,
+        lambda: show_screen("screen-menu", show_header=True),
+        keep_header=True,
     )
 
 
 def prompt_account_type(action_name):
     service.pending_action = action_name
-    show_subscreen("screen-account-type")
+    show_screen("screen-account-type", show_header=True)
 
 
 def on_choose_account_type(kind):
@@ -833,32 +1579,31 @@ def on_choose_account_type(kind):
         document["input-tx-amount"].value = ""
         if action == "withdraw":
             document["cash-screen-title"].text = f"Withdraw Cash ({acc.account_type})"
-            document["cash-screen-sub"].text = "Enter withdrawal amount or select a denomination"
-            document["btn-confirm-cash"].text = "Confirm Withdrawal"
+            document["cash-screen-sub"].text = "Enter withdrawal amount or choose a preset denomination"
+            document["btn-confirm-cash"].text = "Continue"
         else:
             document["cash-screen-title"].text = f"Deposit Cash ({acc.account_type})"
-            document["cash-screen-sub"].text = "Enter deposit amount or select a denomination"
-            document["btn-confirm-cash"].text = "Confirm Deposit"
-
+            document["cash-screen-sub"].text = "Enter deposit amount or choose a preset denomination"
+            document["btn-confirm-cash"].text = "Continue"
+        update_cash_fee_preview()
         run_with_loading(
             f"Accessing {acc.account_type}...",
             "Preparing cash terminal",
-            550,
-            lambda: show_subscreen("screen-cash")
+            450,
+            lambda: show_screen("screen-cash", show_header=True),
+            keep_header=True,
         )
     elif action == "inquire":
-        run_with_loading(
-            f"Retrieving {acc.account_type} Balance...",
-            "Please wait",
-            650,
-            lambda: show_subscreen("screen-inquire")
-        )
+        service.pending_amount = 0.0
+        document["receipt-prompt-summary"].text = f"Balance Inquiry for {acc.account_type} ({acc.masked_account_number})."
+        show_screen("screen-receipt-prompt", show_header=True)
     elif action == "history":
         run_with_loading(
             f"Loading {acc.account_type} Transactions...",
             "Please wait",
-            650,
-            lambda: show_subscreen("screen-history")
+            450,
+            lambda: show_screen("screen-history", show_header=True),
+            keep_header=True,
         )
 
 
@@ -868,38 +1613,185 @@ def on_confirm_cash(_ev):
         return
     document["cash-error"].class_name = "feedback-banner error hidden"
     raw_amt = document["input-tx-amount"].value
+    try:
+        amount, fee_info = service.validate_cash_action(raw_amt)
+        service.pending_amount = amount
+        total_debit = round(amount + fee_info["total_fee"], 2) if service.pending_action == "withdraw" else amount
+        op_label = "Withdrawal" if service.pending_action == "withdraw" else "Deposit"
+        document["receipt-prompt-summary"].text = (
+            f"{op_label} of {fmt_php(amount)} from {acc.account_type} "
+            f"(Total Fees: {fmt_php(fee_info['total_fee'])} · Total Debit: {fmt_php(total_debit)})."
+        )
+        show_screen("screen-receipt-prompt", show_header=True)
+    except ATMTransactionError as exc:
+        document["cash-error"].class_name = "feedback-banner error"
+        document["cash-error-msg"].text = exc.message
 
-    def process_tx():
+
+def populate_receipt(tx_type_label, amount, fee_info, avail_balance, ref_id):
+    card = service.get_active_card()
+    acc = service.current_account
+    now_str = datetime.now().strftime("%b %d, %Y %I:%M %p")
+    total_debited = round(amount + fee_info["total_fee"], 2) if service.pending_action == "withdraw" else amount
+
+    service.last_receipt = {
+        "terminal_id": service.terminal_id,
+        "datetime": now_str,
+        "card_pan": card["masked_pan"],
+        "card_type": "International Card" if card["type"] == "international" else "Local Card",
+        "acct_type": acc.account_type,
+        "tx_type": tx_type_label,
+        "amount": amount,
+        "account_fee": fee_info["account_fee"],
+        "local_bank_fee": fee_info["local_bank_fee"],
+        "intl_withdrawal_fee": fee_info["intl_withdrawal_fee"],
+        "fx_conversion_fee": fee_info["fx_conversion_fee"],
+        "is_intl": fee_info["card_type"] == "international",
+        "total_debited": total_debited,
+        "avail_balance": avail_balance,
+        "auth_code": generate_auth_code(),
+        "ref_id": ref_id,
+    }
+    set_receipt_hardware_state(True)
+
+
+def finalize_transaction(wants_receipt):
+    acc = service.current_account
+    action = service.pending_action
+
+    def execute_and_transition():
         try:
-            if service.pending_action == "withdraw":
-                service.perform_withdrawal(raw_amt)
-            else:
-                service.perform_deposit(raw_amt)
-            document["input-tx-amount"].value = ""
-            refresh_atm_data()
-            show_subscreen("screen-completed")
+            if action == "withdraw":
+                amt = service.pending_amount
+                fee_info = service.compute_fees(amt, "withdraw")
+                tx = service.perform_withdrawal(amt)
+                refresh_atm_data()
+                if wants_receipt:
+                    populate_receipt("Cash Withdrawal", amt, fee_info, acc.balance, tx.transaction_id)
+                    document["completed-receipt-hint"].text = "Receipt ready at bottom-left CLAIM RECEIPT slot. Perform another transaction?"
+                else:
+                    document["completed-receipt-hint"].text = "Would you like to perform another transaction?"
+                document["input-tx-amount"].value = ""
+                show_screen("screen-completed", show_header=True)
+            elif action == "deposit":
+                amt = service.pending_amount
+                fee_info = service.compute_fees(amt, "deposit")
+                tx = service.perform_deposit(amt)
+                refresh_atm_data()
+                if wants_receipt:
+                    populate_receipt("Cash Deposit", amt, fee_info, acc.balance, tx.transaction_id)
+                    document["completed-receipt-hint"].text = "Receipt ready at bottom-left CLAIM RECEIPT slot. Perform another transaction?"
+                else:
+                    document["completed-receipt-hint"].text = "Would you like to perform another transaction?"
+                document["input-tx-amount"].value = ""
+                show_screen("screen-completed", show_header=True)
+            elif action == "inquire":
+                refresh_atm_data()
+                if wants_receipt:
+                    fee_info = service.compute_fees(0.0, "inquire")
+                    populate_receipt("Balance Inquiry", 0.0, fee_info, acc.balance, f"INQ-{acc.account_number[-3:]}")
+                    document["inq-receipt-note"].text = "Receipt ready at bottom-left CLAIM RECEIPT slot"
+                else:
+                    document["inq-receipt-note"].text = "Account funds and applicable limits"
+                show_screen("screen-inquire", show_header=True)
         except ATMTransactionError as exc:
-            show_subscreen("screen-cash")
+            show_screen("screen-cash", show_header=True)
             document["cash-error"].class_name = "feedback-banner error"
             document["cash-error-msg"].text = exc.message
 
     run_with_loading(
         "Processing Transaction...",
-        "Please wait while your transaction is being processed",
-        850,
-        process_tx
+        "Finalizing with ExpressBank host",
+        700,
+        execute_and_transition,
+        keep_header=True,
     )
 
 
-def on_login_keydown(ev):
+def open_receipt_modal(_ev):
+    rec = service.last_receipt
+    if not rec:
+        return
+    document["rec-terminal-id"].text = rec["terminal_id"]
+    document["rec-datetime"].text = rec["datetime"]
+    document["rec-card-pan"].text = rec["card_pan"]
+    document["rec-card-type"].text = rec["card_type"]
+    document["rec-acct-type"].text = rec["acct_type"]
+    document["rec-tx-type"].text = rec["tx_type"]
+    document["rec-amount"].text = fmt_php(rec["amount"])
+    document["rec-acct-fee"].text = fmt_php(rec["account_fee"])
+
+    if rec["is_intl"] and rec["tx_type"] == "Cash Withdrawal":
+        document["rec-local-fee-row"].class_name = "receipt-line hidden"
+        document["rec-intl-fee-row"].class_name = "receipt-line"
+        document["rec-fx-fee-row"].class_name = "receipt-line"
+        document["rec-intl-fee"].text = fmt_php(rec["intl_withdrawal_fee"])
+        document["rec-fx-fee"].text = fmt_php(rec["fx_conversion_fee"])
+    elif rec["local_bank_fee"] > 0 and rec["tx_type"] == "Cash Withdrawal":
+        document["rec-local-fee-row"].class_name = "receipt-line"
+        document["rec-intl-fee-row"].class_name = "receipt-line hidden"
+        document["rec-fx-fee-row"].class_name = "receipt-line hidden"
+        document["rec-local-fee"].text = fmt_php(rec["local_bank_fee"])
+    else:
+        document["rec-local-fee-row"].class_name = "receipt-line hidden"
+        document["rec-intl-fee-row"].class_name = "receipt-line hidden"
+        document["rec-fx-fee-row"].class_name = "receipt-line hidden"
+
+    document["rec-total-debited"].text = fmt_php(rec["total_debited"])
+    document["rec-avail-balance"].text = fmt_php(rec["avail_balance"])
+    document["rec-auth-code"].text = rec["auth_code"]
+    document["rec-ref-id"].text = rec["ref_id"]
+
+    document["modal-receipt"].class_name = "modal-backdrop"
+
+
+def close_receipt_modal(_ev):
+    document["modal-receipt"].class_name = "modal-backdrop hidden"
+
+
+def on_card_pin_keydown(ev):
     if getattr(ev, "key", "") == "Enter" or getattr(ev, "keyCode", 0) == 13:
         ev.preventDefault()
-        on_login(ev)
+        on_card_pin_login(ev)
 
 
-document["btn-login"].bind("click", on_login)
-document["input-account-number"].bind("keydown", on_login_keydown)
-document["input-pin-code"].bind("keydown", on_login_keydown)
+def on_manual_keydown(ev):
+    if getattr(ev, "key", "") == "Enter" or getattr(ev, "keyCode", 0) == 13:
+        ev.preventDefault()
+        on_manual_login(ev)
+
+
+for bar in document.select(".carousel-bar"):
+    def bind_bar(b):
+        def h(_ev):
+            update_carousel(int(b.attrs["data-slide"]))
+        b.bind("click", h)
+    bind_bar(bar)
+
+for cbtn in document.select(".bank-card"):
+    def bind_card(b):
+        def h(_ev):
+            on_pick_card(b)
+        b.bind("click", h)
+    bind_card(cbtn)
+
+document["btn-welcome-select-card"].bind("click", open_card_selector)
+document["btn-welcome-manual"].bind("click", lambda _e: show_screen("screen-manual-login", show_header=False))
+document["btn-manual-back"].bind("click", lambda _e: show_screen("screen-welcome", show_header=False))
+
+document["btn-select-card"].bind("click", open_card_selector)
+document["btn-close-card-modal"].bind("click", close_card_selector)
+document["btn-enter-card"].bind("click", on_enter_card_slot)
+
+document["btn-card-login"].bind("click", on_card_pin_login)
+document["input-card-pin"].bind("keydown", on_card_pin_keydown)
+document["btn-card-pin-cancel"].bind("click", lambda _e: show_screen("screen-welcome", show_header=False))
+document["btn-switch-card-in-pin"].bind("click", open_card_selector)
+
+document["btn-login"].bind("click", on_manual_login)
+document["input-account-number"].bind("keydown", on_manual_keydown)
+document["input-pin-code"].bind("keydown", on_manual_keydown)
+
 document["btn-logout"].bind("click", trigger_thankyou_and_exit)
 
 document["opt-withdraw"].bind("click", lambda _e: prompt_account_type("withdraw"))
@@ -909,10 +1801,18 @@ document["opt-history"].bind("click", lambda _e: prompt_account_type("history"))
 
 document["btn-choose-savings"].bind("click", lambda _e: on_choose_account_type("savings"))
 document["btn-choose-checking"].bind("click", lambda _e: on_choose_account_type("checking"))
-document["btn-cancel-acct-type"].bind("click", lambda _e: show_subscreen("screen-menu"))
+document["btn-cancel-acct-type"].bind("click", lambda _e: show_screen("screen-menu", show_header=True))
 
-document["btn-back-from-cash"].bind("click", lambda _e: show_subscreen("screen-menu"))
+document["btn-back-from-cash"].bind("click", lambda _e: show_screen("screen-menu", show_header=True))
 document["btn-confirm-cash"].bind("click", on_confirm_cash)
+document["input-tx-amount"].bind("input", update_cash_fee_preview)
+
+document["btn-receipt-yes"].bind("click", lambda _e: finalize_transaction(True))
+document["btn-receipt-no"].bind("click", lambda _e: finalize_transaction(False))
+
+document["btn-claim-receipt"].bind("click", open_receipt_modal)
+document["btn-close-receipt"].bind("click", close_receipt_modal)
+document["btn-print-receipt"].bind("click", lambda _e: window.print())
 
 for ybtn in document.select(".btn-another-yes"):
     ybtn.bind("click", on_another_yes)
@@ -924,6 +1824,7 @@ for qbtn in document.select(".quick-amt"):
     def bind_q(b):
         def h(_ev):
             document["input-tx-amount"].value = b.attrs["data-amt"]
+            update_cash_fee_preview()
         b.bind("click", h)
     bind_q(qbtn)
 
@@ -932,10 +1833,17 @@ for kbtn in document.select(".num-key"):
         def h(_ev):
             cur = document["input-tx-amount"].value
             document["input-tx-amount"].value = cur + b.attrs["data-key"]
+            update_cash_fee_preview()
         b.bind("click", h)
     bind_k(kbtn)
 
-document["key-clear"].bind("click", lambda _e: setattr(document["input-tx-amount"], "value", ""))
+
+def clear_tx_amount(_ev):
+    document["input-tx-amount"].value = ""
+    update_cash_fee_preview()
+
+
+document["key-clear"].bind("click", clear_tx_amount)
   </script>
 
 </body>
