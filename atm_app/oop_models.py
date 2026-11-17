@@ -133,8 +133,10 @@ class Account:
         return list(self._transactions)
 
     def verify_pin(self, input_pin):
-        clean_in = str(input_pin).strip()
-        return clean_in == self._pin or (self._pin == "123456" and clean_in == "1234")
+        if input_pin is None:
+            return False
+        entered = str(input_pin)
+        return entered.isdigit() and entered == self._pin
 
     @staticmethod
     def parse_positive_amount(raw_value, operation_name="Transaction"):
@@ -145,7 +147,7 @@ class Account:
             amount = float(clean_str)
         except (ValueError, TypeError):
             raise InvalidAmountError(f"{operation_name} rejected: '{raw_value}' is not a valid numeric amount.")
-        if amount <= 0:
+        if amount != amount or amount == float("inf") or amount == float("-inf") or amount <= 0:
             raise InvalidAmountError(f"{operation_name} rejected: Amount must be greater than PHP 0.00.")
         return round(amount, 2)
 
@@ -201,7 +203,7 @@ class SavingsAccount(Account):
     WITHDRAWAL_LIMIT = 20000.00
     WITHDRAWAL_FEE = 0.00
 
-    def __init__(self, account_number, holder_name, pin="123456", starting_balance=15000.00, transactions=None):
+    def __init__(self, account_number, holder_name, pin="", starting_balance=15000.00, transactions=None):
         super().__init__(account_number, holder_name, pin, starting_balance, "Savings Account", transactions)
 
     def get_max_withdrawable(self):
@@ -234,7 +236,7 @@ class CheckingAccount(Account):
     WITHDRAWAL_LIMIT = 50000.00
     WITHDRAWAL_FEE = 15.00
 
-    def __init__(self, account_number, holder_name, pin="123456", starting_balance=25000.00, transactions=None):
+    def __init__(self, account_number, holder_name, pin="", starting_balance=25000.00, transactions=None):
         super().__init__(account_number, holder_name, pin, starting_balance, "Checking Account", transactions)
 
     def get_max_withdrawable(self):
@@ -327,24 +329,24 @@ class ATMService:
 
     @staticmethod
     def _create_predefined_accounts():
-        sa1 = SavingsAccount("100000248", "Hanz Dalmino", "123456", 15000.00)
+        sa1 = SavingsAccount("100000248", "Hanz Dalmino", "248159", 15000.00)
         sa1._record_transaction("Opening Balance", 15000.00, 0.0)
-        ca1 = CheckingAccount("100000248", "Hanz Dalmino", "123456", 25000.00)
+        ca1 = CheckingAccount("100000248", "Hanz Dalmino", "248159", 25000.00)
         ca1._record_transaction("Opening Balance", 25000.00, 0.0)
 
-        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 20000.00)
+        sa2 = SavingsAccount("200000519", "Kristof Badayos", "5194", 20000.00)
         sa2._record_transaction("Opening Balance", 20000.00, 0.0)
-        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 35000.00)
+        ca2 = CheckingAccount("200000519", "Kristof Badayos", "5194", 35000.00)
         ca2._record_transaction("Opening Balance", 35000.00, 0.0)
 
-        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "123456", 45000.00)
+        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "814620", 45000.00)
         sa3._record_transaction("Opening Balance", 45000.00, 0.0)
-        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "123456", 60000.00)
+        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "814620", 60000.00)
         ca3._record_transaction("Opening Balance", 60000.00, 0.0)
 
-        sa4 = SavingsAccount("400000932", "Diana Sismar", "123456", 30000.00)
+        sa4 = SavingsAccount("400000932", "Diana Sismar", "9327", 30000.00)
         sa4._record_transaction("Opening Balance", 30000.00, 0.0)
-        ca4 = CheckingAccount("400000932", "Diana Sismar", "123456", 40000.00)
+        ca4 = CheckingAccount("400000932", "Diana Sismar", "9327", 40000.00)
         ca4._record_transaction("Opening Balance", 40000.00, 0.0)
 
         return {
@@ -384,7 +386,7 @@ class ATMService:
 
     def login(self, raw_acc, raw_pin, card_id=None):
         acc_in = str(raw_acc or "").strip()
-        pin_in = str(raw_pin or "").strip()
+        pin_in = "" if raw_pin is None else str(raw_pin)
         if not acc_in or not pin_in:
             raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
 
@@ -392,13 +394,17 @@ class ATMService:
         if not normalized.isdigit() or len(normalized) < 9:
             raise ATMTransactionError("Account Number must be at least 9 digits.")
 
+        if not pin_in.isdigit() or len(pin_in) not in (4, 6):
+            raise ATMTransactionError("Invalid PIN Code. Enter your exact assigned 4-digit or 6-digit PIN.")
+
         if normalized not in self.accounts:
             raise ATMTransactionError("Invalid Account Number or PIN Code.")
 
         user_accounts = self.accounts[normalized]
         sa = user_accounts["savings"]
-        if not sa.verify_pin(pin_in):
-            raise ATMTransactionError("Invalid Account Number or PIN Code.")
+        ca = user_accounts["checking"]
+        if not (sa.verify_pin(pin_in) and ca.verify_pin(pin_in)):
+            raise ATMTransactionError("Incorrect PIN Code. Access denied.")
 
         self.logged_in_card = normalized
         if card_id and card_id in self.CARD_CATALOG:
@@ -454,9 +460,11 @@ class ATMService:
             c_data = pair["checking"]
             s_txs = [Transaction.from_dict(t) for t in s_data.get("transactions", [])]
             c_txs = [Transaction.from_dict(t) for t in c_data.get("transactions", [])]
+            if "pin" not in s_data or "pin" not in c_data:
+                return cls()
             rebuilt[card_num] = {
-                "savings": SavingsAccount(s_data["account_number"], s_data["holder_name"], s_data.get("pin", "123456"), s_data["balance"], s_txs),
-                "checking": CheckingAccount(c_data["account_number"], c_data["holder_name"], c_data.get("pin", "123456"), c_data["balance"], c_txs),
+                "savings": SavingsAccount(s_data["account_number"], s_data["holder_name"], s_data["pin"], s_data["balance"], s_txs),
+                "checking": CheckingAccount(c_data["account_number"], c_data["holder_name"], c_data["pin"], c_data["balance"], c_txs),
             }
         return cls(
             accounts=rebuilt,

@@ -154,9 +154,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label" for="input-card-pin">Enter PIN Code (6 Digits)</label>
-                  <input id="input-card-pin" type="password" maxlength="6" class="form-input tabular-nums" placeholder="Enter PIN (e.g. 123456 or 1234)" autocomplete="off" />
-                  <p class="form-hint">If your PIN is below 6 digits, type and hit Enter. Demo PIN: 123456 or 1234.</p>
+                  <label class="form-label" for="input-card-pin">Enter PIN Code</label>
+                  <input id="input-card-pin" type="password" inputmode="numeric" maxlength="8" class="form-input tabular-nums" placeholder="Enter PIN here" autocomplete="off" />
+                  <p class="form-hint">Enter your assigned PIN and press Enter or click Enter ATM.</p>
                 </div>
 
                 <div style="display: flex; gap: 0.75rem; margin-top: 1.15rem;">
@@ -196,9 +196,9 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="input-pin-code">PIN Code (6 Digits)</label>
-                <input id="input-pin-code" type="password" maxlength="6" class="form-input tabular-nums" placeholder="Enter 6-Digit PIN Code" autocomplete="off" />
-                <p class="form-hint">If your PIN is below 6 digits, type and hit Enter</p>
+                <label class="form-label" for="input-pin-code">PIN Code</label>
+                <input id="input-pin-code" type="password" inputmode="numeric" maxlength="8" class="form-input tabular-nums" placeholder="Enter PIN here" autocomplete="off" />
+                <p class="form-hint">Enter your assigned PIN and press Enter or click Enter ATM.</p>
               </div>
 
               <button type="button" id="btn-login" class="btn-screen-primary" style="width: 100%; margin-top: 0.4rem;">
@@ -766,7 +766,7 @@ from datetime import datetime
 import json
 import random
 
-STORAGE_KEY = "expressbank_kiosk_atm_v7"
+STORAGE_KEY = "expressbank_kiosk_atm_v8"
 
 
 def mask_account_number(acc_num):
@@ -907,8 +907,10 @@ class Account:
         return list(self._transactions)
 
     def verify_pin(self, input_pin):
-        clean_in = str(input_pin).strip()
-        return clean_in == self._pin or (self._pin == "123456" and clean_in == "1234")
+        if input_pin is None:
+            return False
+        entered = str(input_pin)
+        return entered.isdigit() and entered == self._pin
 
     @staticmethod
     def parse_positive_amount(raw_value, operation_name="Transaction"):
@@ -919,7 +921,7 @@ class Account:
             amount = float(clean_str)
         except Exception:
             raise InvalidAmountError(f"{operation_name} rejected: '{raw_value}' is not a valid number.")
-        if amount <= 0:
+        if amount != amount or amount == float("inf") or amount == float("-inf") or amount <= 0:
             raise InvalidAmountError(f"{operation_name} rejected: Amount must be greater than PHP 0.00.")
         return round(amount, 2)
 
@@ -1109,24 +1111,24 @@ class ATMService:
 
     @staticmethod
     def _create_predefined_accounts():
-        sa1 = SavingsAccount("100000248", "Hanz Dalmino", "123456", 15000.00)
+        sa1 = SavingsAccount("100000248", "Hanz Dalmino", "248159", 15000.00)
         sa1._record_transaction("Opening Balance", 15000.00, 0.0)
-        ca1 = CheckingAccount("100000248", "Hanz Dalmino", "123456", 25000.00)
+        ca1 = CheckingAccount("100000248", "Hanz Dalmino", "248159", 25000.00)
         ca1._record_transaction("Opening Balance", 25000.00, 0.0)
 
-        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 20000.00)
+        sa2 = SavingsAccount("200000519", "Kristof Badayos", "5194", 20000.00)
         sa2._record_transaction("Opening Balance", 20000.00, 0.0)
-        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 35000.00)
+        ca2 = CheckingAccount("200000519", "Kristof Badayos", "5194", 35000.00)
         ca2._record_transaction("Opening Balance", 35000.00, 0.0)
 
-        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "123456", 45000.00)
+        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "814620", 45000.00)
         sa3._record_transaction("Opening Balance", 45000.00, 0.0)
-        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "123456", 60000.00)
+        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "814620", 60000.00)
         ca3._record_transaction("Opening Balance", 60000.00, 0.0)
 
-        sa4 = SavingsAccount("400000932", "Diana Sismar", "123456", 30000.00)
+        sa4 = SavingsAccount("400000932", "Diana Sismar", "9327", 30000.00)
         sa4._record_transaction("Opening Balance", 30000.00, 0.0)
-        ca4 = CheckingAccount("400000932", "Diana Sismar", "123456", 40000.00)
+        ca4 = CheckingAccount("400000932", "Diana Sismar", "9327", 40000.00)
         ca4._record_transaction("Opening Balance", 40000.00, 0.0)
 
         return {
@@ -1226,7 +1228,7 @@ class ATMService:
 
     def login(self, raw_acc, raw_pin, card_id=None):
         acc_in = str(raw_acc or "").strip()
-        pin_in = str(raw_pin or "").strip()
+        pin_in = "" if raw_pin is None else str(raw_pin)
         if not acc_in or not pin_in:
             raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
 
@@ -1234,13 +1236,17 @@ class ATMService:
         if not normalized.isdigit() or len(normalized) < 9:
             raise ATMTransactionError("Account Number must be at least 9 digits.")
 
+        if not pin_in.isdigit() or len(pin_in) not in (4, 6):
+            raise ATMTransactionError("Invalid PIN Code. Enter your exact assigned 4-digit or 6-digit PIN.")
+
         if normalized not in self.accounts:
             raise ATMTransactionError("Invalid Account Number or PIN Code.")
 
         user_accounts = self.accounts[normalized]
         sa = user_accounts["savings"]
-        if not sa.verify_pin(pin_in):
-            raise ATMTransactionError("Invalid Account Number or PIN Code.")
+        ca = user_accounts["checking"]
+        if not (sa.verify_pin(pin_in) and ca.verify_pin(pin_in)):
+            raise ATMTransactionError("Incorrect PIN Code. Access denied.")
 
         self.logged_in_card = normalized
         if card_id and card_id in self.CARD_CATALOG:
