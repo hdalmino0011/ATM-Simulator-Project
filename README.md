@@ -88,6 +88,7 @@ The **ExpressBank ATM Simulator** is a realistic, single-viewport kiosk Automate
 
 ### Option B: Static / GitHub Pages Browser Execution
 - Hosting the `main` branch on **GitHub Pages** (`https://hdalmino0011.github.io/ATM-Simulator-Project/`) executes the exact same Python OOP classes (`Account`, `SavingsAccount`, `CheckingAccount`, `Transaction`, `ATMService`, and `ATMTransactionError`) directly in the browser via Brython using `index.html` and `style.css`.
+- For local static preview without Django, run Python's built-in HTTP server (`python3 -m http.server 3000 --bind 0.0.0.0`). Zero TypeScript or JavaScript source files exist in the codebase (`vite.config.ts` and JS/TS dependencies were completely removed).
 
 ---
 
