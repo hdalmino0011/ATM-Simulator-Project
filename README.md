@@ -33,11 +33,11 @@ The **ExpressBank ATM Simulator** is a realistic, single-viewport kiosk Automate
 2. **Dynamic Welcome Screen & Hardware Deck Controls**
    - **Welcome Carousel:** Displays *"Welcome to ExpressBank ATM"* over a 5-second automatic sliding banner (*"Fast, Secure, and Reliable Transactions"*, *"24/7 Access to Your Funds"*, *"International Card Accepted Here"*, *"Your Security is Our Priority"*).
    - **Bottom-Right (`ENTER CARD HERE`):** Triggers card insertion / chip reading and transitions to the **Card Detected** PIN screen.
-   - **Bottom-Center (`Select Card`):** Opens a 4-card visual drawer showing distinct debit, premium credit, international travel, and classic ATM cards.
+   - **Bottom-Center (`Select Card`):** Opens a 4-card visual drawer displaying realistic bank cards (with randomized **Visa** and **Mastercard** vector logos, EMV chip, validity date, card number, cardholder name, and account number — without fee text or Local/International labels on the physical card faces).
    - **Bottom-Left (`CLAIM RECEIPT`):** Remains disabled (`"No Transaction"`) until a user chooses **Yes** at the receipt prompt. Once clicked, it displays the formatted transaction slip **once** and immediately resets back to disabled (`"No Transaction"`).
 
 3. **Card Information Visibility & Last-4-Digit Privacy Masking**
-   - **Before Login (`Select Card` Drawer):** Full card numbers and account numbers are visible so users can inspect and choose a card.
+   - **Before Login (`Select Card` Drawer):** Full card numbers and account numbers are visible so users can inspect and choose a card. Local vs. International classification is detected internally by the ATM after insertion and does not depend on whether the card carries a Visa or Mastercard logo.
    - **Card Detected & Logged-In Dashboard:** Card PANs and account numbers are covered/masked to show **only the last 4 digits** (`**** **** **** 0248`, `*****0248`) along with masked cardholder initials before PIN entry, and remain masked throughout the logged-in header, Balance Inquiry, hardware slot status, receipts, and any post-login card view.
 
 4. **Strict Assigned PIN Authentication (4-Digit & 6-Digit Accounts)**
@@ -48,12 +48,12 @@ The **ExpressBank ATM Simulator** is a realistic, single-viewport kiosk Automate
 
 5. **Predefined Cardholder Accounts & Assigned PINs**
 
-   | Card / Network | Cardholder | Type & BIN | Account Number | Assigned PIN | Savings Start | Checking Start | Local / Intl Withdrawal Fee Rule |
+   | Card Profile | Cardholder | Detected Classification & BIN | Account Number | Assigned PIN | Savings Start | Checking Start | Local / Intl Withdrawal Fee Rule |
    | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-   | **ExpressBank Everyday Debit** | Hanz Dalmino | Local · BancNet (`421900`) | `100000248` (`*****0248`) | `248159` *(6 digits)* | `₱ 15,000.00` | `₱ 25,000.00` | `₱ 0.00` Local Bank Fee |
-   | **MetroGold Premier Credit** | Kristof Badayos | Local · Mastercard (`542810`) | `200000519` (`*****0519`) | `5194` *(4 digits)* | `₱ 20,000.00` | `₱ 35,000.00` | `₱ 18.00` Local Interbank Fee |
-   | **GlobalPass Platinum Travel** | April Dianne Calvo | International · Visa (`453288`) | `300000814` (`*****0814`) | `814620` *(6 digits)* | `₱ 45,000.00` | `₱ 60,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
-   | **CitiReach Classic Global ATM** | Diana Sismar | International · Plus/Cirrus (`529104`) | `400000932` (`*****0932`) | `9327` *(4 digits)* | `₱ 30,000.00` | `₱ 40,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
+   | **ExpressBank Everyday Debit** | Hanz Dalmino | Local (`421900`) · Random Visa/Mastercard | `100000248` (`*****0248`) | `248159` *(6 digits)* | `₱ 15,000.00` | `₱ 25,000.00` | `₱ 0.00` Local Bank Fee |
+   | **MetroGold Premier Credit** | Kristof Badayos | Local (`542810`) · Random Visa/Mastercard | `200000519` (`*****0519`) | `5194` *(4 digits)* | `₱ 20,000.00` | `₱ 35,000.00` | `₱ 18.00` Local Interbank Fee |
+   | **GlobalPass Platinum Travel** | April Dianne Calvo | International (`453288`) · Random Visa/Mastercard | `300000814` (`*****0814`) | `814620` *(6 digits)* | `₱ 45,000.00` | `₱ 60,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
+   | **CitiReach Classic ATM** | Diana Sismar | International (`529104`) · Random Visa/Mastercard | `400000932` (`*****0932`) | `9327` *(4 digits)* | `₱ 30,000.00` | `₱ 40,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
 
 6. **Account Types, Fee Breakdown & Receipt Prompt Flow**
    - Every operation prompts for **Account Type**:

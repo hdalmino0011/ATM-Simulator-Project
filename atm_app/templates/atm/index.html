@@ -561,7 +561,7 @@
       <div class="card-drawer-header">
         <div>
           <h2 class="screen-section-heading" style="margin-bottom: 0.15rem;">Select a Bank Card to Insert</h2>
-          <p class="screen-section-sub" style="margin-bottom: 0;">The ATM automatically detects Local vs. International cards and applies applicable fees</p>
+          <p class="screen-section-sub" style="margin-bottom: 0;">Choose a bank card to insert into the ATM card reader</p>
         </div>
         <button type="button" id="btn-close-card-modal" class="btn-screen-secondary">Close</button>
       </div>
@@ -571,96 +571,94 @@
         <button type="button" class="bank-card card-theme-local-debit" data-card-id="local_debit" data-type="local" data-bin="421900">
           <div class="bank-card-top">
             <div>
-              <div class="bank-card-issuer">ExpressBank PH</div>
-              <div class="bank-card-kind">Local Debit Card · BancNet</div>
+              <div class="bank-card-issuer">ExpressBank</div>
+              <div class="bank-card-kind">Debit Card</div>
             </div>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-              <line x1="12" y1="20" x2="12.01" y2="20"></line>
-            </svg>
+            <span class="card-brand-slot">
+              <svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">
+                <text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>
+              </svg>
+            </span>
           </div>
           <div class="bank-card-chip-row">
             <div class="emv-chip"></div>
-            <span style="font-size: 0.76rem; color: rgba(255,255,255,0.85);">Local Network · ₱0 Fee</span>
+            <span class="card-valid-thru">VALID THRU 08/29</span>
           </div>
           <div class="bank-card-pan">4219 0010 0000 0248</div>
           <div class="bank-card-bottom">
             <span>Hanz Dalmino</span>
-            <span class="bank-card-acct tabular-nums">Acct #100000248 · BIN 421900</span>
+            <span class="bank-card-acct tabular-nums">Acct #100000248</span>
           </div>
         </button>
 
         <button type="button" class="bank-card card-theme-local-gold" data-card-id="local_gold" data-type="local" data-bin="542810">
           <div class="bank-card-top">
             <div>
-              <div class="bank-card-issuer">MetroGold Bank PH</div>
-              <div class="bank-card-kind">Premium Credit Card · Local</div>
+              <div class="bank-card-issuer">MetroGold Bank</div>
+              <div class="bank-card-kind">Premier Credit Card</div>
             </div>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(253,224,71,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-              <line x1="12" y1="20" x2="12.01" y2="20"></line>
-            </svg>
+            <span class="card-brand-slot">
+              <svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">
+                <circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>
+                <circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>
+              </svg>
+            </span>
           </div>
           <div class="bank-card-chip-row">
             <div class="emv-chip"></div>
-            <span style="font-size: 0.76rem; color: rgba(254,240,138,0.9);">Local Interbank · ₱18 Fee</span>
+            <span class="card-valid-thru">VALID THRU 11/28</span>
           </div>
           <div class="bank-card-pan">5428 1020 0000 0519</div>
           <div class="bank-card-bottom">
             <span>Kristof Badayos</span>
-            <span class="bank-card-acct tabular-nums">Acct #200000519 · BIN 542810</span>
+            <span class="bank-card-acct tabular-nums">Acct #200000519</span>
           </div>
         </button>
 
         <button type="button" class="bank-card card-theme-intl-platinum" data-card-id="intl_platinum" data-type="international" data-bin="453288">
           <div class="bank-card-top">
             <div>
-              <div class="bank-card-issuer">GlobalPass International</div>
-              <div class="bank-card-kind">Travel Card · Visa Global</div>
+              <div class="bank-card-issuer">GlobalPass Bank</div>
+              <div class="bank-card-kind">Platinum Travel Card</div>
             </div>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9"></circle>
-              <line x1="3.6" y1="9" x2="20.4" y2="9"></line>
-              <line x1="3.6" y1="15" x2="20.4" y2="15"></line>
-              <path d="M11.5 3a17 17 0 0 0 0 18"></path>
-              <path d="M12.5 3a17 17 0 0 1 0 18"></path>
-            </svg>
+            <span class="card-brand-slot">
+              <svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">
+                <circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>
+                <circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>
+              </svg>
+            </span>
           </div>
           <div class="bank-card-chip-row">
             <div class="emv-chip"></div>
-            <span style="font-size: 0.76rem; color: #7dd3fc;">International · $3.50/1.75% + 3% FX</span>
+            <span class="card-valid-thru">VALID THRU 04/30</span>
           </div>
           <div class="bank-card-pan">4532 8830 0000 1234</div>
           <div class="bank-card-bottom">
             <span>April Dianne Calvo</span>
-            <span class="bank-card-acct tabular-nums">Acct #300000814 · BIN 453288</span>
+            <span class="bank-card-acct tabular-nums">Acct #300000814</span>
           </div>
         </button>
 
         <button type="button" class="bank-card card-theme-intl-silver" data-card-id="intl_silver" data-type="international" data-bin="529104">
           <div class="bank-card-top">
             <div>
-              <div class="bank-card-issuer">CitiReach Global</div>
-              <div class="bank-card-kind">Basic ATM Card · Plus/Cirrus</div>
+              <div class="bank-card-issuer">CitiReach Bank</div>
+              <div class="bank-card-kind">Classic ATM Card</div>
             </div>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9"></circle>
-              <line x1="3.6" y1="9" x2="20.4" y2="9"></line>
-              <line x1="3.6" y1="15" x2="20.4" y2="15"></line>
-              <path d="M11.5 3a17 17 0 0 0 0 18"></path>
-              <path d="M12.5 3a17 17 0 0 1 0 18"></path>
-            </svg>
+            <span class="card-brand-slot">
+              <svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">
+                <text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>
+              </svg>
+            </span>
           </div>
           <div class="bank-card-chip-row">
             <div class="emv-chip"></div>
-            <span style="font-size: 0.76rem; color: #bae6fd;">International · $3.50/1.75% + 3% FX</span>
+            <span class="card-valid-thru">VALID THRU 09/29</span>
           </div>
           <div class="bank-card-pan">5291 0440 0000 5678</div>
           <div class="bank-card-bottom">
             <span>Diana Sismar</span>
-            <span class="bank-card-acct tabular-nums">Acct #400000932 · BIN 529104</span>
+            <span class="bank-card-acct tabular-nums">Acct #400000932</span>
           </div>
         </button>
 
@@ -1055,7 +1053,7 @@ class ATMService:
             "bin": "421900",
             "full_pan": "4219 0010 0000 0248",
             "masked_pan": "**** **** **** 0248",
-            "network": "BancNet Local",
+            "network": "Visa",
             "account_number": "100000248",
             "holder_name": "Hanz Dalmino",
             "local_bank_fee": 0.00,
@@ -1067,7 +1065,7 @@ class ATMService:
             "bin": "542810",
             "full_pan": "5428 1020 0000 0519",
             "masked_pan": "**** **** **** 0519",
-            "network": "Mastercard Local",
+            "network": "Mastercard",
             "account_number": "200000519",
             "holder_name": "Kristof Badayos",
             "local_bank_fee": 18.00,
@@ -1079,19 +1077,19 @@ class ATMService:
             "bin": "453288",
             "full_pan": "4532 8830 0000 1234",
             "masked_pan": "**** **** **** 1234",
-            "network": "Visa Global",
+            "network": "Mastercard",
             "account_number": "300000814",
             "holder_name": "April Dianne Calvo",
             "local_bank_fee": 0.00,
         },
         "intl_silver": {
             "id": "intl_silver",
-            "title": "CitiReach Classic Global ATM",
+            "title": "CitiReach Classic ATM",
             "type": "international",
             "bin": "529104",
             "full_pan": "5291 0440 0000 5678",
             "masked_pan": "**** **** **** 5678",
-            "network": "Plus / Cirrus Global",
+            "network": "Visa",
             "account_number": "400000932",
             "holder_name": "Diana Sismar",
             "local_bank_fee": 0.00,
@@ -1292,6 +1290,37 @@ service = ATMService()
 document["fascia-terminal-label"].text = f"Terminal {service.terminal_id} · 24/7 Self-Service"
 current_slide = 0
 
+VISA_LOGO_SVG = (
+    '<svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">'
+    '<text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" '
+    'font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>'
+    '</svg>'
+)
+
+MASTERCARD_LOGO_SVG = (
+    '<svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">'
+    '<circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>'
+    '<circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>'
+    '</svg>'
+)
+
+
+def assign_random_card_brands():
+    brands = ["Visa", "Mastercard", "Visa", "Mastercard"]
+    random.shuffle(brands)
+    card_ids = ["local_debit", "local_gold", "intl_platinum", "intl_silver"]
+    for cid, brand in zip(card_ids, brands):
+        service.CARD_CATALOG[cid]["network"] = brand
+    for btn in document.select(".bank-card"):
+        cid = btn.attrs["data-card-id"]
+        brand = service.CARD_CATALOG[cid]["network"]
+        slots = btn.select(".card-brand-slot")
+        if slots:
+            slots[0].html = VISA_LOGO_SVG if brand == "Visa" else MASTERCARD_LOGO_SVG
+
+
+assign_random_card_brands()
+
 
 def fmt_php(val):
     return f"₱ {val:,.2f}"
@@ -1472,7 +1501,7 @@ def open_card_selector(_ev=None):
                 pan_els[0].text = c["masked_pan"] if is_logged_in else c["full_pan"]
             if acct_els:
                 acct_lbl = mask_account_number(c["account_number"]) if is_logged_in else c["account_number"]
-                acct_els[0].text = f"Acct #{acct_lbl} · BIN {c['bin']}"
+                acct_els[0].text = f"Acct #{acct_lbl}"
         theme = btn.class_name.replace(" selected-card", "")
         if cid == service.selected_card_id:
             btn.class_name = theme + " selected-card"
