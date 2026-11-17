@@ -156,7 +156,7 @@
                 <div class="form-group">
                   <label class="form-label" for="input-card-pin">Enter PIN Code</label>
                   <input id="input-card-pin" type="password" inputmode="numeric" maxlength="8" class="form-input tabular-nums" placeholder="Enter PIN here" autocomplete="off" />
-                  <p class="form-hint">Enter your assigned PIN and press Enter or click Enter ATM.</p>
+                  <p class="form-hint">Enter your 6-digit PIN, or press Enter if your PIN has fewer than 6 digits.</p>
                 </div>
 
                 <div style="display: flex; gap: 0.75rem; margin-top: 1.15rem;">
@@ -198,7 +198,7 @@
               <div class="form-group">
                 <label class="form-label" for="input-pin-code">PIN Code</label>
                 <input id="input-pin-code" type="password" inputmode="numeric" maxlength="8" class="form-input tabular-nums" placeholder="Enter PIN here" autocomplete="off" />
-                <p class="form-hint">Enter your assigned PIN and press Enter or click Enter ATM.</p>
+                <p class="form-hint">Enter your 6-digit PIN, or press Enter if your PIN has fewer than 6 digits.</p>
               </div>
 
               <button type="button" id="btn-login" class="btn-screen-primary" style="width: 100%; margin-top: 0.4rem;">
@@ -575,8 +575,9 @@
               <div class="bank-card-kind">Debit Card</div>
             </div>
             <span class="card-brand-slot">
-              <svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">
-                <text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>
+              <svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">
+                <circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>
+                <circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>
               </svg>
             </span>
           </div>
@@ -598,9 +599,8 @@
               <div class="bank-card-kind">Premier Credit Card</div>
             </div>
             <span class="card-brand-slot">
-              <svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">
-                <circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>
-                <circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>
+              <svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">
+                <text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>
               </svg>
             </span>
           </div>
@@ -646,8 +646,11 @@
               <div class="bank-card-kind">Classic ATM Card</div>
             </div>
             <span class="card-brand-slot">
-              <svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">
-                <text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>
+              <svg class="card-brand-svg" width="72" height="22" viewBox="0 0 88 26" aria-label="BancNet">
+                <rect x="1" y="2" width="86" height="22" rx="5" fill="#ffffff" fill-opacity="0.16" stroke="rgba(255,255,255,0.45)" stroke-width="1"></rect>
+                <rect x="6" y="7" width="6" height="12" rx="1.5" fill="#38bdf8"></rect>
+                <rect x="14" y="7" width="4" height="12" rx="1.5" fill="#ef4444"></rect>
+                <text x="23" y="17" fill="#ffffff" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" letter-spacing="0.02em">BancNet</text>
               </svg>
             </span>
           </div>
@@ -1053,7 +1056,7 @@ class ATMService:
             "bin": "421900",
             "full_pan": "4219 0010 0000 0248",
             "masked_pan": "**** **** **** 0248",
-            "network": "Visa",
+            "network": "Mastercard",
             "account_number": "100000248",
             "holder_name": "Hanz Dalmino",
             "local_bank_fee": 0.00,
@@ -1065,7 +1068,7 @@ class ATMService:
             "bin": "542810",
             "full_pan": "5428 1020 0000 0519",
             "masked_pan": "**** **** **** 0519",
-            "network": "Mastercard",
+            "network": "Visa",
             "account_number": "200000519",
             "holder_name": "Kristof Badayos",
             "local_bank_fee": 18.00,
@@ -1089,7 +1092,7 @@ class ATMService:
             "bin": "529104",
             "full_pan": "5291 0440 0000 5678",
             "masked_pan": "**** **** **** 5678",
-            "network": "Visa",
+            "network": "BancNet",
             "account_number": "400000932",
             "holder_name": "Diana Sismar",
             "local_bank_fee": 0.00,
@@ -1227,8 +1230,16 @@ class ATMService:
     def login(self, raw_acc, raw_pin, card_id=None):
         acc_in = str(raw_acc or "").strip()
         pin_in = "" if raw_pin is None else str(raw_pin)
-        if not acc_in or not pin_in:
-            raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
+        if card_id:
+            if not pin_in:
+                raise ATMTransactionError("Please enter your PIN code.")
+        else:
+            if not acc_in and not pin_in:
+                raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
+            if not acc_in:
+                raise ATMTransactionError("Please enter your Account Number.")
+            if not pin_in:
+                raise ATMTransactionError("Please enter your PIN code.")
 
         normalized = acc_in.replace(" ", "").replace("-", "")
         if not normalized.isdigit() or len(normalized) < 9:
@@ -1289,37 +1300,6 @@ class ATMService:
 service = ATMService()
 document["fascia-terminal-label"].text = f"Terminal {service.terminal_id} · 24/7 Self-Service"
 current_slide = 0
-
-VISA_LOGO_SVG = (
-    '<svg class="card-brand-svg" width="52" height="20" viewBox="0 0 64 24" aria-label="Visa">'
-    '<text x="62" y="19" text-anchor="end" fill="#ffffff" font-family="Poppins, sans-serif" '
-    'font-size="18" font-weight="800" font-style="italic" letter-spacing="0.03em">VISA</text>'
-    '</svg>'
-)
-
-MASTERCARD_LOGO_SVG = (
-    '<svg class="card-brand-svg" width="44" height="26" viewBox="0 0 44 28" aria-label="Mastercard">'
-    '<circle cx="15" cy="14" r="10.5" fill="#eb001b"></circle>'
-    '<circle cx="29" cy="14" r="10.5" fill="#f79e1b" fill-opacity="0.9"></circle>'
-    '</svg>'
-)
-
-
-def assign_random_card_brands():
-    brands = ["Visa", "Mastercard", "Visa", "Mastercard"]
-    random.shuffle(brands)
-    card_ids = ["local_debit", "local_gold", "intl_platinum", "intl_silver"]
-    for cid, brand in zip(card_ids, brands):
-        service.CARD_CATALOG[cid]["network"] = brand
-    for btn in document.select(".bank-card"):
-        cid = btn.attrs["data-card-id"]
-        brand = service.CARD_CATALOG[cid]["network"]
-        slots = btn.select(".card-brand-slot")
-        if slots:
-            slots[0].html = VISA_LOGO_SVG if brand == "Visa" else MASTERCARD_LOGO_SVG
-
-
-assign_random_card_brands()
 
 
 def fmt_php(val):

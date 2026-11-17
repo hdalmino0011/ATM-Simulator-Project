@@ -274,7 +274,7 @@ class ATMService:
             "bin": "421900",
             "full_pan": "4219 0010 0000 0248",
             "masked_pan": "**** **** **** 0248",
-            "network": "Visa",
+            "network": "Mastercard",
             "account_number": "100000248",
             "holder_name": "Hanz Dalmino",
             "local_bank_fee": 0.00,
@@ -286,7 +286,7 @@ class ATMService:
             "bin": "542810",
             "full_pan": "5428 1020 0000 0519",
             "masked_pan": "**** **** **** 0519",
-            "network": "Mastercard",
+            "network": "Visa",
             "account_number": "200000519",
             "holder_name": "Kristof Badayos",
             "local_bank_fee": 18.00,
@@ -310,7 +310,7 @@ class ATMService:
             "bin": "529104",
             "full_pan": "5291 0440 0000 5678",
             "masked_pan": "**** **** **** 5678",
-            "network": "Visa",
+            "network": "BancNet",
             "account_number": "400000932",
             "holder_name": "Diana Sismar",
             "local_bank_fee": 0.00,
@@ -387,8 +387,16 @@ class ATMService:
     def login(self, raw_acc, raw_pin, card_id=None):
         acc_in = str(raw_acc or "").strip()
         pin_in = "" if raw_pin is None else str(raw_pin)
-        if not acc_in or not pin_in:
-            raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
+        if card_id:
+            if not pin_in:
+                raise ATMTransactionError("Please enter your PIN code.")
+        else:
+            if not acc_in and not pin_in:
+                raise ATMTransactionError("Please enter both your Account Number and PIN Code.")
+            if not acc_in:
+                raise ATMTransactionError("Please enter your Account Number.")
+            if not pin_in:
+                raise ATMTransactionError("Please enter your PIN code.")
 
         normalized = acc_in.replace(" ", "").replace("-", "")
         if not normalized.isdigit() or len(normalized) < 9:
