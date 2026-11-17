@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 
 class ATMTransactionError(Exception):
@@ -28,6 +29,15 @@ def mask_account_number(acc_num):
     if len(s) <= 3:
         return s
     return ("*" * (len(s) - 3)) + s[-3:]
+
+
+def generate_terminal_id():
+    return f"EB-ATM-{random.randint(1040, 9899)}"
+
+
+def generate_auth_code():
+    chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    return "".join(random.choice(chars) for _ in range(6))
 
 
 class Transaction:
@@ -151,12 +161,14 @@ class Account:
         self._balance = round(self._balance + amount, 2)
         return self._record_transaction("Deposit", amount, 0.0)
 
-    def withdraw(self, raw_amount):
+    def withdraw(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
-        if amount > self._balance:
+        total_fee = round(float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
+        if total_deduction > self._balance:
             raise InsufficientFundsError("Withdrawal rejected: Insufficient funds.")
-        self._balance = round(self._balance - amount, 2)
-        return self._record_transaction("Withdrawal", amount, 0.0)
+        self._balance = round(self._balance - total_deduction, 2)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
     def get_max_withdrawable(self):
         return self._balance
@@ -196,21 +208,25 @@ class SavingsAccount(Account):
         avail = max(0.0, round(self._balance - self.MAINTAINING_BALANCE, 2))
         return min(avail, self.WITHDRAWAL_LIMIT)
 
-    def withdraw(self, raw_amount):
+    def withdraw(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
             raise WithdrawalLimitError(
                 f"Withdrawal rejected: Exceeds Savings limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}."
             )
-        if amount > self._balance:
-            raise InsufficientFundsError("Withdrawal rejected: Insufficient funds.")
-        projected = round(self._balance - amount, 2)
+        total_fee = round(float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
+        if total_deduction > self._balance:
+            raise InsufficientFundsError(
+                f"Withdrawal rejected: Insufficient funds to cover PHP {amount:,.2f} plus PHP {total_fee:,.2f} fee."
+            )
+        projected = round(self._balance - total_deduction, 2)
         if projected < self.MAINTAINING_BALANCE:
             raise MaintainingBalanceError(
                 f"Withdrawal rejected: PHP {self.MAINTAINING_BALANCE:,.2f} maintaining balance required."
             )
         self._balance = projected
-        return self._record_transaction("Withdrawal", amount, 0.0)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
 
 class CheckingAccount(Account):
@@ -226,29 +242,87 @@ class CheckingAccount(Account):
             return 0.0
         return min(round(self._balance - self.WITHDRAWAL_FEE, 2), self.WITHDRAWAL_LIMIT)
 
-    def withdraw(self, raw_amount):
+    def withdraw(self, raw_amount, extra_fee=0.0):
         amount = self.parse_positive_amount(raw_amount, "Withdrawal")
         if amount > self.WITHDRAWAL_LIMIT:
             raise WithdrawalLimitError(
                 f"Withdrawal rejected: Exceeds Checking limit of PHP {self.WITHDRAWAL_LIMIT:,.2f}."
             )
-        total_deduction = round(amount + self.WITHDRAWAL_FEE, 2)
+        total_fee = round(self.WITHDRAWAL_FEE + float(extra_fee), 2)
+        total_deduction = round(amount + total_fee, 2)
         if total_deduction > self._balance:
             raise InsufficientFundsError(
-                f"Withdrawal rejected: Insufficient funds to cover withdrawal plus PHP {self.WITHDRAWAL_FEE:,.2f} fee."
+                f"Withdrawal rejected: Insufficient funds to cover withdrawal plus PHP {total_fee:,.2f} total fee."
             )
         self._balance = round(self._balance - total_deduction, 2)
-        return self._record_transaction("Withdrawal", amount, self.WITHDRAWAL_FEE)
+        return self._record_transaction("Withdrawal", amount, total_fee)
 
 
 class ATMService:
-    def __init__(self, accounts=None, active_type="savings", logged_in_card="100000248"):
+    USD_EXCHANGE_RATE = 58.00
+    INTL_USD_FEE = 3.50
+    INTL_PCT_FEE = 0.0175
+    INTL_FX_FEE = 0.03
+
+    CARD_CATALOG = {
+        "local_debit": {
+            "id": "local_debit",
+            "title": "ExpressBank Everyday Debit",
+            "type": "local",
+            "bin": "421900",
+            "full_pan": "4219 0010 0000 0248",
+            "masked_pan": "**** **** **** 0248",
+            "network": "BancNet Local",
+            "account_number": "100000248",
+            "holder_name": "Hanz Dalmino",
+            "local_bank_fee": 0.00,
+        },
+        "local_gold": {
+            "id": "local_gold",
+            "title": "MetroGold Premier Credit",
+            "type": "local",
+            "bin": "542810",
+            "full_pan": "5428 1020 0000 0519",
+            "masked_pan": "**** **** **** 0519",
+            "network": "Mastercard Local",
+            "account_number": "200000519",
+            "holder_name": "Kristof Badayos",
+            "local_bank_fee": 18.00,
+        },
+        "intl_platinum": {
+            "id": "intl_platinum",
+            "title": "GlobalPass Platinum Travel",
+            "type": "international",
+            "bin": "453288",
+            "full_pan": "4532 8830 0000 1234",
+            "masked_pan": "**** **** **** 1234",
+            "network": "Visa Global",
+            "account_number": "300000814",
+            "holder_name": "April Dianne Calvo",
+            "local_bank_fee": 0.00,
+        },
+        "intl_silver": {
+            "id": "intl_silver",
+            "title": "CitiReach Classic Global ATM",
+            "type": "international",
+            "bin": "529104",
+            "full_pan": "5291 0440 0000 5678",
+            "masked_pan": "**** **** **** 5678",
+            "network": "Plus / Cirrus Global",
+            "account_number": "400000932",
+            "holder_name": "Diana Sismar",
+            "local_bank_fee": 0.00,
+        },
+    }
+
+    def __init__(self, accounts=None, active_type="savings", logged_in_card="100000248", selected_card_id="local_debit"):
         if accounts:
             self.accounts = accounts
         else:
             self.accounts = self._create_predefined_accounts()
         self.active_type = active_type if active_type in ("savings", "checking") else "savings"
         self.logged_in_card = logged_in_card if logged_in_card in self.accounts else "100000248"
+        self.selected_card_id = selected_card_id if selected_card_id in self.CARD_CATALOG else "local_debit"
         self.current_account = self.accounts[self.logged_in_card][self.active_type]
 
     @staticmethod
@@ -258,17 +332,57 @@ class ATMService:
         ca1 = CheckingAccount("100000248", "Hanz Dalmino", "123456", 25000.00)
         ca1._record_transaction("Opening Balance", 25000.00, 0.0)
 
-        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 15000.00)
-        sa2._record_transaction("Opening Balance", 15000.00, 0.0)
-        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 25000.00)
-        ca2._record_transaction("Opening Balance", 25000.00, 0.0)
+        sa2 = SavingsAccount("200000519", "Kristof Badayos", "123456", 20000.00)
+        sa2._record_transaction("Opening Balance", 20000.00, 0.0)
+        ca2 = CheckingAccount("200000519", "Kristof Badayos", "123456", 35000.00)
+        ca2._record_transaction("Opening Balance", 35000.00, 0.0)
+
+        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "123456", 45000.00)
+        sa3._record_transaction("Opening Balance", 45000.00, 0.0)
+        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "123456", 60000.00)
+        ca3._record_transaction("Opening Balance", 60000.00, 0.0)
+
+        sa4 = SavingsAccount("400000932", "Diana Sismar", "123456", 30000.00)
+        sa4._record_transaction("Opening Balance", 30000.00, 0.0)
+        ca4 = CheckingAccount("400000932", "Diana Sismar", "123456", 40000.00)
+        ca4._record_transaction("Opening Balance", 40000.00, 0.0)
 
         return {
             "100000248": {"savings": sa1, "checking": ca1},
             "200000519": {"savings": sa2, "checking": ca2},
+            "300000814": {"savings": sa3, "checking": ca3},
+            "400000932": {"savings": sa4, "checking": ca4},
         }
 
-    def login(self, raw_acc, raw_pin):
+    def get_active_card_profile(self):
+        return self.CARD_CATALOG.get(self.selected_card_id, self.CARD_CATALOG["local_debit"])
+
+    def compute_network_fees(self, amount, card_id=None):
+        cid = card_id or self.selected_card_id
+        card = self.CARD_CATALOG.get(cid, self.CARD_CATALOG["local_debit"])
+        amt = round(float(amount), 2) if amount else 0.0
+        if card["type"] == "international":
+            usd_min_php = round(self.INTL_USD_FEE * self.USD_EXCHANGE_RATE, 2)
+            pct_php = round(amt * self.INTL_PCT_FEE, 2)
+            intl_withdrawal_fee = max(usd_min_php, pct_php) if amt > 0 else usd_min_php
+            fx_fee = round(amt * self.INTL_FX_FEE, 2)
+            return {
+                "card_type": "international",
+                "local_bank_fee": 0.00,
+                "intl_withdrawal_fee": intl_withdrawal_fee,
+                "fx_conversion_fee": fx_fee,
+                "total_network_fee": round(intl_withdrawal_fee + fx_fee, 2),
+            }
+        local_fee = round(card.get("local_bank_fee", 0.0), 2)
+        return {
+            "card_type": "local",
+            "local_bank_fee": local_fee,
+            "intl_withdrawal_fee": 0.00,
+            "fx_conversion_fee": 0.00,
+            "total_network_fee": local_fee,
+        }
+
+    def login(self, raw_acc, raw_pin, card_id=None):
         acc_in = str(raw_acc or "").strip()
         pin_in = str(raw_pin or "").strip()
         if not acc_in or not pin_in:
@@ -287,6 +401,13 @@ class ATMService:
             raise ATMTransactionError("Invalid Account Number or PIN Code.")
 
         self.logged_in_card = normalized
+        if card_id and card_id in self.CARD_CATALOG:
+            self.selected_card_id = card_id
+        else:
+            for cid, cinfo in self.CARD_CATALOG.items():
+                if cinfo["account_number"] == normalized:
+                    self.selected_card_id = cid
+                    break
         self.active_type = "savings"
         self.current_account = user_accounts["savings"]
         return self.current_account
@@ -303,7 +424,9 @@ class ATMService:
         return self.current_account.deposit(raw_amount)
 
     def perform_withdrawal(self, raw_amount):
-        return self.current_account.withdraw(raw_amount)
+        amount = Account.parse_positive_amount(raw_amount, "Withdrawal")
+        fee_info = self.compute_network_fees(amount)
+        return self.current_account.withdraw(amount, extra_fee=fee_info["total_network_fee"])
 
     def to_session_data(self):
         serialized = {}
@@ -315,6 +438,7 @@ class ATMService:
         return {
             "active_type": self.active_type,
             "logged_in_card": self.logged_in_card,
+            "selected_card_id": self.selected_card_id,
             "accounts": serialized,
         }
 
@@ -338,4 +462,5 @@ class ATMService:
             accounts=rebuilt,
             active_type=data.get("active_type", "savings"),
             logged_in_card=data.get("logged_in_card", "100000248"),
+            selected_card_id=data.get("selected_card_id", "local_debit"),
         )
