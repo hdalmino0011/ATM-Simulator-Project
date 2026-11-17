@@ -26,9 +26,9 @@ class MaintainingBalanceError(ATMTransactionError):
 
 def mask_account_number(acc_num):
     s = str(acc_num or "").strip()
-    if len(s) <= 3:
+    if len(s) <= 4:
         return s
-    return ("*" * (len(s) - 3)) + s[-3:]
+    return ("*" * (len(s) - 4)) + s[-4:]
 
 
 def generate_terminal_id():
