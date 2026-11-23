@@ -339,9 +339,9 @@ class ATMService:
         ca2 = CheckingAccount("200000519", "Kristof Badayos", "5194", 35000.00)
         ca2._record_transaction("Opening Balance", 35000.00, 0.0)
 
-        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "814620", 45000.00)
+        sa3 = SavingsAccount("300000814", "April Dianne Calvo", "090525", 45000.00)
         sa3._record_transaction("Opening Balance", 45000.00, 0.0)
-        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "814620", 60000.00)
+        ca3 = CheckingAccount("300000814", "April Dianne Calvo", "090525", 60000.00)
         ca3._record_transaction("Opening Balance", 60000.00, 0.0)
 
         sa4 = SavingsAccount("400000932", "Diana Sismar", "9327", 30000.00)
