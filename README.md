@@ -53,7 +53,7 @@ The **ExpressBank ATM Simulator** is a realistic, single-viewport kiosk Automate
    | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
    | **ExpressBank Everyday Debit** | Hanz Dalmino | **Mastercard** · Local (`421900`) | `100000248` (`*****0248`) | `248159` *(6 digits)* | `₱ 15,000.00` | `₱ 25,000.00` | `₱ 0.00` Local Bank Fee |
    | **MetroGold Premier Credit** | Kristof Badayos | **Visa** · Local (`542810`) | `200000519` (`*****0519`) | `5194` *(4 digits)* | `₱ 20,000.00` | `₱ 35,000.00` | `₱ 18.00` Local Interbank Fee |
-   | **GlobalPass Platinum Travel** | April Dianne Calvo | **Mastercard** · International (`453288`) | `300000814` (`*****0814`) | `814620` *(6 digits)* | `₱ 45,000.00` | `₱ 60,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
+   | **GlobalPass Platinum Travel** | April Dianne Calvo | **Mastercard** · International (`453288`) | `300000814` (`*****0814`) | `090525` *(6 digits)* | `₱ 45,000.00` | `₱ 60,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
    | **CitiReach Classic ATM** | Diana Sismar | **BancNet** · International (`529104`) | `400000932` (`*****0932`) | `9327` *(4 digits)* | `₱ 30,000.00` | `₱ 40,000.00` | `max($3.50, 1.75%)` + `3.00%` FX Fee |
 
 6. **Account Types, Fee Breakdown & Receipt Prompt Flow**
