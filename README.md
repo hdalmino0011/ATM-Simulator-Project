@@ -208,5 +208,5 @@ InvalidAmountError  InsufficientFundsError  WithdrawalLimitError  MaintainingBal
 ## 7. Known Persistence & Data Reset Limitations (Part IV)
 
 - Per **Part IV (Django Integration and Development Rules)**, a relational database is **not required**.
-- Account balances and session transactions are persisted in **Django signed cookie sessions** (`request.session`) and browser **JSON Local Storage** (`expressbank_kiosk_atm_v8`).
+- Account balances and session transactions are persisted in **Django signed cookie sessions** (`request.session`) and browser **JSON Local Storage** (`expressbank_kiosk_atm_v9`).
 - Clearing browser site data/cookies resets all four predefined accounts (`100000248`, `200000519`, `300000814`, and `400000932`) back to their initial starting balances and PINs.
